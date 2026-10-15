@@ -6,6 +6,22 @@
 
 const DEFAULT_DOCUMENTS = [
   {
+    id: "doc-resp-servo-u",
+    title: "Servo-U Ventilator (Getinge) – Praktisk Guide & Klinisk Rutin",
+    category: "Respiration",
+    dateAdded: "2026-10-15T10:15:00Z",
+    priority: "Riktlinje",
+    isPinned: true,
+    tags: ["Servo-U", "Ventilator", "Respiration", "PRVC", "PC", "PS/CPAP", "NAVA", "Automode", "NIV", "P0.1", "Platåtryck", "Drivtryck", "Larm", "IVA"],
+    description: "Praktisk klinisk guide och handhavanderutin för Getinge Servo-U intensivvårdsventilator. Omfattar systemöversikt, förkontroll & patientkretstest, inställning av PBW/tidalvolym, ventilationsmoder (PRVC, PC, VC, PS/CPAP, Automode, SIMV, Bi-Vent/APRV, NAVA, NIV, High Flow), trigger- och cykelinställningar, lungmekaniska manövrar (Pplat, ΔP, Auto-PEEP, P0.1, Open Lung Tool), sugstöd, nebulisering, larmfelsökning och hygienrutiner.",
+    content: `# Servo-U Ventilator (Getinge) – Praktisk Guide & Klinisk Rutin
+
+> **Avdelningsriktlinje – Intensivvårdsenheten Östra**  
+> **Kategori:** Respiration | **Målgrupp:** Intensivvårdssjuksköterskor, IVA-läkare och undersköterskor  
+> **Utrustning:** Servo-U® Mechanical Ventilator (Getinge / Maquet Critical Care)
+`
+  },
+  {
     id: "doc-resp-fp950",
     title: "Fisher & Paykel 950 Befuktare (F&P 950™) – Bruksanvisning & Klinisk Rutin",
     category: "Respiration",

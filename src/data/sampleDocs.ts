@@ -19,6 +19,217 @@ export const CATEGORIES: CategoryItem[] = [
 
 export const DEFAULT_DOCUMENTS: DocumentItem[] = [
   {
+    id: "doc-resp-servo-u",
+    title: "Servo-U Ventilator (Getinge) – Praktisk Guide & Klinisk Rutin",
+    category: "Respiration",
+    dateAdded: "2026-10-15T10:15:00Z",
+    priority: "Riktlinje",
+    isPinned: true,
+    tags: ["Servo-U", "Ventilator", "Respiration", "PRVC", "PC", "PS/CPAP", "NAVA", "Automode", "NIV", "P0.1", "Platåtryck", "Drivtryck", "Larm", "IVA"],
+    description: "Praktisk klinisk guide och handhavanderutin för Getinge Servo-U intensivvårdsventilator. Omfattar systemöversikt, förkontroll & patientkretstest, inställning av PBW/tidalvolym, ventilationsmoder (PRVC, PC, VC, PS/CPAP, Automode, SIMV, Bi-Vent/APRV, NAVA, NIV, High Flow), trigger- och cykelinställningar, lungmekaniska manövrar (Pplat, ΔP, Auto-PEEP, P0.1, Open Lung Tool), sugstöd, nebulisering, larmfelsökning och hygienrutiner.",
+    content: `# Servo-U Ventilator (Getinge) – Praktisk Guide & Klinisk Rutin
+
+> **Avdelningsriktlinje – Intensivvårdsenheten Östra**  
+> **Kategori:** Respiration | **Målgrupp:** Intensivvårdssjuksköterskor, IVA-läkare och undersköterskor  
+> **Utrustning:** Servo-U® Mechanical Ventilator (Getinge / Maquet Critical Care)
+
+---
+
+## 1. Systemöversikt, Kopplingar & Förberedelse
+
+Servo-U är en avancerad intensivvårdsventilator för invasiv och icke-invasiv ventilation (inklusive NAVA och Högflödesterapi) hos vuxna och pediatriska patienter. Systemet består av **Användargränssnittet (pekskärmen)** och **Patientenheten (gas- och pneumatikmodulen)**.
+
+### 1.1 Huvudkomponenter på Patientenheten & Skärmen
+
+| Komponent | Placering / Beteckning | Funktion & Klinisk Kontroll |
+|:---|:---|:---|
+| **Användargränssnitt (UI)** | Vridbar pekskärm med larmram | Visar kurvor, loopar, numeriska värden, larm och snabbknappar. Kan låsas mot oavsiktlig beröring. |
+| **Direktvalsvred (Main Rotary Knob)** | Nedre högra hörnet på skärmen | Används för finjustering och bekräftelse av valda ventilationsparametrar. |
+| **Inspirationsdel (Inspirationsutlopp)** | Patientenhetens högra sida | Ansluts via bakterie-/virusfilter till inspirationsslangen (och ev. aktiv befuktare F&P 950). |
+| **Expirationsintag & Expirationskassett** | Patientenhetens vänstra sida | Utbytbar kassett med integrerad **ultraljudsflödesmätare** och expirationsventil. Skyddas alltid med expirationsfilter/vattenfälla. |
+| **Gasanslutningar (Luft & O₂)** | Patientenhetens baksida | Ansluts till centralgassystemet (**Air** och **O₂**, drifttryck **2,0–6,0 bar / 200–600 kPa**). |
+| **Nätström & Reservbatterier** | Patientenhetens baksida/undersida | Minst **2 laddade batterier** (1 internt + 1 utbytbart i fack). Ger ca **60–120 min** drift vid strömavbrott/transport. |
+| **Modulfack (Edi, CO₂, Y-sensor)** | Patientenhetens sida | Anslutning av **Edi-modul** (för NAVA-ventilation) samt **kapnograf (CO₂-sensor)**. |
+| **Aerogen® Nebulisatoruttag** | Framsidan av patientenheten | Integrerad strömförsörjning och tidsstyrning för Aerogen Solo mikropumpnebulisator. |
+
+> [!CAUTION]
+> **Befuktning – Aktiv vs. Passiv (HME):**  
+> Använd **ALDRIG** HME-filter (värme-fuktväxlare vid Y-stycket) samtidigt som aktiv befuktare (F&P 950) eller nebulisator! Kombinationen mättar HME-filtret med vätska och orsakar akut, livshotande totalstopp (ocklusion) i andningskretsen.
+
+---
+
+## 2. Förkontroll (Pre-use Check) & Patientkretstest
+
+Innan ventilatorn kopplas till en patient måste alltid funktion och slangkretstäthet verifieras.
+
+### 2.1 Förkontroll (Pre-use Check)
+Utförs i **Standby-läge** inför varje ny patient samt efter byte av expirationskassett (tar ca 3–4 minuter):
+1. Säkerställ att både **nätström** samt **Luft och O₂** är anslutna.
+2. Koppla den korta **blå/transparanta testslangen** mellan inspirationsutloppet och expirationsintaget.
+3. Tryck på **FÖRKONTROLL (Pre-use check)** på Standby-skärmen och följ instruktionerna på skärmen.
+4. Ventilatorn testar automatiskt:
+   - Intern teknik, barometertryck och säkerhetsventil
+   - Gasförsörjning (Luft och O₂) samt O₂-sensor/cell
+   - Inre läckage, tryckgivare och expirationskassettens ultraljudsflödesmätare
+   - Batteristatus (växlar kort till batteridrift under testet) och akustiska/visuella larm
+5. Efter godkänd förkontroll kopplas patientens faktiska andningsslangset på, varefter ventilatorn automatiskt övergår till **Patientkretstest**.
+
+### 2.2 Patientkretstest (Patient Circuit Test)
+Kan även köras separat i Standby (t.ex. vid byte av slangset eller befuktare under pågående vårdtillfälle):
+1. Anslut det kompletta slangsetet (inkl. aktiv befuktare med vattenfylld kammare, filter, svivel/kateterfäste).
+2. Blockera (plugga) patientänden vid Y-stycket när skärmen ber om det, och öppna Y-stycket när skärmen anger det.
+3. **Varför detta är kritiskt:** Testet mäter läckage, inspiratorisk/expiratorisk resistans samt **slangarnas komplians (Circuit Compliance, mL/cmH₂O)**. När slangkompensation är aktiverad kompenserar Servo-U automatiskt varje andetag för den volym som fjädrar bort i slangarna, så att den inställda tidalvolymen speglar vad patienten faktiskt får i lungorna.
+
+---
+
+## 3. Uppstart i Standby & Inställning av PBW (Predicted Body Weight)
+
+Följ alltid dessa 5 steg i **Standby** innan du trycker på *Starta ventilation*:
+
+| Steg | Skärmval | Klinisk Rutin på IVA Östra |
+|:---:|:---|:---|
+| **1** | **Patientkategori** | Välj **Vuxen (Adult)** (vikt 10–250 kg, $V_T$ 100–4000 mL) eller **Barn (Pediatric)** (vikt 0,5–30 kg, $V_T$ 10–350 mL). |
+| **2** | **Kön & Längd (PBW)** | Tryck på **Patientdata** och mata in **Kön** och **Kroppslängd (cm)**. Servo-U räknar automatiskt ut **PBW (Predicted Body Weight / Idealvikt)** enligt Devine-formeln och visar tidalvolymen i **mL/kg PBW** direkt på inställningsknappen! |
+| **3** | **Ventilationsform** | Välj **Invasiv** (intuberad / trakeostomerad) eller **Icke-invasiv (NIV / High Flow)**. |
+| **4** | **Ventilationsmod & Värden** | Tryck på **MODER (Modes)**, välj mod (t.ex. *PRVC*, *PC* eller *PS/CPAP*), ställ in grundparametrar och **Reservventilation (Backup)** samt kontrollera **Larmgränser**. |
+| **5** | **Starta ventilation** | Anslut Y-stycket till patienten, tryck på **Starta ventilation** och verifiera thoraxhöjning, kurvor, etCO₂ och auskultationsfynd. |
+
+> [!IMPORTANT]
+> **Lungprotektiv ventilation baseras på PBW (Längd & Kön – ALDRIG faktisk kroppsvikt!):**  
+> Lungornas volym bestäms av bröstkorgens storlek (kroppslängd och biologiskt kön), inte av fettmassa eller ödem.  
+> - **Mål för Tidalvolym ($V_T$):** **6 mL/kg PBW** (intervall **4–8 mL/kg PBW**, vid svår ARDS 4–6 mL/kg PBW).  
+> - **Mål för Platåtryck ($P_{\text{plat}}$):** **< 30 cmH₂O**.  
+> - **Mål för Drivtryck ($\Delta P = P_{\text{plat}} - \text{PEEP}_{\text{tot}}$):** **< 14–15 cmH₂O**.
+
+---
+
+## 4. Ventilationsmoder på Servo-U – Funktion & Inställning
+
+### 4.1 Kontrollerade & Adaptiva Moder
+
+| Mod | Typ & Funktionsprincip | Grundinställningar (Standard Vuxen) | Kliniska Fördelar & Fallgropar |
+|:---|:---|:---|:---|
+| **PRVC**<br>*(Tryckreglerad Volymkontroll)* | **Adaptiv dubbelkontroll (Förstahandsmod på IVA):**<br>Levererar en garanterad målvolym ($V_T$) med ett **decelererande flöde** och lägsta möjliga konstanta inspiratoriska tryck. Första andetaget är ett testandetag; därefter justeras trycket automatiskt med max ±3 cmH₂O/andetag efter lungans compliance. | • **$V_T$:** 6 mL/kg PBW (4–8 mL/kg)<br>• **PEEP:** 5–10 cmH₂O (enl. PEEP/FiO₂)<br>• **AF (RR):** 12–20 /min<br>• **I:E / $T_i$:** 1:2 (eller $T_i$ 0,9–1,2 s)<br>• **$\text{FiO}_2$:** För $\text{SpO}_2$ 92–96% | **Fördel:** Garanterar minutvolym samtidigt som topptryck hålls så lågt som möjligt.<br>**Fallgrop:** Trycket begränsas vid **5 cmH₂O under Övre trycklarmgräns** (*Varning: Begränsat tryck!*). Vid kraftig lufthunger/spontanandning kan PRVC ge för lågt tryckstöd om patienten drar stora volymer. |
+| **PC**<br>*(Tryckkontroll / Pressure Control)* | **Tryckstyrd mod:**<br>Levererar en fast inställd trycknivå (**PC över PEEP**, cmH₂O) under inställd inspirationstid ($T_i$). Flödet är decelererande. Patienten kan trigga extra PC-andetag. | • **PC över PEEP:** 10–18 cmH₂O (titrera så att $V_T \approx 6\text{ mL/kg PBW}$)<br>• **PEEP:** 5–15 cmH₂O<br>• **AF (RR):** 12–20 /min<br>• **I:E:** 1:2 (vid obstruktivitet 1:3–1:4) | **Fördel:** Strikt kontroll över maximalt alveolärt tryck ($P_{\text{peak}} \approx P_{\text{plat}}$ om flödet når 0). Utmärkt vid svår ARDS eller läckage.<br>**Fallgrop:** **Ingen volymgaranti!** Vid slempropp, bronkospasm eller buktrycksstegring sjunker $V_T$ och minutvolymen direkt – sätt snäva larmgränser för **MVe**! |
+| **VC**<br>*(Volymkontroll / Volume Control)* | **Volymstyrd mod:**<br>Levererar en fast tidalvolym ($V_T$) med ett förinställt flödesmönster (konstant fyrkantsvåg eller decelererande flöde) och ev. inspiratorisk paus ($T_{\text{pause}}$ %). | • **$V_T$:** 6 mL/kg PBW<br>• **PEEP:** 5–10 cmH₂O<br>• **AF:** 12–20 /min<br>• **$T_{\text{pause}}$:** 10 % (för kontinuerlig $P_{\text{plat}}$-mätning)<br>• **Flödesadaptation:** På/Av | **Fördel:** Möjliggör exakt separation av resistivt tryck ($P_{\text{peak}} - P_{\text{plat}}$) och elastiskt platåtryck ($P_{\text{plat}}$).<br>**Fallgrop:** Konstant flöde ger högre topptryck och kan ge flödesasymmetri ("flow starvation") hos vaknande patienter om flödesadaptation ej är aktiv. |
+
+### 4.2 Understödda, Interaktiva & Spontana Moder
+
+| Mod | Typ & Funktionsprincip | Viktigaste Inställningar | Kliniska Riktlinjer vid Sängkant |
+|:---|:---|:---|:---|
+| **PS / CPAP**<br>*(Tryckunderstöd / Pressure Support)* | **Spontanandningsmod (Urträning / Vakna patienter):**<br>Patienten triggar själv varje andetag och styr både andningsfrekvens och inspirationstid. Ventilatorn ger ett inställt tryckstöd (**PS över PEEP**). Vid **PS = 0 cmH₂O** fungerar moden som ren **CPAP**. | • **PS över PEEP:** 6–14 cmH₂O<br>• **PEEP:** 5–10 cmH₂O<br>• **Inspirationsavslut (Cycle off):** Standard **30 %**<br>• **Apnétid:** 15–30 s<br>• **Reservventilation:** PC eller PRVC | **Kritiskt:** Kontrollera alltid att **Reservventilation (Backup)** är rimligt inställd (t.ex. PC över PEEP 12–15 cmH₂O, AF 14/min). Justera *Inspirationsavslut (%)* efter grundsjukdom (se avsnitt 4.3!). |
+| **Automode®**<br>*(PRVC ⇄ VS, PC ⇄ PS, VC ⇄ VS)* | **Automatisk övergångsmod:**<br>Växlar sömlöst från kontrollerad mod (t.ex. PC eller PRVC) till understödd spontanmod (PS eller VS – Volume Support) så snart patienten triggar egna andetag. Vid apné växlar den mjukt tillbaka till kontrollerad mod utan larm. | • Aktiveras med skjutreglaget **Automode På/Av** inne i *PRVC*, *PC* eller *VC*.<br>• **Trigger-timeout:** 7–12 s (anpassas dynamiskt). | Utmärkt för postoperativa patienter och patienter som växlar i vakenhetsgrad under dygnet eller vid urträningsstart. |
+| **SIMV**<br>*(VC+PS, PC+PS, PRVC+PS)* | **Kombinationsmod:**<br>Levererar en fast SIMV-frekvens av synkroniserade obligatoriska andetag. Mellan dessa kan patienten andas spontant med tryckunderstöd (**PS**). | • **SIMV-frekvens**, **Tidalvolym / PC**, **PS över PEEP**, **Andningscykel-tid**. | Används mer sällan på vuxen-IVA eftersom Automode eller ren PS med reservventilation ger bättre synkroni. |
+| **Bi-Vent / APRV**<br>*(Airway Pressure Release Ventilation)* | **Tvåfasigt positivt luftvägstryck:**<br>Växlar tidsstyrt mellan en hög trycknivå (**$P_{\text{high}}$**) och en låg trycknivå (**$P_{\text{low}}$**). Patienten kan spontanandas fritt med eller utan PS på båda trycknivåerna. | • **$P_{\text{high}}$** & **$P_{\text{low}}$** (PEEP)<br>• **$T_{\text{high}}$** & **$T_{\text{low}}$**<br>• **PS över $P_{\text{high}}$** / **PS över $P_{\text{low}}$** | Vid klassisk APRV ("inverse ratio") hålls $T_{\text{high}}$ lång (4–6 s) för alveolär rekrytering och $T_{\text{low}}$ mycket kort (0,4–0,8 s) för CO₂-utvädring utan alveolär kollaps. |
+| **NAVA & NIV NAVA**<br>*(Neurally Adjusted Ventilatory Assist)* | **Diafragmastyrda andetag via Edi-kateter:**<br>Ventilatorn läser av den elektriska aktiviteten i diafragma (**Edi** i $\mu\text{V}$) via en speciell ventrikelsond med elektroder och levererar tryck i direkt proportion till patientens eget nervsignal-påslag! | • **NAVA-nivå:** $0,5\text{–}2,0\text{ cmH}_2\text{O}/\mu\text{V}$<br>• **Edi-trigger:** $0,5\ \mu\text{V}$<br>• **PEEP:** 5–10 cmH₂O<br>• **Mål för Edi-peak:** **$5\text{–}15\ \mu\text{V}$** | **Unik fördel:** Eliminerar asynkroni vid trigger och cykelavslut (styrs av nervsignalen, opåverkad av läckage). Om Edi-signalen faller bort växlar Servo-U automatiskt till **PS**, och vid apné vidare till **PC-reservventilation**. |
+| **NIV PC / NIV PS & High Flow O₂** | **Icke-invasiv maskventilation & Högflödesgrimma:**<br>NIV kompenserar automatiskt för maskläckage upp till 65 L/min hos vuxna. **High Flow** levererar kontinuerligt befuktat flöde via Optiflow-grimma. | • **NIV PS:** PEEP 4–8 cmH₂O, PS 6–12 cmH₂O<br>• **High Flow:** Flöde **30–60 L/min**, $\text{FiO}_2$ **21–100 %** (kräver aktiv befuktare F&P 950 i Optiflow-läge 37 °C!). | Vid NIV: Invänta att patienten är informerad, håll masken mot ansiktet initialt innan banden spänns och följ läckage-% på skärmen. |
+
+---
+
+### 4.3 Finjustering av Patient-Ventilator-Synkroni (Trigger, Stigtid & Cykelavslut)
+
+När en patient ”kämpar mot ventilatorn” (dyssynkroni) i understödda eller kontrollerade moder justeras dessa tre nyckelparametrar:
+
+1. **Triggerkänslighet (Trigger Sensitivity):**
+   - **Flödestrigger (Grönt fält, nivå 1–10, standard = 2):** Patienten behöver bara suga till en liten volym av biasflödet (2 L/min) för att utlösa ett andetag.
+   - **Rött fält (Hög känslighet):** Ökar risken för **autotriggning / självtriggning** (t.ex. av hjärtslag/kardiogena oscillationer eller kondensvatten som skvalpar i slangen!).
+   - **Trycktrigger (0 till -20 cmH₂O):** Kräver att patienten skapar ett negativt undertryck. Används om autotriggning inte kan hävas med flödestrigger.
+2. **Inspiratorisk Stigtid (Inspiratory Rise Time):**
+   - Styr hur snabbt trycket stiger till inställd nivå i början av inspirationen (normalt **0,15 s** eller **5 %**).
+   - **Kortare stigtid (0,05–0,10 s):** Vid hög andningsdrive / ”lufthunger” där tryckkurvan hänger ned i början av andetaget.
+   - **Längre stigtid (0,20–0,30 s):** Om en tryckspik (*overshoot*) ses i början av inspirationen eller om patienten upplever luftströmmen som obehagligt hård.
+3. **Inspirationsavslut (Inspiratory Cycle Off / Expiratorisk Trigger %):**
+   - Bestämmer vid vilken procentandel av toppflödet som inspirationen avslutas i **PS/CPAP** (standard **30 %**):
+   - **KOL / Astma (Obstruktivt):** Höj till **40–60 %**! Obstruktiva lungor har långsamt avtagande flöde; med 30 % blir inspirationen för lång och patienten tvingas aktivt krysta ut luften. Högre % ger kortare inspiration och **längre expirationstid** (mindre Auto-PEEP).
+   - **ARDS / Lungfibros (Restriktivt / Stela lungor):** Sänk till **10–20 %**! Stela lungor når snabbt lågt flöde, vilket annars bryter andetaget för tidigt med små tidalvolymer och dubbeltriggning som följd.
+
+---
+
+## 5. Skärmvyer, Servo Compass & Lungmekaniska Manövrar
+
+### 5.1 Skärmvyer & Servo Compass®
+Genom att trycka på **VYER (Views)** i menyraden kan du växla mellan:
+- **Grundvy (Basic)** & **Mer värden (More values):** Visar alla numeriska parametrar.
+- **Loopar (Loops):** *Tryck-Volym*, *Flöde-Volym* och *Tryck-Flöde* (med möjlighet att spara referensloop för att utvärdera bronkdilatation eller PEEP-effekt).
+- **Servo Compass®:** Ett visuellt ”sikte” som i realtid övervakar de två viktigaste målen för lungprotektiv ventilation:
+  1. **Tidalvolym per kg idealvikt ($V_T / \text{PBW}$, mål 4–8 mL/kg)**
+  2. **Drivtryck ($\Delta P$, mål < 15 cmH₂O) eller Totaltryck ($P_{\text{plat}}$, mål < 30 cmH₂O)**  
+  Så länge kompassen är grön ventileras lungan inom inställda skyddsgränser.
+
+### 5.2 Diagnostiska Manövrar på Servo-U
+
+| Manöver / Parameter | Hur den utförs på Servo-U | Formel & Normal-/Målvärde | Klinisk Tolkning vid Sängkant |
+|:---|:---|:---|:---|
+| **Inspiratorisk Paus**<br>*(Platåtryck $P_{\text{plat}}$ & $C_{\text{stat}}$)* | Håll in knappen **INSP. PAUS (Insp. hold)** i **2–3 sekunder** under kontrollerad el. lugn andning. | • **$P_{\text{plat}}$:** **< 30 cmH₂O**<br>• **$C_{\text{stat}}$:** $\frac{V_T}{P_{\text{plat}} - \text{PEEP}_{\text{tot}}}$<br>*(Normalt 50–80 mL/cmH₂O; ARDS 20–35)* | Speglar det sanna alveolära sluttrycket när flödet är 0. Om **Topptryck ($P_{\text{peak}}$) är högt men $P_{\text{plat}}$ är normalt** beror problemet på **luftvägsmotstånd** (slempropp, bronkospasm, knickad tub). Om **både $P_{\text{peak}}$ och $P_{\text{plat}}$ stiger** har **lungcompliance försämrats** (lungödem, atelektas, pneumothorax, buktryck). |
+| **Drivtryck ($\Delta P$)**<br>*(Driving Pressure)* | Beräknas kontinuerligt i PRVC/PC samt exakt vid **INSP. PAUS**. | • **$\Delta P = P_{\text{plat}} - \text{PEEP}_{\text{tot}}$**<br>• **Målvärde:** **< 14–15 cmH₂O** | Det elastiska distensionstrycket över alveolerna vid varje andetag. Starkaste prediktorn för överlevnad vid ARDS. Om $\Delta P \ge 15\text{ cmH}_2\text{O}$: sänk $V_T$ (ned mot 4–5 mL/kg PBW) eller optimera PEEP. |
+| **Expiratorisk Paus**<br>*(Auto-PEEP / $\text{PEEP}_i$)* | Håll in knappen **EXP. PAUS (Exp. hold)** i **3–5 sekunder** i slutet av utandningen. | • **$\text{PEEP}_{\text{tot}} = \text{PEEP}_{\text{inst}} + \text{Auto-PEEP}$**<br>• **Normalt Auto-PEEP:** **< 1–2 cmH₂O** | Detekterar *dynamisk hyperinflation (air-trapping)* där patienten inte hinner tömma lungorna före nästa andetag. **Åtgärd vid högt Auto-PEEP:** Sänk andningsfrekvensen, förläng expirationstiden (I:E 1:3–1:4), ge bronkdilaterande inhalationer och sug rent. |
+| **P0.1**<br>*(Ocklusionstryck vid 100 ms)* | Visas kontinuerligt vid spontanandning (eller via P0.1-manöver). | • **Målintervall på IVA:** **$1,5\text{–}3,5\text{ cmH}_2\text{O}$** | Mäter patientens centrala andningsdrive under de första 0,1 sekunderna av inspirationen:<br>• **< 1,5 cmH₂O:** Överassisterad / för djupt sederad (risk för diafragmaatrofi). Sänk PS eller sedering.<br>• **> 3,5–4,0 cmH₂O:** Kraftig lufthunger / hög belastning (risk för utmattning och P-SILI). Öka PS eller utred orsak (acidos, smärta, feber, slem). |
+| **SBI / RSBI**<br>*(Rapid Shallow Breathing Index)* | Avläses under *Mer värden* i spontanmod (PS/CPAP). | • **$\text{SBI} = \frac{\text{Andningsfrekvens (AF)}}{\text{Tidalvolym (L)}}$**<br>• **Mål inför extubation:** **< 100–105** | Ett högt SBI (> 105 andetag/min/L) visar att patienten andas snabbt och ytligt och löper hög risk att misslyckas vid urträning/extubation. |
+
+---
+
+## 6. Endotrakeal Sugning (Sugstöd), O₂-Boost & Nebulisering
+
+### 6.1 O₂-Boost (Snabbknapp för Preoxygenering)
+- Tryck på **O₂-boost** längst ned på skärmen för att ge **100 % syrgas i 1 minut (60 sekunder)** inför procedurer som lägesändring, vändning eller sugning med slutet sugsystem.
+- Efter 60 sekunder återgår ventilatorn automatiskt till den tidigare inställda $\text{FiO}_2$-nivån.
+
+### 6.2 Sugstöd (Suction Support – vid Frånkoppling / Öppen Sugning)
+När kretsen måste kopplas isär:
+1. Tryck på **Sugning / Frånkoppling (Suction support)** och välj önskad $\text{FiO}_2$ (standard 100 %).
+2. **Fas 1 – För-oxygenering:** Ventilatorn ger 100 % $\text{O}_2$ i upp till **2 minuter**.
+3. **Fas 2 – Frånkoppling & Sugning:** När du kopplar isär Y-stycket pausar ventilatorn automatiskt larmen (apné och minutvolym) och stoppar högtrycksblåsningen så att aerosol/kondens inte sprids i vårdrummet.
+4. **Fas 3 – Efter-oxygenering:** Så snart Y-stycket kopplas tillbaka till patienten återupptar Servo-U ventilationen automatiskt och ger **100 % $\text{O}_2$ i 1 minut** innan den återgår till ordinarie $\text{FiO}_2$.
+
+### 6.3 Nebulisering (Aerogen Solo®)
+1. Anslut Aerogen-kabeln till nebulisatoruttaget på patientenhetens framsida och placera T-stycket med läkemedelskoppen på inspirationsslangen.
+2. **KRITISKT:** Om patienten har ett **HME-filter** vid tuben/Y-stycket **MÅSTE HME-filtret tas bort** innan nebuliseringen startas! Kontrollera att ett bakterie-/virusfilter sitter på expirationsingången för att skydda expirationskassetten från läkemedelsutfällning.
+3. Tryck på **Nebulisering** i menyn och välj tid (**5–30 min**, standard **15 min**, eller *Kontinuerlig* vid t.ex. status asthmaticus). Aerogen-nebulisatorn tillför ingen extra gasvolym och påverkar därför inte tidalvolymer eller tryck.
+
+---
+
+## 7. Larmhantering & Klinisk Felsökningsmatris
+
+- **Hög prioritet (Rött larm, snabba pip):** Kräver omedelbar åtgärd vid sängkant!
+- **Medelhög prioritet (Gult larm):** Kräver snar bedömning och åtgärd.
+- **Låg prioritet (Blått/Gult informationslarm):** Notera och åtgärda.
+- **Ljudpaus (Audio Pause – klockikon):** Tystar pågående larm i **2 minuter (120 sekunder)**.
+
+| Larmmeddelande på Servo-U | Prioritet | Vanligaste Orsaker | Klinisk Felsökning & Åtgärd |
+|:---|:---:|:---|:---|
+| **Luftvägstryck över övre gräns**<br>*(Airway pressure high)* | **Hög (Röd)** | 1. Sekret/slempropp i ET-tub eller luftvägar.<br>2. Patienten hostar, krystar eller biter på tuben.<br>3. Vatten/kondens eller knick i andningsslang.<br>4. Bronkospasm, pneumothorax eller glidning av tub i höger huvudbronk. | 1. Titta på patienten och $\text{SpO}_2$ – **handventilera med Rubens blåsa vid akut desaturation/cirkulationspåverkan!**<br>2. Sug rent i ET-tuben, sätt ev. bitblock.<br>3. Töm kondens i slangar och kontrollera kretsen.<br>4. Auskultera lungorna bilateralt och mät $P_{\text{plat}}$ (Insp. paus). |
+| **Exspiratorisk minutvolym: Låg**<br>*(Expiratory minute volume low)* | **Hög (Röd)** | 1. **Läckage:** Slangkoppling har lossnat, kuffläckage eller dislocerad ET-tub.<br>2. Minskad spontanandning i PS/CPAP.<br>3. I PC-mod: Försämrad compliance eller ökad resistans ger mindre tidalvolymer. | 1. Kontrollera alla kopplingar från tub till befuktare och ventilator.<br>2. Kontrollera kufftryck (**25–30 cmH₂O**) och tubläge vid mungipa/tandrad.<br>3. Om PC: Kontrollera luftvägarna och justera PC över PEEP eller larmgräns. |
+| **Begränsat tryck (PRVC / VS)**<br>*(Regulation pressure limited)* | **Medel/Hög** | Ventilatorn kan inte leverera inställd tidalvolym ($V_T$) eftersom det skulle kräva ett tryck som är närmare än **5 cmH₂O under övre trycklarmgränsen**. | 1. Åtgärda grundorsaken till de höga trycken (sug rent, töm kondens, bedöm sedering/smärta/compliance).<br>2. Om högre tryck är medicinskt motiverat: Höj **Övre tryckgräns** eller sänk inställd $V_T$. |
+| **Apné / Ingen patientansträngning**<br>*(Apnea / No patient effort)* | **Hög / Medel** | Patienten har inte triggat något andetag inom inställd apnétid (15–30 s) i PS/CPAP. Ventilatorn har växlat till **Reservventilation (Backup)**. | 1. Bedöm vakenhet/sederingsdjup (RASS) och nyligen givna opioid-/propofolbolusar.<br>2. Om patienten ska vila: Byt aktivt till kontrollerad mod (**PRVC** eller **PC**).<br>3. Om patienten är vaken men inte orkar trigga: Kontrollera triggerkänslighet och Auto-PEEP. |
+| **Läckage för högt (NIV)**<br>*(Leakage too high)* | **Medel (Gul)** | Masken sluter inte tätt mot ansiktet (t.ex. över näsrygg eller vid ventrikelsond). | Justera maskens läge och huvudband. Undvik att dra åt banden för hårt (trycksårsrisk) – lyft och omplacera maskkudden under pågående luftflöde. |
+| **Kontrollera slangar**<br>*(Check tubing)* | **Hög (Röd)** | Blockerad slang, felkopplad krets eller frånkopplad tryckmätning. | Kontrollera att inspirations- och expirationsslangar samt filter är fria från ocklusion (kontrollera särskilt våta filter vid nebulisering!). |
+| **Expirationskassett frånkopplad / Tekniskt fel** | **Hög (Röd)** | Expirationskassetten sitter inte korrekt nedtryckt i sitt fäste eller kondens/läkemedelsrester stör ultraljudssensorn. | Tryck ned expirationskassetten tills den klickar fast. Vid kvarstående larm eller synlig kontamination: Byt till en ren expirationskassett och kör kretstest. |
+| **Lågt gastryck (Luft / O₂)**<br>*(Gas supply pressure low)* | **Hög (Röd)** | Gasslangen är inte intryckt i vägguttaget eller centralgastrycket är < 2,0 bar. | Kontrollera snabbkopplingarna för **Air** och **O₂** i väggen/pendeln. (Obs: Servo-U kräver minst en högtrycksgas för att kunna ventilera!). |
+
+---
+
+## 8. Hygien, Rengöring & Byte av Expirationskassett
+
+### 8.1 Expirationskassett & Filterrutin
+- **Expirationsfilter:** Använd alltid ett högeffektivt bakterie-/virusfilter (och vattenfälla vid aktiv befuktning) framför expirationsintaget för att skydda expirationskassetten och förhindra kontamination av omgivningsluften.
+- **Byte av Expirationskassett:**
+  1. Byt expirationskassett **mellan varje patient**, vid **nebulisering utan skyddsfilter**, eller om larm/högt expirationsmotstånd uppstår.
+  2. Öppna spärren vid expirationsintaget, lyft rakt upp och ta ut kassetten.
+  3. Sätt i en ren, desinficerad kassett och tryck ned tills den klickar i lås.
+  4. **Viktigt:** Kör alltid ett **Patientkretstest (eller Förkontroll)** efter byte av expirationskassett!
+  5. Den använda kassetten skickas till diskdesinfektor/autoklav enligt avdelningens rutin.
+
+### 8.2 Avtorkning av Skärm & Patientenhet
+1. **Lås pekskärmen före avtorkning** (håll in låsikonen i menyn) eller sätt ventilatorn i Standby/avstängt läge.
+2. Torka utvändiga ytor på skärm, arm, vagn och patientenhet med luddfri duk fuktad med ytdesinfektionsmedel (t.ex. etanol/isopropanol 70 % eller väteperoxidbaserat medel).
+3. Låt aldrig vätska tränga in i modulfack eller kontakter.
+
+### 8.3 Säkerhetsföreskrifter vid Transport & MR
+- **Intrahospital transport:** Kontrollera före avfärd att minst **2 fulladdade batterier** sitter i ventilatorn, att beräknad kvarvarande batteritid på skärmen överstiger transporttiden med god marginal (minst 60 min), samt att **handventilationsblåsa (Rubens blåsa)** och full syrgastub medföljer sängen!
+- **MR-miljö:** Standard **Servo-U är MR-osäker (MR Unsafe)** och får **ALDRIG** tas in i MR-undersökningsrummet. Vid MR-undersökning används avdelningens dedikerade MR-kompatibla transportventilator.
+`
+  },
+  {
     id: "doc-resp-fp950",
     title: "Fisher & Paykel 950 Befuktare (F&P 950™) – Bruksanvisning & Klinisk Rutin",
     category: "Respiration",

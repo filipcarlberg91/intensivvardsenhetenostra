@@ -911,48 +911,79 @@ export const SERVO_U_DATA = {
       type: "Neuronal Styrning",
       isPrimary: false,
       description: "Styr ventilatorn direkt via elektrisk aktivitet i diafragma (Edi).",
-      mechanism: "Edi-kateter i esofagus mäter diafragmans aktionspotential och anpassar trycket i realtid.",
-      keySettings: "NAVA-nivå, PEEP, Triggersensor, Reservventilation.",
-      advantages: ["Överlägsen synkroni, förhindrar över- och underassistans."],
-      pitfalls: ["Kräver korrekt placerad Edi-kateter och intakt andningsdrive."]
+      mechanism: "Edi-kateter i esofagus mäter diafragmans aktionspotential (µV) och anpassar trycket i realtid (mål Edi-peak 5–15 µV).",
+      keySettings: "NAVA-nivå (0.5–2.0 cmH2O/µV), PEEP, Edi-trigger (0.5 µV), Reservventilation.",
+      advantages: ["Överlägsen synkroni vid både trigger och cykelavslut, förhindrar över- och underassistans."],
+      pitfalls: ["Kräver korrekt placerad Edi-kateter (verifieras i Edi-kateterpositioneringsvy) och intakt andningsdrive."]
+    },
+    {
+      id: "automode",
+      name: "Automode (PRVC ⇄ VS / PC ⇄ PS / VC ⇄ VS)",
+      type: "Interaktiv Övergångsmod",
+      isPrimary: false,
+      description: "Växlar automatiskt mellan kontrollerad och understödd spontanandning.",
+      mechanism: "När patienten triggar egna andetag växlar ventilatorn sömlöst till VS eller PS. Vid apné (7–12 s) återgår den till kontrollerad ventilation utan apnélarm.",
+      keySettings: "Aktiveras via Automode-reglaget i PRVC, PC eller VC. Trigger-timeout (7–12 s).",
+      advantages: ["Smidig övergång från uppvaknande till spontanandning och minskar onödiga apnélarm."],
+      pitfalls: ["Följ patientens andningsarbete (P0.1) så att patienten inte tröttas ut i VS/PS."]
+    },
+    {
+      id: "bivent-aprv",
+      name: "Bi-Vent / APRV (Airway Pressure Release Ventilation)",
+      type: "Tvåfasig Tryckmod",
+      isPrimary: false,
+      description: "Tidsstyrd växling mellan två trycknivåer (Phigh och Plow) med fri spontanandning.",
+      mechanism: "Håller lungan öppen på Phigh under Thigh och släpper kort ut CO2 under Tlow. Spontanandning möjlig på båda nivåerna.",
+      keySettings: "Phigh, Plow (PEEP), Thigh, Tlow, ev. Tryckunderstöd (PS) över Phigh/Plow.",
+      advantages: ["Effektiv alveolär rekrytering och bibehållen diafragmaaktivitet vid svår hypoxemi/ARDS."],
+      pitfalls: ["Kräver noggrann inställning av Tlow (0.4–0.8 s vid APRV) för att undvika avkollapsning eller extrem hyperkapni."]
     }
   ],
   diagnosticTools: [
     {
       name: "Inspiratorisk Paus (Platåtryck Pplat & Cstat)",
       type: "Diagnostiskt Manöver",
-      shortcut: "Insp Pause knapp (2–3 s)",
-      formula: "Cstat = Vt / (Pplat - PEEP)",
+      shortcut: "Insp. paus knapp (håll in 2–3 s)",
+      formula: "Cstat = Vt / (Pplat - PEEPtot)",
       procedure: "Håll 'Insp Pause' intryckt i 2–3 sekunder under slutinspiration.",
-      normalValue: "Pplat < 30 cmH2O | Cstat > 50 ml/cmH2O (vid ARDS ofta 20–35)",
-      clinicalMeaning: "Platåtrycket speglar det sanna alveolära trycket utan flödesresistans. Beräknar statisk compliance: Cstat = Vt / (Pplat - PEEP)."
+      normalValue: "Pplat < 30 cmH2O | Cstat 50–80 ml/cmH2O (vid ARDS ofta 20–35)",
+      clinicalMeaning: "Platåtrycket speglar det sanna alveolära trycket utan flödesresistans. Högt Ppeak men normalt Pplat = luftvägshinder (slem/bronkospasm)."
     },
     {
       name: "Expiratorisk Paus (Auto-PEEP & Total PEEP)",
       type: "Dynamisk Hyperinflation",
-      shortcut: "Exp Pause knapp (3–5 s)",
-      formula: "Auto-PEEP = Pexp_hold - PEEP_inställt",
+      shortcut: "Exp. paus knapp (håll in 3–5 s)",
+      formula: "Auto-PEEP = PEEPtot - PEEPinställt",
       procedure: "Håll 'Exp Pause' intryckt i 3–5 sekunder under slutexpiration.",
-      normalValue: "Auto-PEEP < 2 cmH2O (0 hos lungfriska)",
-      clinicalMeaning: "Mäter 'intrinsic PEEP' och air-trapping vid obstruktiva tillstånd (KOL/Astma). Hög Auto-PEEP ger cirkulationskollaps och barotrauma."
+      normalValue: "Auto-PEEP < 1–2 cmH2O (0 hos lungfriska)",
+      clinicalMeaning: "Mäter 'intrinsic PEEP' och air-trapping vid obstruktiva tillstånd (KOL/Astma). Åtgärd: Sänk AF, förläng expiration (I:E 1:3–1:4), höj inspirationsavslut i PS till 40–60%."
     },
     {
       name: "Drivtryck (Driving Pressure ΔP)",
-      type: "Lungskydsparameter",
-      shortcut: "Auto-beräknas kontinuerligt",
+      type: "Lungskyddsparameter",
+      shortcut: "Auto-beräknas kontinuerligt & i Servo Compass",
       formula: "ΔP = Platåtryck (Pplat) - Total PEEP",
       procedure: "Beräknas automatiskt: ΔP = Platåtryck (Pplat) minus Total PEEP.",
-      normalValue: "Målvärde ΔP < 14 cmH2O vid lungprotektiv ventilation",
-      clinicalMeaning: "Starkaste oberoende prediktorn för mortalitet vid ARDS (Amato et al., NEJM). Högt drivtryck kräver sänkt tidalvolym eller PEEP-optimering."
+      normalValue: "Målvärde ΔP < 14–15 cmH2O vid lungprotektiv ventilation",
+      clinicalMeaning: "Starkaste oberoende prediktorn för mortalitet vid ARDS. Högt drivtryck kräver sänkt tidalvolym (4–5 ml/kg PBW) eller PEEP-optimering."
     },
     {
-      name: "O2-Boost (Preoxygenering)",
-      type: "Säkerhetsfunktion",
-      shortcut: "Snabbknapp 'O2-Boost'",
-      formula: "100% FiO2 i 120 sekunder med automatisk återgång",
-      procedure: "Tryck på O2-Boost knappen på skärmen (levererar 100% O2 i 2 minuter).",
-      normalValue: "100% FiO2 i 120 sekunder med automatisk återgång",
-      clinicalMeaning: "Används inför endotrakeal sugning, bronkoskopi, lägesändring eller vändning till bukläge."
+      name: "P0.1 (Ocklusionstryck vid 100 ms)",
+      type: "Andningsdrive & Belastning",
+      shortcut: "Visas kontinuerligt vid spontanandning",
+      formula: "Tryckfall under första 0,1 s av inandning",
+      procedure: "Avläs P0.1 bland numeriska värden under pågående triggad andning.",
+      normalValue: "Målintervall på IVA: 1,5 – 3,5 cmH2O",
+      clinicalMeaning: "P0.1 < 1,5 cmH2O = överassistans/översedering (risk för diafragmaatrofi). P0.1 > 3,5–4,0 cmH2O = hög andningsdrive/lufthunger och risk för utmattning (P-SILI)."
+    },
+    {
+      name: "O2-Boost & Sugstöd (Suction Support)",
+      type: "Pre- & Postoxygenering",
+      shortcut: "Snabbknapp 'O2-Boost' el. 'Frånkoppling/Sugning'",
+      formula: "100% FiO2 i 60 s (O2-Boost) / 120 s före + 60 s efter (Sugstöd)",
+      procedure: "Tryck på O2-Boost (1 min 100% O2) eller Frånkoppling/Sugning vid öppen sugning.",
+      normalValue: "Automatisk larmpaus vid frånkoppling och automatisk återgång av FiO2",
+      clinicalMeaning: "Förhindrar hypoxemi vid endotrakeal sugning, bronkoskopi, lägesändring eller vändning till bukläge."
     }
   ],
   alarmsTroubleshooting: [
