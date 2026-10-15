@@ -1,0 +1,6634 @@
+/* ==========================================================================
+   IVA Dokumenthub - Modern Medicinsk Stilmall (Intensivvård)
+   ========================================================================== */
+
+:root {
+  --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+  
+  /* Huvudfärger - IVA Kliniskt tema */
+  --bg-app: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --border-subtle: #e2e8f0;
+  --border-focus: #0284c7;
+  
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+  
+  /* Kategori-färgpalett */
+  --color-resp: #0284c7;
+  --color-resp-bg: #e0f2fe;
+  --color-resp-border: #bae6fd;
+  
+  --color-circ: #e11d48;
+  --color-circ-bg: #ffe4e6;
+  --color-circ-border: #fecdd3;
+  
+  --color-nutr: #d97706;
+  --color-nutr-bg: #fef3c7;
+  --color-nutr-border: #fde68a;
+  
+  --color-crrt: #7c3aed;
+  --color-crrt-bg: #f3e8ff;
+  --color-crrt-border: #ddd6fe;
+  
+  --color-elim: #059669;
+  --color-elim-bg: #d1fae5;
+  --color-elim-border: #a7f3d0;
+  
+  --color-omv: #0d9488;
+  --color-omv-bg: #ccfbf1;
+  --color-omv-border: #99f6e4;
+  
+  --color-anh: #4f46e5;
+  --color-anh-bg: #e0e7ff;
+  --color-anh-border: #c7d2fe;
+  
+  /* Prioritetsfärger */
+  --priority-akut-bg: #fee2e2;
+  --priority-akut-text: #b91c1c;
+  --priority-akut-border: #fca5a5;
+  
+  --priority-riktlinje-bg: #dbeafe;
+  --priority-riktlinje-text: #1d4ed8;
+  --priority-riktlinje-border: #93c5fd;
+  
+  --priority-rutin-bg: #f1f5f9;
+  --priority-rutin-text: #334155;
+  --priority-rutin-border: #cbd5e1;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-floating: 0 20px 25px -5px rgb(15 23 42 / 0.18), 0 8px 10px -6px rgb(15 23 42 / 0.12);
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  
+  --floating-menu-height: 64px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  padding-bottom: 80px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   Topphuvud (Klinisk Navigering & Global Kontroll)
+   ========================================================================== */
+
+/* ==========================================================================
+   Topphuvud (Klinisk Navigering & Global Kontroll)
+   ========================================================================== */
+
+html {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  touch-action: pan-y;
+}
+
+.app-header {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.08);
+}
+
+/* Rad 1: Huvudrad (Brand, Sök, AI, Notiser, Profil) */
+.header-main-bar {
+  background: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.header-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0.55rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.brand-logo-icon {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(2, 132, 199, 0.28);
+  flex-shrink: 0;
+}
+
+.brand-titles h1 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  line-height: 1.2;
+}
+
+.hospital-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.12rem 0.45rem;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.brand-titles p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Sökfält i sidhuvudet */
+.global-search-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f1f5f9;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  padding: 0.38rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 200px;
+}
+
+.global-search-btn:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  color: var(--text-main);
+}
+
+.global-search-btn kbd {
+  margin-left: auto;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 0.08rem 0.35rem;
+  font-size: 0.7rem;
+  font-family: inherit;
+  color: #64748b;
+}
+
+/* ✨ GEMINI AI KNAPP */
+.btn-gemini-ai {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: #ffffff;
+  border: none;
+  padding: 0.42rem 0.9rem;
+  border-radius: var(--radius-full);
+  font-size: 0.825rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(124, 58, 237, 0.3);
+  position: relative;
+  white-space: nowrap;
+}
+
+.btn-gemini-ai:hover {
+  background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(124, 58, 237, 0.4);
+}
+
+.btn-gemini-ai:active {
+  transform: translateY(0);
+}
+
+.ai-sparkle-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #38bdf8;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #38bdf8;
+  animation: pulseAiDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseAiDot {
+  0%, 100% { opacity: 0.6; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+/* Kompakta knappar */
+.btn-upload-primary {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  padding: 0.42rem 0.85rem;
+  border-radius: var(--radius-md);
+  font-size: 0.825rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(2, 132, 199, 0.3);
+  white-space: nowrap;
+}
+
+.btn-upload-primary:hover {
+  background: #0369a1;
+  transform: translateY(-1px);
+}
+
+.btn-header-secondary {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  padding: 0.42rem 0.7rem;
+  border-radius: var(--radius-md);
+  font-size: 0.825rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-header-secondary:hover {
+  background: #f1f5f9;
+  color: var(--text-main);
+}
+
+.btn-icon-compact {
+  padding: 0.42rem 0.55rem;
+}
+
+.btn-compact-text {
+  font-size: 0.78rem;
+}
+
+/* ==========================================================================
+   Rad 2: Klinisk Sektionsnavigering (Kompakta Pills / Flikar)
+   ========================================================================== */
+
+.clinical-subnav-strip {
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+  width: 100%;
+}
+
+.subnav-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0.35rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.subnav-container::-webkit-scrollbar {
+  display: none;
+}
+
+.subnav-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.subnav-pill-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.subnav-pill-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.subnav-pill-title {
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1;
+}
+
+.subnav-pill-desc {
+  font-size: 0.7rem;
+  color: #64748b;
+  font-weight: 400;
+  padding-left: 0.35rem;
+  border-left: 1px solid #e2e8f0;
+  line-height: 1;
+}
+
+/* Aktiva statusar för varje sektion */
+.subnav-pill-btn.active {
+  background: #0284c7;
+  border-color: #0284c7;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+  color: #ffffff !important;
+}
+
+.subnav-pill-btn.active .subnav-pill-icon {
+  color: #ffffff !important;
+}
+
+.subnav-pill-btn.active .subnav-pill-title {
+  color: #ffffff !important;
+}
+
+.subnav-pill-btn.active .subnav-pill-desc {
+  color: rgba(255, 255, 255, 0.85) !important;
+  border-left-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Specifika färger vid aktiv kategori */
+
+.subnav-pill-btn[data-category="HOME"].active {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+.subnav-pill-btn[data-category="EQUIPMENT"].active {
+  background: #0891b2 !important;
+  border-color: #0891b2 !important;
+  color: #ffffff !important;
+}
+
+.subnav-pill-btn[data-category="DISEASES"].active {
+  background: #e11d48;
+  border-color: #e11d48;
+}
+
+.subnav-pill-btn[data-category="ACID_BASE"].active {
+  background: #7c3aed;
+  border-color: #7c3aed;
+}
+
+.subnav-pill-btn[data-category="FLUID_BALANCE"].active {
+  background: #059669;
+  border-color: #059669;
+}
+
+.subnav-pill-btn[data-category="NUTRITION_CALC"].active {
+  background: #d97706;
+  border-color: #d97706;
+}
+
+.subnav-pill-btn[data-category="DRUGS"].active {
+  background: #0284c7;
+  border-color: #0284c7;
+}
+
+.subnav-pill-btn[data-category="Respiration"].active {
+  background: #334155;
+  border-color: #334155;
+}
+
+.subnav-pill-btn[data-category="MY_PAGE"].active {
+  background: #b45309;
+  border-color: #b45309;
+}
+
+.subnav-badge {
+  background: #eab308;
+  color: #78350f;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.1rem 0.35rem;
+  border-radius: var(--radius-full);
+  margin-left: 0.2rem;
+}
+
+.subnav-pill-btn.active .subnav-badge {
+  background: #ffffff;
+  color: #b45309;
+}
+
+.btn-header-secondary:hover {
+  background: #f1f5f9;
+  color: var(--text-main);
+}
+
+/* Google Login & Användarprofil */
+.btn-google-login {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #ffffff;
+  border: 1px solid #dadce0;
+  color: #3c4043;
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.08);
+}
+
+.btn-google-login:hover {
+  background: #f8fafd;
+  border-color: #c2d7fb;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.15);
+  transform: translateY(-1px);
+}
+
+.user-profile-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.75rem;
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.user-profile-badge:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.user-avatar-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.user-avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-name-text {
+  font-weight: 600;
+  color: #1e293b;
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-user-logout {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.btn-user-logout:hover {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+/* Snabbval av Google-konton */
+.google-account-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  background: #ffffff;
+  transition: all 0.15s;
+}
+
+.google-account-choice:hover {
+  border-color: #4285f4;
+  background: #f8fafd;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Huvudinnehåll och Sidor
+   ========================================================================== */
+
+.main-content {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Kategori Sido-huvud (Banner) */
+.page-hero {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--theme-color, #0284c7);
+}
+
+.hero-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.hero-info {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.hero-icon-bubble {
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--theme-color, #0284c7);
+  background: var(--theme-bg, #e0f2fe);
+  border: 1px solid var(--theme-border, #bae6fd);
+  flex-shrink: 0;
+}
+
+.hero-icon-bubble svg {
+  width: 32px;
+  height: 32px;
+}
+
+.hero-text h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero-count-pill {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.hero-text p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+  max-width: 680px;
+}
+
+/* Sökning & Verktygsfält för aktuell sida */
+.page-toolbar {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.page-search-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 480px;
+}
+
+.page-search-icon {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-subtle);
+  pointer-events: none;
+  display: flex;
+}
+
+.page-search-input {
+  width: 100%;
+  padding: 0.6rem 2.2rem 0.6rem 2.5rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--text-main);
+  background: #ffffff;
+  transition: all 0.2s;
+}
+
+.page-search-input:focus {
+  outline: none;
+  border-color: var(--theme-color, #0284c7);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.page-search-clear {
+  position: absolute;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-subtle);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: var(--radius-full);
+  display: none;
+}
+
+.page-search-clear:hover {
+  color: var(--text-main);
+  background: #e2e8f0;
+}
+
+.toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.sort-select {
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: #334155;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.sort-select:focus {
+  outline: none;
+  border-color: var(--theme-color, #0284c7);
+}
+
+.view-toggle {
+  display: flex;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.view-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.view-btn.active {
+  background: #f1f5f9;
+  color: var(--theme-color, #0284c7);
+  font-weight: 600;
+}
+
+/* Favoritknapp & Stjärna */
+.btn-card-action.favorite {
+  color: #94a3b8;
+}
+
+.btn-card-action.favorite:hover {
+  color: #eab308;
+  background: #fef9c3;
+}
+
+.btn-card-action.favorite.is-active {
+  color: #eab308;
+  background: #fef9c3;
+  border-color: #fef08a;
+}
+
+/* ==========================================================================
+   Dokument-rutnät (Grid View) & Kortvy
+   ========================================================================== */
+
+.documents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.doc-card {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.doc-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #cbd5e1;
+}
+
+.doc-card.is-pinned {
+  border-color: #fde68a;
+  background: linear-gradient(180deg, #fffbeb 0%, #ffffff 40px);
+}
+
+.doc-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.doc-type-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: #fee2e2;
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px rgba(220, 38, 38, 0.1);
+}
+
+.doc-type-icon.is-doc {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.doc-badges-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.badge-priority {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+}
+
+.badge-priority.Akut {
+  background: var(--priority-akut-bg);
+  color: var(--priority-akut-text);
+  border-color: var(--priority-akut-border);
+}
+
+.badge-priority.Riktlinje {
+  background: var(--priority-riktlinje-bg);
+  color: var(--priority-riktlinje-text);
+  border-color: var(--priority-riktlinje-border);
+}
+
+.badge-priority.Rutin {
+  background: var(--priority-rutin-bg);
+  color: var(--priority-rutin-text);
+  border-color: var(--priority-rutin-border);
+}
+
+.badge-category {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: var(--cat-bg, #f1f5f9);
+  color: var(--cat-color, #475569);
+  border: 1px solid var(--cat-border, #e2e8f0);
+}
+
+.pin-indicator {
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  title: "Nålat dokument";
+}
+
+.doc-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.doc-title:hover {
+  color: #0284c7;
+}
+
+.doc-description {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin-bottom: 0.85rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.doc-tags-list {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.doc-tag-item {
+  font-size: 0.72rem;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+}
+
+.doc-card-footer {
+  margin-top: auto;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.doc-meta {
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.doc-meta span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.btn-card-action {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  padding: 0.4rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.btn-card-action:hover {
+  background: #f1f5f9;
+  color: var(--text-main);
+  border-color: #cbd5e1;
+}
+
+.btn-open-doc {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(2, 132, 199, 0.2);
+}
+
+.btn-open-doc:hover {
+  background: #0369a1;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(2, 132, 199, 0.3);
+}
+
+/* ==========================================================================
+   Listvy (Kompakt Lista)
+   ========================================================================== */
+
+.documents-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.doc-list-item {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: all 0.15s;
+}
+
+.doc-list-item:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.doc-list-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.doc-list-title-wrap {
+  min-width: 0;
+}
+
+.doc-list-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.doc-list-title:hover {
+  color: #0284c7;
+}
+
+.doc-list-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ==========================================================================
+   Tomt resultat & Inga dokument
+   ========================================================================== */
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: var(--radius-lg);
+  margin-top: 1rem;
+}
+
+.empty-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1rem;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border-radius: var(--radius-full);
+}
+
+.empty-state h3 {
+  font-size: 1.15rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  max-width: 420px;
+  margin: 0 auto 1.25rem;
+}
+
+/* ==========================================================================
+   FAB (Floating Action Button) & Utfällbar Navigationsmeny
+   Sparar vertikal skärmyta och ger en modern mobilapp-känsla
+   ========================================================================== */
+
+.fab-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 950;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.fab-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 940;
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.fab-container.is-open .fab-backdrop {
+  display: block !important;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.fab-main-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border: 2.5px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 10px 25px -3px rgba(2, 132, 199, 0.5), 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 955;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  outline: none;
+}
+
+.fab-main-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 14px 28px -4px rgba(2, 132, 199, 0.65), 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+.fab-main-btn * {
+  pointer-events: none;
+}
+
+.fab-icon-menu,
+.fab-icon-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.fab-icon-close {
+  display: none;
+}
+
+.fab-container.is-open .fab-icon-menu {
+  display: none;
+}
+
+.fab-container.is-open .fab-icon-close {
+  display: flex;
+}
+
+.fab-container.is-open .fab-main-btn {
+  background: #0f172a;
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.fab-badge-pill {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #eab308;
+  color: #713f12;
+  font-size: 0.68rem;
+  font-weight: 800;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.2s;
+}
+
+.fab-container.is-open .fab-badge-pill {
+  opacity: 0;
+}
+
+/* Utfällbar meny-panel */
+.fab-menu-panel {
+  position: absolute;
+  bottom: 74px;
+  right: 0;
+  width: 330px;
+  max-height: min(620px, calc(100vh - 105px));
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  padding: 1.1rem;
+  z-index: 950;
+  display: none;
+  flex-direction: column;
+  gap: 0.85rem;
+  transform: scale(0.85) translateY(20px);
+  transform-origin: bottom right;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  overflow-y: auto;
+}
+
+.fab-menu-panel::-webkit-scrollbar {
+  width: 5px;
+}
+.fab-menu-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+.fab-menu-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+}
+
+.fab-container.is-open .fab-menu-panel {
+  display: flex !important;
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Panel Header */
+.fab-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.65rem;
+}
+
+.fab-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+}
+
+.fab-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.fab-mini-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fab-mini-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.08);
+}
+
+.fab-mini-btn.primary {
+  background: #0284c7;
+}
+
+.fab-mini-btn.primary:hover {
+  background: #0369a1;
+}
+
+/* Min Sida i FAB */
+.fab-mypage-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, rgba(202, 138, 4, 0.25) 0%, rgba(234, 179, 8, 0.12) 100%);
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  border-radius: 14px;
+  padding: 0.75rem 0.9rem;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.fab-mypage-card:hover {
+  background: linear-gradient(135deg, rgba(202, 138, 4, 0.35) 0%, rgba(234, 179, 8, 0.22) 100%);
+  border-color: rgba(250, 204, 21, 0.6);
+  transform: translateY(-1px);
+}
+
+.fab-mypage-card.active {
+  background: #eab308;
+  color: #713f12;
+  border-color: #facc15;
+  box-shadow: 0 4px 14px rgba(234, 179, 8, 0.3);
+}
+
+.fab-mypage-card.active .fab-mypage-title {
+  color: #713f12;
+}
+
+.fab-mypage-card.active .fab-mypage-sub {
+  color: #854d0e;
+}
+
+.fab-mypage-card.active .fab-badge {
+  background: #713f12;
+  color: #fef08a;
+}
+
+.fab-mypage-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(234, 179, 8, 0.25);
+  color: #eab308;
+  flex-shrink: 0;
+}
+
+.fab-mypage-card.active .fab-mypage-icon {
+  background: rgba(113, 63, 18, 0.15);
+  color: #713f12;
+}
+
+.fab-mypage-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.fab-mypage-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fef08a;
+  line-height: 1.2;
+}
+
+.fab-mypage-sub {
+  font-size: 0.75rem;
+  color: #cbd5e1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Sektionsetikett */
+.fab-section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #94a3b8;
+  margin-top: 0.1rem;
+}
+
+/* Rutnät med de 7 medicinska kategorierna */
+.fab-category-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+}
+
+.fab-cat-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.7rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.fab-cat-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.fab-cat-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  border-color: #ffffff;
+}
+
+.fab-cat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.fab-cat-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fab-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #f1f5f9;
+  flex-shrink: 0;
+}
+
+.fab-cat-btn.active .fab-badge {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* Verktyg & Översikt i FAB */
+.fab-tools-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+}
+
+/* ==========================================================================
+   MIN SIDA (Personlig Dashboard & Sparade Favoriter)
+   ========================================================================== */
+
+.mypage-hero-card {
+  background: linear-gradient(135deg, #ffffff 0%, #fefce8 100%);
+  border: 1px solid #fef08a;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.mypage-profile-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.mypage-user-identity {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mypage-avatar-large {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(202, 138, 4, 0.3);
+  border: 2px solid #ffffff;
+  flex-shrink: 0;
+}
+
+.mypage-user-details h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.2rem;
+}
+
+.mypage-user-email {
+  font-size: 0.85rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.mypage-sync-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  background: #dcfce7;
+  color: #166534;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.mypage-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+.mypage-stat-card {
+  background: #ffffff;
+  border: 1px solid #fef08a;
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mypage-stat-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #fef9c3;
+  color: #ca8a04;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.mypage-stat-num {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.mypage-stat-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* Sökning & Filter på Min Sida */
+.mypage-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+.mypage-filter-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.mypage-pill-btn {
+  padding: 0.35rem 0.8rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border-subtle);
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.mypage-pill-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.mypage-pill-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+
+/* ==========================================================================
+   Modaler (Global Sök, Dokumentvisare, Ladda upp, Redigera)
+   ========================================================================== */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  overflow-y: auto;
+}
+
+.modal-backdrop.is-open {
+  display: flex !important;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-dialog {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-floating);
+  width: 100%;
+  max-width: 650px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.96);
+  transition: transform 0.2s ease;
+  margin: auto;
+}
+
+.modal-backdrop.is-open .modal-dialog {
+  transform: scale(1);
+}
+
+.modal-dialog.large {
+  max-width: 1100px;
+  height: 90vh;
+}
+
+/* Kritiskt för scroll: form måste vara flex-container som krymper med min-height: 0 */
+.modal-dialog form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  flex-shrink: 0;
+}
+
+.modal-header h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+}
+
+.modal-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.modal-body {
+  padding: 1.25rem 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  overscroll-behavior: contain;
+}
+
+/* Smidig och synlig rullningslist för modaler */
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.modal-footer {
+  padding: 0.9rem 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  background: #f8fafc;
+  flex-shrink: 0;
+}
+
+/* Formulärelement */
+.form-group {
+  margin-bottom: 1.1rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.35rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--text-main);
+  background: #ffffff;
+  transition: border-color 0.15s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+/* Kompakt och funktionell Drag and Drop filuppladdningszon */
+.dropzone {
+  border: 2px dashed #94a3b8;
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1rem;
+  text-align: center;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.dropzone:hover,
+.dropzone.dragover {
+  border-color: #0284c7;
+  background: #e0f2fe;
+}
+
+.dropzone-icon {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto 0.4rem;
+  color: #0284c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropzone-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.dropzone-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.file-selected-pill {
+  margin-top: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+}
+
+/* ==========================================================================
+   Global Sök-modal (All Pages Search)
+   ========================================================================== */
+
+.global-search-dialog {
+  max-width: 720px;
+}
+
+.search-input-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.global-search-input {
+  width: 100%;
+  border: none;
+  font-size: 1.15rem;
+  font-family: inherit;
+  color: var(--text-main);
+  outline: none;
+}
+
+.global-search-results-list {
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.search-result-item {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.search-result-item:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.search-result-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.search-result-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.25rem;
+}
+
+.search-result-desc {
+  font-size: 0.825rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Dokumentvisare (PDF & Riktlinje Viewer)
+   ========================================================================== */
+
+.viewer-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.viewer-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f1f5f9;
+}
+
+.viewer-content-frame {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #ffffff;
+}
+
+.markdown-doc-view {
+  padding: 2.5rem 3rem;
+  background: #ffffff;
+  color: #1e293b;
+  max-width: 860px;
+  margin: 1.5rem auto;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  line-height: 1.7;
+}
+
+.markdown-doc-view h1 {
+  font-size: 1.6rem;
+  color: #0f172a;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.markdown-doc-view h2 {
+  font-size: 1.25rem;
+  color: #0284c7;
+  margin-top: 1.75rem;
+  margin-bottom: 0.65rem;
+}
+
+.markdown-doc-view p,
+.markdown-doc-view ul,
+.markdown-doc-view table {
+  margin-bottom: 1rem;
+}
+
+.markdown-doc-view table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.markdown-doc-view th,
+.markdown-doc-view td {
+  border: 1px solid #cbd5e1;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.markdown-doc-view th {
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+/* Toast Notiser */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  animation: toastIn 0.25s ease;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Utskriftslayout */
+@media print {
+  .app-header,
+  .fab-container,
+  .floating-menu-container,
+  .page-toolbar,
+  .btn-card-action,
+  .modal-header,
+  .modal-footer {
+    display: none !important;
+  }
+  body {
+    padding: 0;
+    background: #ffffff;
+  }
+}
+
+/* Responsive för surfplattor och skärmar */
+@media (max-width: 1024px) {
+  .fab-menu-panel {
+    max-width: 90vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .documents-grid {
+    grid-template-columns: 1fr;
+  }
+  .fab-container {
+    bottom: 16px;
+    right: 16px;
+  }
+  .fab-menu-panel {
+    width: calc(100vw - 24px);
+    right: 0;
+    bottom: 72px;
+  }
+}
+
+/* ==========================================================================
+   Läkemedel, Doskalkylator & Blandbarhet (IVA Modul)
+   ========================================================================== */
+
+.drug-module-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Fliknavigering */
+.drug-tab-nav {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 2px solid var(--border-subtle);
+  padding-bottom: 0.5rem;
+  overflow-x: auto;
+}
+
+.drug-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.drug-tab-btn:hover {
+  background: #f1f5f9;
+  color: var(--text-main);
+}
+
+.drug-tab-btn.active {
+  background: #e0f2fe;
+  color: #0369a1;
+  box-shadow: 0 1px 2px rgba(2, 132, 199, 0.15);
+}
+
+/* Kalkylatorsektion */
+.calc-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .calc-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calc-card {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.calc-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.weight-quick-row {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.quick-weight-btn {
+  background: #f1f5f9;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.quick-weight-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.quick-weight-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+}
+
+/* Resultatkort för kalkylator */
+.calc-result-box {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #ffffff;
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 280px;
+}
+
+.calc-result-header {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+
+.calc-big-value {
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #38bdf8;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.calc-big-unit {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.calc-info-pill {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  color: #e2e8f0;
+  line-height: 1.45;
+  margin-top: auto;
+}
+
+/* Läkemedelsregister / Kort */
+.drug-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.drug-card {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.35rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.drug-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #cbd5e1;
+}
+
+.drug-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.drug-card-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.drug-card-trade {
+  font-size: 0.825rem;
+  color: var(--text-muted);
+}
+
+.drug-spec-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+  background: #f8fafc;
+  padding: 0.75rem 0.95rem;
+  border-radius: var(--radius-md);
+  border: 1px solid #f1f5f9;
+}
+
+.drug-spec-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.drug-spec-label {
+  font-weight: 600;
+  color: #475569;
+}
+
+.drug-spec-value {
+  color: #0f172a;
+  text-align: right;
+  font-weight: 500;
+}
+
+.drug-recipe-box {
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.95rem;
+  font-size: 0.85rem;
+  color: #1e40af;
+  line-height: 1.45;
+}
+
+/* Blandbarhet i CVK */
+.compat-tester-card {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.compat-selects-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+
+@media (max-width: 650px) {
+  .compat-selects-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.compat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.compat-badge.YES {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.compat-badge.NO {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+.compat-badge.CAUTION {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.compat-result-card {
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-top: 1rem;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.compat-result-card.YES {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.compat-result-card.NO {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.compat-result-card.CAUTION {
+  background: #fffbeb;
+  border-color: #fef3c7;
+}
+
+/* CVK Skänkelguide */
+.cvc-lumina-guide {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.cvc-lumen-card {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  padding: 1.25rem;
+  position: relative;
+  border-top-width: 4px;
+}
+
+.cvc-lumen-card.distal {
+  border-top-color: #854d0e; /* Brun */
+}
+
+.cvc-lumen-card.medial {
+  border-top-color: #0284c7; /* Blå */
+}
+
+.cvc-lumen-card.proximal {
+  border-top-color: #64748b; /* Vit/Ljus */
+}
+
+/* ==========================================================================
+   Notification Center / Notisklocka & Dropdown
+   ========================================================================== */
+
+.notification-center-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-notification-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-notification-trigger:hover,
+.btn-notification-trigger.active {
+  background: #f1f5f9;
+  color: var(--text-main);
+  border-color: #cbd5e1;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  animation: notifPulse 2s infinite;
+}
+
+@keyframes notifPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 380px;
+  max-width: calc(100vw - 24px);
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.15), 0 6px 12px -4px rgba(0, 0, 0, 0.08);
+  display: none;
+  flex-direction: column;
+  z-index: 1050;
+  overflow: hidden;
+}
+
+.notification-dropdown.is-open {
+  display: flex;
+  animation: notifDropdownIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes notifDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.notification-dropdown-header {
+  padding: 0.85rem 1rem;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notification-dropdown-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.notif-count-tag {
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+}
+
+.btn-notif-action {
+  background: transparent;
+  border: none;
+  color: #0284c7;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+}
+
+.btn-notif-action:hover {
+  background: #e0f2fe;
+}
+
+/* Systemnotiser Banner */
+.notification-permission-banner {
+  padding: 0.65rem 1rem;
+  background: #f0fdf4;
+  border-bottom: 1px solid #dcfce7;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: #166534;
+}
+
+.notification-permission-banner.blocked {
+  background: #fef2f2;
+  border-color: #fee2e2;
+  color: #991b1b;
+}
+
+.notification-permission-banner.prompt {
+  background: #eff6ff;
+  border-color: #dbeafe;
+  color: #1e40af;
+}
+
+.btn-enable-system-notif {
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.btn-enable-system-notif:hover {
+  background: #0369a1;
+}
+
+.notification-dropdown-list {
+  max-height: 380px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-item {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  position: relative;
+  text-align: left;
+  background: #ffffff;
+}
+
+.notification-item:hover {
+  background: #f8fafc;
+}
+
+.notification-item.unread {
+  background: #f0f9ff;
+}
+
+.notification-item.unread:hover {
+  background: #e0f2fe;
+}
+
+.notif-item-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notif-item-icon.upload {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.notif-item-icon.edit {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.notif-item-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-item-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.3;
+  margin-bottom: 0.2rem;
+  word-break: break-word;
+}
+
+.notif-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.notif-item-category {
+  display: inline-block;
+  font-weight: 600;
+  padding: 0.05rem 0.4rem;
+  border-radius: 4px;
+  background: #f1f5f9;
+}
+
+.notif-item-time {
+  color: var(--text-subtle);
+}
+
+.notif-unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0284c7;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.notification-empty {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notification-empty svg {
+  color: #cbd5e1;
+  width: 36px;
+  height: 36px;
+}
+
+.notification-dropdown-footer {
+  padding: 0.65rem 1rem;
+  background: #f8fafc;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-clear-notifs {
+  background: transparent;
+  border: none;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.btn-clear-notifs:hover {
+  color: #ef4444;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .notification-dropdown {
+    position: fixed;
+    top: 60px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-width: none;
+  }
+}
+
+/* ==========================================================================
+   Behörigheter, Roller & Testläge (Simulera Läsbehörighet)
+   ========================================================================== */
+
+.simulate-banner {
+  background: #fef3c7;
+  border-bottom: 2px solid #f59e0b;
+  color: #92400e;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.84rem;
+  position: sticky;
+  top: 64px;
+  z-index: 990;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15);
+}
+
+.simulate-banner-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.btn-exit-simulate {
+  background: #b45309;
+  color: #ffffff;
+  border: none;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.btn-exit-simulate:hover {
+  background: #92400e;
+}
+
+/* Roll-taggar */
+.user-role-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+
+.user-role-tag.owner {
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  color: #b45309;
+}
+
+.user-role-tag.editor {
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+}
+
+.user-role-tag.reader {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+/* Modal Behörigheter */
+.permissions-dialog {
+  max-width: 600px;
+}
+
+.permissions-header-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  background: #e0f2fe;
+  color: #0284c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.permissions-info-alert {
+  padding: 0.85rem 1rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+  color: #1e40af;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  line-height: 1.45;
+  margin-bottom: 1.25rem;
+}
+
+.permissions-info-alert svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.invite-card {
+  padding: 1.15rem;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.invite-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.authorized-editors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.authorized-editor-item {
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  transition: all 0.15s;
+}
+
+.authorized-editor-item:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.editor-info-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.editor-avatar-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.editor-details {
+  min-width: 0;
+}
+
+.editor-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editor-email {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editor-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.btn-revoke-editor {
+  background: transparent;
+  border: 1px solid #fee2e2;
+  color: #dc2626;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-revoke-editor:hover {
+  background: #fef2f2;
+  border-color: #fca5a5;
+}
+
+.simulate-toggle-card {
+  margin-top: 1.5rem;
+  padding: 0.95rem 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .invite-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .simulate-toggle-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ==========================================================================
+   KLINISKA MODULER: SJUKDOMSTILLSTÅND, SYRA-BAS, VÄTSKOR & NUTRITION
+   ========================================================================== */
+
+/* 1. Sjukdomstillstånd på IVA */
+.disease-nav-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  scrollbar-width: thin;
+}
+
+.disease-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.disease-pill-btn:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.disease-pill-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+.disease-card {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.disease-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: #cbd5e1;
+}
+
+.disease-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.disease-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.disease-icon-bubble {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.disease-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.disease-subtype-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.disease-subtype-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.disease-subtype-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.clinical-section-block {
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: #334155;
+}
+
+.clinical-section-label {
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.action-steps-box {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-left: 3.5px solid #0284c7;
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.9rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #0f172a;
+  white-space: pre-line;
+}
+
+/* 2. Syra-Bas Balans & Blodgaskalkylator */
+.preset-chips-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.preset-chip-btn {
+  padding: 0.35rem 0.75rem;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.preset-chip-btn:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.bloodgas-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .bloodgas-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calc-panel {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.calc-inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.calc-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.calc-field-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calc-field-unit {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.calc-field-input {
+  padding: 0.5rem 0.75rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+  background: #ffffff;
+  outline: none;
+  transition: all 0.15s;
+}
+
+.calc-field-input:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+.diagnosis-hero-box {
+  padding: 1.25rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.diagnosis-badge-large {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.diagnosis-subtext {
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.ph-gauge-bar {
+  height: 10px;
+  border-radius: 9999px;
+  background: linear-gradient(to right, #dc2626 0%, #f59e0b 25%, #16a34a 45%, #16a34a 55%, #0284c7 75%, #7c3aed 100%);
+  position: relative;
+  margin: 0.75rem 0 1.25rem;
+}
+
+.ph-gauge-marker {
+  position: absolute;
+  top: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #0f172a;
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transform: translateX(-50%);
+  transition: left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.calc-metric-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.metric-card-mini {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+}
+
+.metric-mini-title {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 0.2rem;
+}
+
+.metric-mini-val {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.metric-mini-sub {
+  font-size: 0.75rem;
+  color: #475569;
+  margin-top: 0.2rem;
+}
+
+/* 3. Vätskebalans & Vätsketyper */
+.fluids-table-card {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.5rem;
+}
+
+.fluids-table-card table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.fluids-table-card th {
+  background: #f8fafc;
+  padding: 0.85rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #475569;
+  border-bottom: 1.5px solid #e2e8f0;
+  text-align: left;
+}
+
+.fluids-table-card td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.85rem;
+  color: #1e293b;
+}
+
+.fluids-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.fluid-detail-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.fluid-pros-list, .fluid-cons-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.fluid-pros-list li {
+  font-size: 0.82rem;
+  color: #166534;
+  display: flex;
+  gap: 0.5rem;
+  line-height: 1.4;
+}
+
+.fluid-cons-list li {
+  font-size: 0.82rem;
+  color: #991b1b;
+  display: flex;
+  gap: 0.5rem;
+  line-height: 1.4;
+}
+
+/* 4. Nutritionskalkylator */
+.nutrition-result-bigbox {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1.5px solid #f59e0b;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.nutrition-pump-rate {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #92400e;
+  line-height: 1;
+  margin: 0.5rem 0;
+}
+
+.nutrition-pump-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #78350f;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.deduction-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.65rem;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Gemini IVA-Assistent (Chat Drawer, Meddelanden & Inställningar)
+   ========================================================================== */
+
+.gemini-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.gemini-drawer-backdrop.active {
+  display: block !important;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gemini-chat-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 520px;
+  max-width: 100vw;
+  background: #ffffff;
+  box-shadow: -10px 0 35px rgba(15, 23, 42, 0.2);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gemini-chat-drawer.active {
+  transform: translateX(0);
+}
+
+/* Header */
+.gemini-drawer-header {
+  padding: 0.9rem 1.25rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.gemini-header-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.gemini-ai-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(124, 58, 237, 0.4);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.gemini-ai-avatar.small {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+}
+
+.gemini-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gemini-header-title strong {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.gemini-header-sub {
+  font-size: 0.72rem;
+  color: #cbd5e1;
+  margin-top: 0.1rem;
+}
+
+.gemini-status-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.12rem 0.45rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.gemini-status-pill.online {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.4);
+}
+
+.gemini-status-pill.offline {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.gemini-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-gemini-tool {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #cbd5e1;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-gemini-tool:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.btn-gemini-close {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #cbd5e1;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-left: 0.25rem;
+}
+
+.btn-gemini-close:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+/* Chat Body */
+.gemini-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Welcome Card */
+.gemini-welcome-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.gemini-welcome-icon {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+  color: #7c3aed;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+}
+
+.gemini-welcome-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.4rem;
+}
+
+.gemini-welcome-card p {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+.gemini-quick-prompts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.quick-prompt-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.2rem;
+}
+
+.quick-chip {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.8rem;
+  color: #1e293b;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  line-height: 1.35;
+}
+
+.quick-chip:hover {
+  background: #ede9fe;
+  border-color: #c4b5fd;
+  color: #5b21b6;
+  transform: translateX(2px);
+}
+
+/* Chat Messages */
+.chat-bubble-row {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.chat-bubble-row.user-row {
+  justify-content: flex-end;
+}
+
+.chat-bubble-row.bot-row {
+  justify-content: flex-start;
+}
+
+.chat-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.chat-avatar.bot-avatar {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: #ffffff;
+}
+
+.chat-avatar.user-avatar {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.chat-bubble {
+  max-width: 84%;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  position: relative;
+  word-break: break-word;
+}
+
+.chat-bubble.user-bubble {
+  background: #0284c7;
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-bubble.bot-bubble {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+  border-bottom-left-radius: 4px;
+}
+
+.chat-bubble.bot-bubble.typing {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.typing-indicator-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.typing-indicator-dots span {
+  width: 6px;
+  height: 6px;
+  background: #7c3aed;
+  border-radius: 50%;
+  animation: typingBounce 1.4s infinite ease-in-out;
+}
+
+.typing-indicator-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-5px); opacity: 1; }
+}
+
+.typing-text {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.chat-bubble-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+.chat-bubble.user-bubble .chat-bubble-meta {
+  color: rgba(255, 255, 255, 0.75);
+  justify-content: flex-end;
+}
+
+.chat-engine-tag {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 0.08rem 0.35rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.chat-engine-tag.online {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.btn-copy-bubble {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.1rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.btn-copy-bubble:hover {
+  color: #0284c7;
+}
+
+/* Markdown element styling in bot bubble */
+.chat-h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0.3rem 0 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.25rem;
+}
+
+.chat-h3 {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0.4rem 0 0.6rem 0;
+}
+
+.chat-alert {
+  padding: 0.55rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  margin: 0.5rem 0;
+  line-height: 1.4;
+}
+
+.chat-alert.alert-warning {
+  background: #fff1f2;
+  border-left: 3px solid #e11d48;
+  color: #9f1239;
+}
+
+.chat-alert.alert-note {
+  background: #f0fdf4;
+  border-left: 3px solid #16a34a;
+  color: #166534;
+}
+
+.chat-inline-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 0.2rem 0.1rem;
+  transition: all 0.15s;
+}
+
+.chat-inline-btn:hover {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+}
+
+.chat-inline-code {
+  background: #f1f5f9;
+  color: #0f172a;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8em;
+}
+
+.chat-ul {
+  padding-left: 1.25rem;
+  margin: 0.4rem 0;
+}
+
+.chat-li {
+  margin-bottom: 0.3rem;
+}
+
+.chat-spacer {
+  height: 0.6rem;
+}
+
+/* Chat Footer / Input */
+.gemini-drawer-footer {
+  padding: 0.85rem 1.25rem;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.gemini-input-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.gemini-textarea {
+  flex: 1;
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 0.65rem 0.85rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: #0f172a;
+  resize: none;
+  max-height: 120px;
+  min-height: 42px;
+  transition: all 0.15s;
+  line-height: 1.4;
+}
+
+.gemini-textarea:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+.btn-gemini-send {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(124, 58, 237, 0.3);
+  flex-shrink: 0;
+}
+
+.btn-gemini-send:hover {
+  background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+  transform: translateY(-1px);
+}
+
+.gemini-disclaimer {
+  margin-top: 0.5rem;
+  font-size: 0.68rem;
+  color: #94a3b8;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* Inställningsmodal för Gemini */
+.gemini-settings-dialog {
+  max-width: 520px;
+}
+
+/* ==========================================================================
+   STARTSIDA (HOME PAGE) - INTENSIVVARDSENHETEN OSTRA
+   ========================================================================== */
+
+.home-hero-card {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 45%, #0f172a 100%);
+  color: #ffffff;
+  border-radius: var(--radius-xl, 18px);
+  padding: 2.25rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.25), 0 8px 10px -6px rgba(15, 23, 42, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.home-hero-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.home-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+}
+
+.home-hero-badge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.home-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+  display: inline-block;
+  animation: pulseGreen 2s infinite;
+}
+
+@keyframes pulseGreen {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.home-hero-date {
+  font-size: 0.82rem;
+  color: #bae6fd;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.home-hero-title {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+  margin: 0 0 0.75rem 0;
+  letter-spacing: -0.02em;
+}
+
+.home-hero-subtitle {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #e0f2fe;
+  margin: 0 0 1.75rem 0;
+  max-width: 780px;
+}
+
+/* Hero Sökbox */
+.home-hero-search-box {
+  max-width: 720px;
+}
+
+.home-search-input-wrapper {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: var(--radius-lg, 12px);
+  padding: 0.35rem 0.45rem 0.35rem 1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  gap: 0.65rem;
+}
+
+.home-search-icon {
+  color: #0284c7;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.home-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  color: #0f172a;
+  background: transparent;
+  min-width: 0;
+}
+
+.home-search-input::placeholder {
+  color: #94a3b8;
+}
+
+.home-search-submit-btn {
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.home-search-submit-btn:hover {
+  background: #0369a1;
+  transform: translateY(-1px);
+}
+
+.home-quick-tags {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-top: 0.85rem;
+}
+
+.home-quick-label {
+  font-size: 0.75rem;
+  color: #bae6fd;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.home-tag-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.home-tag-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+/* Sektionsrubriker på Startsidan */
+.home-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+  flex-wrap: wrap;
+}
+
+.home-section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.home-section-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.home-section-dot.red { background: #e11d48; box-shadow: 0 0 8px rgba(225, 29, 72, 0.4); }
+.home-section-dot.blue { background: #0284c7; box-shadow: 0 0 8px rgba(2, 132, 199, 0.4); }
+.home-section-dot.slate { background: #64748b; }
+
+.home-section-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.home-section-hint {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* Akuta Protokoll */
+.home-emergency-section {
+  margin-bottom: 2.25rem;
+}
+
+.home-emergency-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1.1rem;
+  width: 100%;
+}
+
+.emergency-quick-card {
+  background: #ffffff;
+  border-radius: var(--radius-lg, 12px);
+  padding: 1.25rem;
+  border: 1.5px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.emergency-quick-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.emergency-quick-card.red { border-left: 5px solid #e11d48; }
+.emergency-quick-card.amber { border-left: 5px solid #f59e0b; }
+.emergency-quick-card.blue { border-left: 5px solid #0284c7; }
+.emergency-quick-card.purple { border-left: 5px solid #7c3aed; }
+
+.emergency-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.emergency-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+}
+.emergency-badge.red { background: #fee2e2; color: #b91c1c; }
+.emergency-badge.amber { background: #fef3c7; color: #b45309; }
+.emergency-badge.blue { background: #e0f2fe; color: #0369a1; }
+.emergency-badge.purple { background: #f3e8ff; color: #6d28d9; }
+
+.emergency-icon {
+  display: flex;
+  align-items: center;
+  color: #64748b;
+}
+
+.emergency-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.45rem 0;
+  line-height: 1.3;
+}
+
+.emergency-desc {
+  font-size: 0.83rem;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
+  flex: 1;
+}
+
+.emergency-action-link {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0284c7;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: auto;
+}
+
+/* Modul-grid på Startsidan */
+.home-modules-section {
+  margin-bottom: 2.25rem;
+}
+
+.home-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.home-module-card {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg, 14px);
+  padding: 1.35rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  gap: 1rem;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+.home-module-card:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+  box-shadow: var(--shadow-md);
+}
+
+.module-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md, 10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+}
+
+.module-card-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.module-card-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.4rem 0;
+  line-height: 1.3;
+}
+
+.module-card-desc {
+  font-size: 0.82rem;
+  color: #64748b;
+  line-height: 1.45;
+  margin: 0 0 0.9rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.module-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.module-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+}
+.module-pill.red { background: #ffe4e6; color: #9f1239; }
+.module-pill.purple { background: #f3e8ff; color: #6d28d9; }
+.module-pill.green { background: #ecfdf5; color: #047857; }
+.module-pill.amber { background: #fef3c7; color: #b45309; }
+.module-pill.blue { background: #e0f2fe; color: #0369a1; }
+.module-pill.slate { background: #f1f5f9; color: #334155; }
+.module-pill.yellow { background: #fef9c3; color: #854d0e; }
+
+.module-arrow {
+  color: #94a3b8;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: transform 0.15s ease;
+}
+
+.home-module-card:hover .module-arrow {
+  transform: translateX(3px);
+  color: #0284c7;
+}
+
+/* Gemini AI Kort på Startsidan */
+.home-ai-card {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #0f172a 100%);
+  color: #ffffff;
+  border-radius: var(--radius-xl, 18px);
+  padding: 2rem;
+  margin-bottom: 2.25rem;
+  border: 1px solid rgba(129, 140, 248, 0.3);
+  box-shadow: 0 12px 28px -6px rgba(49, 46, 129, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.home-ai-left {
+  flex: 1;
+  min-width: min(100%, 320px);
+}
+
+.home-ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(129, 140, 248, 0.25);
+  border: 1px solid rgba(129, 140, 248, 0.4);
+  color: #c7d2fe;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.home-ai-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.01em;
+}
+
+.home-ai-desc {
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  line-height: 1.55;
+  margin: 0 0 1.1rem 0;
+  max-width: 680px;
+}
+
+.home-ai-prompt-shortcuts {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ai-prompt-chip {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #e0e7ff;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-md, 8px);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+
+.ai-prompt-chip:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.home-ai-right {
+  flex-shrink: 0;
+}
+
+.btn-home-gemini-launch {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #ffffff;
+  border: none;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius-lg, 12px);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.45);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-home-gemini-launch:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
+}
+
+/* Senast reviderade PM */
+.home-recent-section {
+  margin-bottom: 2.5rem;
+}
+
+.home-recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.home-recent-card {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg, 12px);
+  padding: 1.15rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-recent-card:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+  box-shadow: var(--shadow-sm);
+}
+
+.home-recent-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.home-recent-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.35rem 0;
+  line-height: 1.35;
+}
+
+.home-recent-card-desc {
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.45;
+  margin: 0 0 0.85rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.home-recent-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: #94a3b8;
+  margin-top: auto;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 0.65rem;
+}
+
+.home-card-read-link {
+  color: #0284c7;
+  font-weight: 700;
+}
+
+.btn-text-link {
+  background: none;
+  border: none;
+  color: #0284c7;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+.btn-text-link:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   ROBUSTA SKYDD MOT HORISONTELLT UTFLÖDE & RESPONSIVA GRIDS
+   ========================================================================== */
+
+/* Skydd mot overflow i alla lägen och element */
+html {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
+  overflow-x: clip;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.main-content {
+  width: 100%;
+  max-width: 1440px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+input, select, textarea, button {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.calc-field-group,
+.calc-field-input,
+.form-input,
+.form-select,
+.form-textarea,
+.doc-card,
+.disease-subtype-card,
+.drug-card,
+.metric-card-mini,
+.home-module-card,
+.emergency-quick-card {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.form-select {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.fluids-table-card,
+.compat-table-container,
+.drug-table-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  display: block !important;
+}
+
+.fluids-table-card table,
+.compat-table-container table,
+.drug-table-container table {
+  width: 100% !important;
+  min-width: 520px !important;
+  border-collapse: collapse;
+}
+
+/* ==========================================================================
+   BREAKPOINT 1: SURFPLATTOR & MEDELSTORA SKÄRMAR (max-width: 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .bloodgas-layout-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  .calc-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  .home-modules-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .home-emergency-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .documents-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .drug-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .disease-subtype-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .fluids-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .home-ai-card {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .home-ai-right {
+    width: 100% !important;
+  }
+
+  .btn-home-gemini-launch {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+/* ==========================================================================
+   BREAKPOINT 2: MOBILER OCH SMÅ SURFPLATTOR (max-width: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 70px;
+  }
+
+  .main-content {
+    padding: 0.75rem 0.5rem 5.5rem 0.5rem !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 1. Header i en ren rad */
+  .header-main-bar {
+    padding: 0;
+  }
+
+  .header-container {
+    padding: 0.45rem 0.65rem !important;
+    gap: 0.35rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .brand-section {
+    gap: 0.45rem !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+    overflow: hidden !important;
+  }
+
+  .brand-logo-icon {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .brand-logo-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .brand-titles {
+    min-width: 0 !important;
+  }
+
+  .brand-titles h1 {
+    font-size: 0.88rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    margin: 0 !important;
+  }
+
+  .brand-titles p {
+    display: none !important;
+  }
+
+  .hospital-badge {
+    display: none !important;
+  }
+
+  .header-actions {
+    gap: 0.35rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  .global-search-btn {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    justify-content: center !important;
+  }
+
+  .global-search-btn span,
+  .global-search-btn kbd {
+    display: none !important;
+  }
+
+  .btn-gemini-ai {
+    padding: 0.35rem 0.65rem !important;
+    font-size: 0.76rem !important;
+    gap: 0.35rem !important;
+  }
+
+  .btn-notification-trigger {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 50% !important;
+  }
+
+  .btn-upload-primary.btn-upload-compact,
+  #btnHeaderPermissions,
+  #btnBackupData {
+    display: none !important;
+  }
+
+  /* 2. Horisontell sveplist för navigation */
+  .clinical-subnav-strip {
+    border-top: 1px solid var(--border-subtle) !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+    padding: 0.35rem 0.5rem !important;
+  }
+
+  .subnav-container {
+    display: flex !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    white-space: nowrap !important;
+    gap: 0.45rem !important;
+    padding: 0.15rem 0 !important;
+    scrollbar-width: none !important;
+  }
+
+  .subnav-container::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .subnav-pill-btn {
+    padding: 0.4rem 0.75rem !important;
+    flex-shrink: 0 !important;
+    min-width: auto !important;
+  }
+
+  .subnav-pill-desc {
+    display: none !important;
+  }
+
+  .subnav-pill-title {
+    font-size: 0.8rem !important;
+  }
+
+  /* 3. Hero & Toolbar */
+  .page-hero {
+    padding: 1rem 0.85rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .hero-main {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.85rem !important;
+  }
+
+  .hero-info {
+    gap: 0.75rem !important;
+  }
+
+  .hero-icon-bubble {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .hero-icon-bubble svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .hero-text h2 {
+    font-size: 1.25rem !important;
+    flex-wrap: wrap !important;
+    gap: 0.4rem !important;
+  }
+
+  .hero-text p {
+    font-size: 0.82rem !important;
+  }
+
+  .page-toolbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.6rem !important;
+  }
+
+  .page-search-wrapper {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .toolbar-controls {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  .sort-select {
+    flex: 1 !important;
+  }
+
+  /* 4. Alla Grids i 1-kolumn på mobil */
+  .documents-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+  }
+
+  .doc-card {
+    padding: 1rem 0.85rem !important;
+    width: 100% !important;
+  }
+
+  .doc-card-actions {
+    width: 100% !important;
+  }
+
+  .btn-view-doc-primary {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .disease-subtype-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+    width: 100% !important;
+  }
+
+  .disease-card {
+    padding: 1rem 0.85rem !important;
+  }
+
+  .disease-card-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.65rem !important;
+  }
+
+  .bloodgas-layout-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    width: 100% !important;
+  }
+
+  .calc-panel {
+    padding: 1rem 0.85rem !important;
+    width: 100% !important;
+  }
+
+  /* Kritiskt: 1 kolumn för kalkylatorfält på mobil så inget spiller ut */
+  .calc-inputs-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.65rem !important;
+    width: 100% !important;
+  }
+
+  .calc-field-group {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+  }
+
+  .calc-metric-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.6rem !important;
+    width: 100% !important;
+  }
+
+  .calc-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    width: 100% !important;
+  }
+
+  .drug-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+  }
+
+  .fluids-card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+    width: 100% !important;
+  }
+
+  .rose-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+    width: 100% !important;
+  }
+
+  .fo-calc-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    width: 100% !important;
+  }
+
+  .nutrition-calc-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    width: 100% !important;
+  }
+
+  /* Startsidans mobilanpassning */
+  .home-hero-card {
+    padding: 1.35rem 1rem !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  .home-hero-title {
+    font-size: 1.45rem !important;
+  }
+
+  .home-hero-subtitle {
+    font-size: 0.88rem !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  .home-search-input-wrapper {
+    flex-direction: column !important;
+    gap: 0.45rem !important;
+    padding: 0.45rem !important;
+  }
+
+  .home-search-input {
+    width: 100% !important;
+    padding: 0.4rem 0.2rem !important;
+  }
+
+  .home-search-submit-btn {
+    width: 100% !important;
+    padding: 0.65rem !important;
+    justify-content: center !important;
+  }
+
+  .home-emergency-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+
+  .home-modules-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+
+  .home-recent-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .home-ai-card {
+    padding: 1.35rem 1rem !important;
+    gap: 1.25rem !important;
+  }
+
+  .home-ai-title {
+    font-size: 1.25rem !important;
+  }
+
+  .home-ai-prompt-shortcuts {
+    flex-direction: column !important;
+  }
+
+  .ai-prompt-chip {
+    width: 100% !important;
+  }
+
+  .btn-home-gemini-launch {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* Övriga komponenter */
+  .compat-selects-row {
+    grid-template-columns: 1fr !important;
+    gap: 0.65rem !important;
+  }
+
+  .pump-rate-value {
+    font-size: 2.2rem !important;
+  }
+
+  .nutrition-pump-rate {
+    font-size: 2.2rem !important;
+  }
+
+  .profile-dashboard-card {
+    padding: 1rem 0.85rem !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+  }
+
+  .my-page-stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+  }
+
+  .modal-dialog {
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+    max-height: 92vh !important;
+    margin: 8px auto !important;
+    padding: 1rem !important;
+  }
+
+  .gemini-chat-drawer {
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+
+  .fab-container {
+    bottom: 16px !important;
+    right: 16px !important;
+  }
+
+  .fab-menu-panel {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    right: 0 !important;
+    bottom: 72px !important;
+    max-height: 82vh !important;
+  }
+
+  .fab-category-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ==========================================================================
+   BREAKPOINT 3: EXTRA SMÅ MOBILER (max-width: 420px)
+   ========================================================================== */
+@media (max-width: 420px) {
+  .header-container {
+    padding: 0.35rem 0.45rem !important;
+  }
+
+  .brand-titles h1 {
+    font-size: 0.8rem !important;
+  }
+
+  .home-hero-card {
+    padding: 1.15rem 0.75rem !important;
+  }
+
+  .home-hero-title {
+    font-size: 1.25rem !important;
+  }
+
+  .home-hero-pill {
+    font-size: 0.72rem !important;
+    padding: 0.25rem 0.6rem !important;
+  }
+
+  .calc-big-value {
+    font-size: 2.2rem !important;
+  }
+
+  .my-page-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+/* ==========================================================================
+   MATERIAL 3 EXPRESSIVE DESIGN SYSTEM UPGRADE
+   Rundade former, tonala ytor, taktila animationer och läsläge
+   ========================================================================== */
+
+:root {
+  /* M3 Expressive Radier */
+  --m3-radius-xs: 8px;
+  --m3-radius-sm: 14px;
+  --m3-radius-md: 20px;
+  --m3-radius-lg: 28px;
+  --m3-radius-xl: 36px;
+  --m3-radius-pill: 9999px;
+
+  /* M3 Expressive Ytfärger */
+  --m3-sys-surface: #ffffff;
+  --m3-sys-surface-dim: #f3f4f6;
+  --m3-sys-surface-container-low: #f8fafc;
+  --m3-sys-surface-container: #f1f5f9;
+  --m3-sys-surface-container-high: #e2e8f0;
+  --m3-sys-surface-container-highest: #cbd5e1;
+
+  /* M3 Expressive Färgroller */
+  --m3-primary: #0284c7;
+  --m3-primary-container: #e0f2fe;
+  --m3-on-primary-container: #0369a1;
+
+  --m3-secondary: #0d9488;
+  --m3-secondary-container: #ccfbf1;
+  --m3-on-secondary-container: #0f766e;
+
+  --m3-tertiary: #7c3aed;
+  --m3-tertiary-container: #f3e8ff;
+  --m3-on-tertiary-container: #6d28d9;
+
+  --m3-rose: #e11d48;
+  --m3-rose-container: #ffe4e6;
+  --m3-amber: #d97706;
+  --m3-amber-container: #fef3c7;
+
+  /* Expressiva Skuggor & Elevation */
+  --m3-elevation-1: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --m3-elevation-2: 0 4px 10px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --m3-elevation-3: 0 12px 24px -4px rgba(15, 23, 42, 0.10), 0 4px 8px -4px rgba(15, 23, 42, 0.06);
+  --m3-elevation-4: 0 20px 32px -6px rgba(15, 23, 42, 0.14), 0 8px 16px -6px rgba(15, 23, 42, 0.08);
+
+  /* Reader Mode Standardinställningar */
+  --reader-font-size: 1.15rem;
+  --reader-line-height: 1.85;
+  --reader-bg: #ffffff;
+  --reader-text: #1e293b;
+  --reader-accent: #0284c7;
+}
+
+/* Expressiva Globala Förbättringar */
+.btn-upload-primary,
+.btn-header-secondary,
+.btn-gemini-ai,
+.global-search-btn,
+.subnav-pill-btn,
+.drug-tab-btn {
+  border-radius: var(--m3-radius-pill) !important;
+  transition: all 0.22s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+.btn-upload-primary:active,
+.btn-header-secondary:active,
+.subnav-pill-btn:active,
+.drug-tab-btn:active {
+  transform: scale(0.96) !important;
+}
+
+/* Kort och paneler i M3-stil */
+.disease-card,
+.calc-panel,
+.home-hero-card,
+.emergency-quick-card,
+.home-module-card,
+.doc-card,
+.modal-dialog {
+  border-radius: var(--m3-radius-lg) !important;
+  box-shadow: var(--m3-elevation-2) !important;
+}
+
+/* ==========================================================================
+   FIX HORISONTELL SCROLLNING FÖR FLIKAR OCH NAVIGERING (MOBIL & DESKTOP)
+   Löser problemet att man inte kan scrolla i sidled på vätskesidan eller doser
+   ========================================================================== */
+
+.subnav-container,
+.drug-tab-nav,
+.page-toolbar .drug-tab-nav,
+.horizontal-scroll-tabs,
+.pocketguide-tabs-bar {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-x !important;
+  scrollbar-width: thin !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0.35rem 0.25rem 0.65rem !important;
+  gap: 0.6rem !important;
+}
+
+.subnav-container::-webkit-scrollbar,
+.drug-tab-nav::-webkit-scrollbar,
+.horizontal-scroll-tabs::-webkit-scrollbar {
+  height: 5px !important;
+}
+
+.subnav-container::-webkit-scrollbar-thumb,
+.drug-tab-nav::-webkit-scrollbar-thumb,
+.horizontal-scroll-tabs::-webkit-scrollbar-thumb {
+  background: #cbd5e1 !important;
+  border-radius: 9999px !important;
+}
+
+.subnav-pill-btn,
+.drug-tab-btn,
+.tab-pill-btn {
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* ==========================================================================
+   CHROME LÄSLÄGE FÖR PM (READER MODE)
+   Ren typografi, läsbart radavstånd, anpassningsbar textstorlek & sepia/mörkt läge
+   ========================================================================== */
+
+.reader-modal-dialog {
+  max-width: 960px !important;
+  width: 95vw !important;
+  border-radius: var(--m3-radius-xl) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  max-height: 92vh !important;
+  background: var(--reader-bg) !important;
+  color: var(--reader-text) !important;
+  box-shadow: var(--m3-elevation-4) !important;
+  transition: background 0.3s ease, color 0.3s ease !important;
+}
+
+/* Läslägets verktygsfält */
+.reader-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.5rem;
+  background: rgba(248, 250, 252, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.reader-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reader-control-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--m3-radius-pill);
+  border: 1px solid var(--border-subtle);
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reader-control-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.reader-theme-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.reader-theme-btn:hover {
+  transform: scale(1.15);
+}
+
+.reader-theme-btn.light { background: #ffffff; border-color: #cbd5e1; }
+.reader-theme-btn.sepia { background: #fbf0d9; border-color: #d7ba8d; }
+.reader-theme-btn.dark { background: #1e293b; border-color: #475569; }
+
+/* Teman för läsläget */
+.reader-modal-dialog.theme-sepia {
+  background: #fbf0d9 !important;
+  color: #433422 !important;
+}
+.reader-modal-dialog.theme-sepia .reader-toolbar {
+  background: rgba(244, 232, 208, 0.95) !important;
+  border-color: #e2ccaa !important;
+}
+.reader-modal-dialog.theme-sepia .reader-content-wrap {
+  color: #433422 !important;
+}
+
+.reader-modal-dialog.theme-dark {
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+}
+.reader-modal-dialog.theme-dark .reader-toolbar {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border-color: #334155 !important;
+}
+.reader-modal-dialog.theme-dark .reader-content-wrap {
+  color: #f1f5f9 !important;
+}
+.reader-modal-dialog.theme-dark .reader-article-card {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+.reader-modal-dialog.theme-dark .reader-content-wrap table {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+.reader-modal-dialog.theme-dark .reader-content-wrap th {
+  background: #334155 !important;
+  color: #f8fafc !important;
+}
+
+/* Läslägets artikelkropp */
+.reader-body-scroll {
+  overflow-y: auto;
+  padding: 2rem 1.5rem 3.5rem;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+}
+
+.reader-content-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  font-size: var(--reader-font-size);
+  line-height: var(--reader-line-height);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.reader-header-meta {
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--border-subtle);
+}
+
+.reader-header-title {
+  font-size: 2.15rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: inherit;
+  margin-bottom: 0.75rem;
+}
+
+.reader-meta-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+}
+
+.reader-content-wrap h1 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  margin: 2.25rem 0 1rem;
+  line-height: 1.3;
+  color: inherit;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.5rem;
+}
+
+.reader-content-wrap h2 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin: 1.85rem 0 0.85rem;
+  line-height: 1.35;
+  color: inherit;
+}
+
+.reader-content-wrap h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 1.4rem 0 0.6rem;
+  line-height: 1.4;
+  color: inherit;
+}
+
+.reader-content-wrap p {
+  margin: 0 0 1.25rem;
+  line-height: inherit;
+  color: inherit;
+}
+
+.reader-content-wrap ul,
+.reader-content-wrap ol {
+  margin: 0 0 1.35rem 1.5rem;
+  padding: 0;
+  line-height: inherit;
+}
+
+.reader-content-wrap li {
+  margin-bottom: 0.5rem;
+  line-height: inherit;
+}
+
+/* Callout alert cards */
+.reader-alert {
+  border-radius: var(--m3-radius-md);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.reader-alert.info { background: #e0f2fe; border: 1.5px solid #bae6fd; color: #0369a1; }
+.reader-alert.warning { background: #fef3c7; border: 1.5px solid #fde68a; color: #92400e; }
+.reader-alert.danger { background: #fee2e2; border: 1.5px solid #fca5a5; color: #991b1b; }
+.reader-alert.success { background: #dcfce7; border: 1.5px solid #86efac; color: #166534; }
+.reader-alert.purple { background: #f3e8ff; border: 1.5px solid #ddd6fe; color: #6b21a8; }
+
+/* Tabeller i läsläge */
+.reader-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.5rem 0 2rem;
+  border-radius: var(--m3-radius-md);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+}
+
+.reader-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.reader-table th {
+  background: #f8fafc;
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  color: #334155;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.reader-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: top;
+}
+
+.reader-table tr:last-child td {
+  border-bottom: none;
+}
+
+.reader-table tr:nth-child(even) td {
+  background: rgba(248, 250, 252, 0.5);
+}
+
+/* ==========================================================================
+   MOBILOPTIMERAD DOKUMENTVISARE & LÄSLÄGE (max-width: 768px)
+   Löser problemet att formatet var dåligt på telefonen
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .modal-dialog.large,
+  .reader-modal-dialog {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    position: fixed !important;
+  }
+
+  .reader-toolbar {
+    padding: 0.65rem 0.85rem !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 50 !important;
+  }
+
+  .reader-header-title {
+    font-size: 1.5rem !important;
+  }
+
+  .reader-body-scroll {
+    padding: 1rem 0.85rem 3rem !important;
+  }
+
+  .reader-content-wrap {
+    font-size: 1.05rem !important;
+    line-height: 1.75 !important;
+  }
+
+  .reader-table th,
+  .reader-table td {
+    padding: 0.55rem 0.65rem !important;
+    font-size: 0.85rem !important;
+  }
+}
+
+/* ==========================================================================
+   CHECKLISTA: START AV ARBETSPASS PÅ IVA (12 PUNKTER)
+   ========================================================================== */
+
+.shift-checklist-modal-dialog {
+  max-width: 780px !important;
+  width: 95vw !important;
+  border-radius: var(--m3-radius-xl) !important;
+  max-height: 90vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.shift-checklist-header {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border-top-left-radius: var(--m3-radius-xl);
+  border-top-right-radius: var(--m3-radius-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shift-checklist-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: 0.75rem;
+}
+
+.shift-checklist-progress-fill {
+  height: 100%;
+  background: #34d399;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.shift-item-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.15rem;
+  border-radius: var(--m3-radius-md);
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  margin-bottom: 0.75rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.shift-item-card:hover {
+  border-color: #0284c7;
+  background: #f8fafc;
+}
+
+.shift-item-card.is-checked {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.shift-checkbox-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  transition: all 0.2s;
+  background: #ffffff;
+}
+
+.shift-item-card.is-checked .shift-checkbox-circle {
+  background: #10b981;
+  border-color: #10b981;
+  color: #ffffff;
+}
+
+.shift-item-content {
+  flex: 1;
+}
+
+.shift-item-title {
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: #0f172a;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.shift-item-desc {
+  font-size: 0.85rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.shift-item-note-input {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--m3-radius-xs);
+  border: 1px solid #cbd5e1;
+  font-size: 0.82rem;
+  background: #ffffff;
+}
+
+/* ==========================================================================
+   DROPTAKTSKALKYLATOR (IVA DROPPAGGREGAT)
+   ========================================================================== */
+
+.drip-calc-panel {
+  background: #ffffff;
+  border: 1.5px solid #a7f3d0;
+  border-radius: var(--m3-radius-lg);
+  padding: 1.5rem;
+  margin-top: 1.25rem;
+  box-shadow: var(--m3-elevation-2);
+}
+
+.drip-result-hero {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 2px solid #6ee7b7;
+  border-radius: var(--m3-radius-md);
+  padding: 1.25rem;
+  text-align: center;
+  margin-top: 1.25rem;
+}
+
+.drip-main-rate {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #065f46;
+  line-height: 1;
+  margin: 0.35rem 0;
+}
+
+.drip-metric-pill-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.drip-metric-pill {
+  background: #ffffff;
+  border: 1px solid #a7f3d0;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--m3-radius-pill);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #065f46;
+}
+
+/* ==========================================================================
+   IVA POCKETGUIDE VIEWER PÅ STARTSIDAN
+   ========================================================================== */
+
+.pocketguide-hero-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--m3-radius-xl);
+  overflow: hidden;
+  box-shadow: var(--m3-elevation-2);
+  margin-bottom: 2rem;
+}
+
+.pocketguide-card-header {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.pocketguide-preview-box {
+  width: 100%;
+  max-height: 520px;
+  overflow: hidden;
+  background: #f8fafc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.pocketguide-preview-box img,
+.pocketguide-preview-box canvas {
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+  display: block;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: zoom-in;
+  transition: transform 0.25s ease;
+}
+
+.pocketguide-preview-box:hover img,
+.pocketguide-preview-box:hover canvas {
+  transform: scale(1.01);
+}
+
+.pocketguide-overlay-btn {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--m3-radius-pill);
+  padding: 0.6rem 1.25rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--m3-elevation-3);
+  transition: background 0.2s;
+}
+
+.pocketguide-overlay-btn:hover {
+  background: #0284c7;
+}
+
+/* ==========================================================================
+   KALORITABELL IVA 343 MODUL
+   ========================================================================== */
+
+.calorie-table-container {
+  background: #ffffff;
+  border-radius: var(--m3-radius-lg);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-top: 1.25rem;
+}
+
+.calorie-grid-header {
+  padding: 0.85rem 1.25rem;
+  background: #f8fafc;
+  border-bottom: 1.5px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.calorie-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.15s;
+}
+
+.calorie-item-row:hover {
+  background: #fafafa;
+}
+
+.calorie-item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.calorie-item-name {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #0f172a;
+}
+
+.calorie-item-sub {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.calorie-item-action {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.calorie-counter-input {
+  width: 70px;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--m3-radius-xs);
+  border: 1.5px solid #cbd5e1;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   SMÄRTA & SEDERING: CPOT OCH RASS KORT
+   ========================================================================== */
+
+.cpot-domain-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--m3-radius-md);
+  padding: 1.15rem;
+  margin-bottom: 1rem;
+}
+
+.cpot-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+}
+
+.cpot-option-btn {
+  padding: 0.75rem 0.85rem;
+  border-radius: var(--m3-radius-sm);
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cpot-option-btn:hover {
+  border-color: #d946ef;
+  background: #faf5ff;
+}
+
+.cpot-option-btn.active {
+  border-color: #a855f7;
+  background: #f3e8ff;
+  color: #6b21a8;
+  font-weight: 700;
+  box-shadow: 0 0 0 1px #a855f7;
+}
+
+.rass-level-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: var(--m3-radius-sm);
+  border: 1.5px solid #e2e8f0;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #ffffff;
+}
+
+.rass-level-row:hover {
+  transform: translateX(4px);
+  border-color: #0284c7;
+}
+
+.rass-level-row.active {
+  border-width: 2px;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ==========================================================================
+   EXCEL VÄTSKEBALANSKALKYLATOR (FRÅN BILD 2)
+   ========================================================================== */
+
+.excel-sheet-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 1024px) {
+  .excel-sheet-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.excel-column-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: var(--m3-radius-md);
+  padding: 1rem;
+}
+
+.excel-section-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #334155;
+  padding-bottom: 0.4rem;
+  border-bottom: 1.5px solid #e2e8f0;
+  margin-bottom: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.excel-row-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+  font-size: 0.82rem;
+}
+
+.excel-row-item label {
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.excel-input-cell {
+  width: 75px;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  text-align: right;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.excel-total-bar {
+  background: #f1f5f9;
+  border-radius: var(--m3-radius-xs);
+  padding: 0.5rem 0.75rem;
+  margin-top: 0.65rem;
+  font-weight: 800;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+}
+
+
+
+/* ==========================================================================
+   START AV ARBETSPASS - HERO KORT & CTA
+   ========================================================================== */
+
+.shift-start-hero-card {
+  margin-top: 1.5rem;
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.25) 0%, rgba(14, 165, 233, 0.15) 100%);
+  border: 2px solid rgba(56, 189, 248, 0.5);
+  border-radius: var(--m3-radius-xl, 24px);
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.3);
+}
+
+.shift-hero-left {
+  flex: 1;
+  min-width: 280px;
+}
+
+.shift-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(2, 132, 199, 0.3);
+  color: #38bdf8;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  margin-bottom: 0.5rem;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.shift-hero-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.shift-hero-desc {
+  margin: 0 0 0.85rem;
+  font-size: 0.88rem;
+  color: #e0f2fe;
+  line-height: 1.5;
+  max-width: 680px;
+}
+
+.shift-hero-status-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.shift-status-pill {
+  background: rgba(15, 23, 42, 0.5);
+  color: #7dd3fc;
+  border: 1px solid rgba(125, 211, 252, 0.4);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.shift-status-pill.complete {
+  background: rgba(16, 185, 129, 0.25);
+  color: #34d399;
+  border-color: #34d399;
+}
+
+.btn-shift-start-cta {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border: 2px solid #38bdf8;
+  border-radius: var(--m3-radius-lg, 16px);
+  padding: 1rem 1.75rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  box-shadow: 0 10px 20px -3px rgba(2, 132, 199, 0.5);
+  transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.btn-shift-start-cta:hover {
+  transform: translateY(-3px) scale(1.02);
+  background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+  box-shadow: 0 15px 30px -5px rgba(2, 132, 199, 0.6);
+  border-color: #7dd3fc;
+}
+
+.btn-shift-start-cta:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ==========================================================================
+   IVA POCKETGUIDE FRAMHÄVT KORT PÅ STARTSIDAN
+   ========================================================================== */
+
+.home-pocketguide-section {
+  margin-top: 2rem;
+}
+
+.pocketguide-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--m3-radius-xl, 24px);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.25s ease;
+}
+
+.pocketguide-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: var(--shadow-md);
+}
+
+.pocketguide-card-header {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.pocketguide-card-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.pocketguide-card-sub {
+  margin: 0.25rem 0 0;
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+
+.btn-pocketguide-action {
+  padding: 0.55rem 1.15rem;
+  border-radius: var(--m3-radius-pill, 9999px);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-pocketguide-action.primary {
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+}
+
+.btn-pocketguide-action.primary:hover {
+  background: #0369a1;
+  transform: translateY(-1px);
+}
+
+.btn-pocketguide-action.secondary {
+  background: #334155;
+  color: #ffffff;
+  border: 1px solid #475569;
+}
+
+.btn-pocketguide-action.secondary:hover {
+  background: #475569;
+}
+
+.pocketguide-preview-wrap {
+  position: relative;
+  width: 100%;
+  max-height: 480px;
+  overflow: hidden;
+  background: #0f172a;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.pocketguide-preview-img {
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.pocketguide-preview-wrap:hover .pocketguide-preview-img {
+  transform: scale(1.02);
+}
+
+.pocketguide-overlay-hint {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #ffffff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+.pocketguide-tags-row {
+  padding: 0.85rem 1.25rem;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pocket-tag {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pocket-tag:hover {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+}
+
+/* ==========================================================================
+   HORISONTELL SCROLLNING FÖR FLIKAR
+   ========================================================================== */
+
+.horizontal-scroll-tabs {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: thin !important;
+  gap: 0.5rem !important;
+  padding-bottom: 0.35rem !important;
+}
+
+.horizontal-scroll-tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.horizontal-scroll-tabs::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.horizontal-scroll-tabs > * {
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* ==========================================================================
+   CPOT & RASS MODULSTILAR
+   ========================================================================== */
+
+.cpot-total-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--m3-radius-lg, 16px);
+  min-width: 100px;
+}
+
+.cpot-domain-group {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--m3-radius-md, 12px);
+  padding: 1rem;
+}
+
+.cpot-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.65rem;
+}
+
+.cpot-option-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: var(--m3-radius-md, 12px);
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cpot-option-card:hover {
+  border-color: #a855f7;
+  background: #faf5ff;
+}
+
+.cpot-option-card.selected {
+  border-color: #a855f7;
+  background: #f3e8ff;
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.3);
+}
+
+.cpot-score-pill {
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 9999px;
+}
+
+.cpot-option-card.selected .cpot-score-pill {
+  background: #9333ea;
+  color: #ffffff;
+}
+
+.rass-level-row {
+  border: 1px solid #e2e8f0;
+  border-radius: var(--m3-radius-md, 12px);
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rass-level-row:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.rass-level-row.selected {
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.4);
+}
+
+.rass-score-chip {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 900;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   EXCEL VÄTSKEBALANS (BILD 2) INMATNINGSRADER
+   ========================================================================== */
+
+.excel-input-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+  gap: 0.5rem;
+}
+
+.excel-row-label {
+  font-size: 0.82rem;
+  color: #334155;
+  font-weight: 600;
+  flex: 1;
+}
+
+.excel-field-num {
+  width: 85px;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.excel-field-num:focus {
+  border-color: #059669;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
+}
+
+/* ==========================================================================
+   CHROME READER MODE FÖR PM & DOKUMENTVISARE
+   ========================================================================== */
+
+.reader-article {
+  max-width: 780px;
+  margin: 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: inherit;
+}
+
+.reader-table-wrap {
+  overflow-x: auto;
+  margin: 1.25rem 0;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.reader-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.reader-table th {
+  background: rgba(0, 0, 0, 0.05);
+  font-weight: 800;
+  text-align: left;
+  padding: 0.65rem 0.85rem;
+  border-bottom: 2px solid rgba(0,0,0,0.12);
+}
+
+.reader-table td {
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.reader-table tr:last-child td {
+  border-bottom: none;
+}
+
+.reader-alert {
+  margin: 1.25rem 0;
+  padding: 0.85rem 1.15rem;
+  border-radius: 8px;
+  border-left: 4px solid;
+  font-size: 0.92em;
+  line-height: 1.6;
+}
+
+.reader-alert.note {
+  background: #f0fdf4;
+  border-color: #16a34a;
+  color: #14532d;
+}
+
+.reader-alert.warning {
+  background: #fffbeb;
+  border-color: #f59e0b;
+  color: #78350f;
+}
+
+.reader-alert.important {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1e3a8a;
+}
+
+.reader-alert.tip {
+  background: #f5f3ff;
+  border-color: #8b5cf6;
+  color: #4c1d95;
+}
+
+.reader-alert.caution {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #7f1d1d;
+}
+
+.reader-list {
+  padding-left: 1.4rem;
+  margin: 0.8rem 0;
+  line-height: 1.6;
+}
+
+.reader-divider {
+  border: none;
+  border-top: 1px solid rgba(0,0,0,0.12);
+  margin: 2rem 0;
+}
+
+/* Chrome Reader Mode Teman */
+.theme-light {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+
+.theme-sepia {
+  background-color: #fbf0d9 !important;
+  color: #433422 !important;
+}
+
+.theme-sepia .reader-toolbar {
+  background-color: #f4e3c1 !important;
+  border-bottom-color: #e5cd9e !important;
+  color: #433422 !important;
+}
+
+.theme-sepia .reader-control-btn {
+  background-color: #ede0bf !important;
+  color: #433422 !important;
+  border-color: #d8c29d !important;
+}
+
+.theme-dark {
+  background-color: #18181b !important;
+  color: #e4e4e7 !important;
+}
+
+.theme-dark .reader-toolbar {
+  background-color: #27272a !important;
+  border-bottom-color: #3f3f46 !important;
+  color: #f4f4f5 !important;
+}
+
+.theme-dark .reader-control-btn {
+  background-color: #3f3f46 !important;
+  color: #f4f4f5 !important;
+  border-color: #52525b !important;
+}
+
+.theme-dark .reader-table th {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.theme-dark .reader-table td {
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.theme-dark .reader-alert.note {
+  background: rgba(22, 163, 74, 0.15) !important;
+  color: #86efac !important;
+}
+
+.theme-dark .reader-alert.warning {
+  background: rgba(245, 158, 11, 0.15) !important;
+  color: #fde68a !important;
+}
+
+.theme-dark .reader-alert.important {
+  background: rgba(59, 130, 246, 0.15) !important;
+  color: #bfdbfe !important;
+}
+
+.theme-dark .reader-alert.tip {
+  background: rgba(139, 92, 246, 0.15) !important;
+  color: #ddd6fe !important;
+}
+
+.theme-dark .reader-alert.caution {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #fca5a5 !important;
+}
