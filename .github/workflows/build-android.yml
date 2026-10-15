@@ -1,0 +1,141 @@
+name: Build Android Play Store (.aab) & APK
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Setup Java JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Install dependencies & Build Web App (Build Mode)
+        run: |
+          npm install
+          npm run build
+
+      - name: Add Capacitor Android Platform
+        run: |
+          npm install --no-save @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
+          rm -rf android
+          npx cap add android
+          npx cap sync android
+
+      - name: Configure Android Manifest Permissions & Versioning for Google Play
+        run: |
+          node -e '
+            const fs = require("fs");
+            const manifestPath = "android/app/src/main/AndroidManifest.xml";
+            let xml = fs.readFileSync(manifestPath, "utf8");
+            const perms = `
+              <uses-permission android:name="android.permission.CAMERA" />
+              <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+              <uses-permission android:name="android.permission.VIBRATE" />
+              <uses-permission android:name="android.permission.WAKE_LOCK" />
+              <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+              <uses-feature android:name="android.hardware.camera" android:required="false" />
+            `;
+            if (!xml.includes("android.permission.CAMERA")) {
+              xml = xml.replace("</manifest>", perms + "\n</manifest>");
+              fs.writeFileSync(manifestPath, xml, "utf8");
+            }
+
+            const gradlePath = "android/app/build.gradle";
+            let gradle = fs.readFileSync(gradlePath, "utf8");
+            const runNum = parseInt(process.env.GITHUB_RUN_NUMBER || "1", 10);
+            const versionCode = 100 + runNum;
+            const versionName = "1.0." + runNum;
+            gradle = gradle.replace(/versionCode\s+\d+/, "versionCode " + versionCode);
+            gradle = gradle.replace(/versionName\s+"[^"]+"/, "versionName \"" + versionName + "\"");
+            fs.writeFileSync(gradlePath, gradle, "utf8");
+            console.log("Configured Android versionCode=" + versionCode + ", versionName=" + versionName);
+          '
+
+      - name: Ensure Persistent Play Store Upload Keystore
+        run: |
+          mkdir -p android-keystore
+          if [ ! -f "android-keystore/iva-upload-key.jks" ]; then
+            echo "Generating new persistent Play Store Upload Keystore..."
+            keytool -genkeypair -v \
+              -keystore android-keystore/iva-upload-key.jks \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -alias ivaostra \
+              -storepass ivaostra2026 \
+              -keypass ivaostra2026 \
+              -dname "CN=IVA Ostra, OU=Intensivvardsenheten Ostra, O=SU, L=Goteborg, ST=VG, C=SE"
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add android-keystore/iva-upload-key.jks
+            git commit -m "Save persistent Android upload keystore for Google Play [skip ci]" || true
+            git push origin HEAD:main || true
+          fi
+
+      - name: Build & Sign Google Play App Bundle (.aab) & Direct APK (.apk)
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew bundleRelease \
+            -Pandroid.injected.signing.store.file=$(pwd)/../android-keystore/iva-upload-key.jks \
+            -Pandroid.injected.signing.store.password=ivaostra2026 \
+            -Pandroid.injected.signing.key.alias=ivaostra \
+            -Pandroid.injected.signing.key.password=ivaostra2026
+
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file=$(pwd)/../android-keystore/iva-upload-key.jks \
+            -Pandroid.injected.signing.store.password=ivaostra2026 \
+            -Pandroid.injected.signing.key.alias=ivaostra \
+            -Pandroid.injected.signing.key.password=ivaostra2026
+
+          cp app/build/outputs/bundle/release/*.aab ../IVA-Ostra-PlayStore-Test.aab
+          cp app/build/outputs/apk/release/*.apk ../IVA-Ostra-Direct-Install.apk
+
+      - name: Upload Play Store AAB & APK Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: IVA-Ostra-Android-PlayStore-Build
+          path: |
+            IVA-Ostra-PlayStore-Test.aab
+            IVA-Ostra-Direct-Install.apk
+
+      - name: Publish to GitHub Releases (Play Store Test Release)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: "IVA Östra v1.0.${{ github.run_number }} — Google Play Testapp (.aab) & APK"
+          body: |
+            ### 🏥 Intensivvårdsenheten Östra — Android Build (v1.0.${{ github.run_number }})
+            - **Google Play Store (Intern testning):** Ladda ner **`IVA-Ostra-PlayStore-Test.aab`** och ladda upp under *Google Play Console → Testning → Intern testning*.
+            - **Direktinstallation på Android-mobil:** Ladda ner **`IVA-Ostra-Direct-Install.apk`** direkt i telefonen.
+            - **Package ID:** `se.vgregion.su.ivaostra`
+            - **Version Code:** `10${{ github.run_number }}`
+            - **Integritetspolicy-URL (krävs i Play Console):** `https://filipcarlberg91.github.io/intensivvardsenhetenostra/privacy-policy.html`
+          files: |
+            IVA-Ostra-PlayStore-Test.aab
+            IVA-Ostra-Direct-Install.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

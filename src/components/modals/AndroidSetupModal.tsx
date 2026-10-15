@@ -15,6 +15,11 @@ interface AndroidSetupModalProps {
   onShowToast: (msg: string) => void;
 }
 
+const GITHUB_REPO_URL = 'https://github.com/filipcarlberg91/intensivvardsenhetenostra';
+const AAB_DOWNLOAD_URL = `${GITHUB_REPO_URL}/releases/latest/download/IVA-Ostra-PlayStore-Test.aab`;
+const APK_DOWNLOAD_URL = `${GITHUB_REPO_URL}/releases/latest/download/IVA-Ostra-Direct-Install.apk`;
+const PRIVACY_POLICY_URL = 'https://filipcarlberg91.github.io/intensivvardsenhetenostra/privacy-policy.html';
+
 export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
   isOpen,
   onClose,
@@ -33,7 +38,7 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
   const [cameraPerm, setCameraPerm] = useState<'granted' | 'denied' | 'prompt' | 'unknown'>('prompt');
   const [wakeLockActive, setWakeLockActive] = useState(false);
   const [wakeLockRef, setWakeLockRef] = useState<any>(null);
-  const [showBuildDetails, setShowBuildDetails] = useState(false);
+  const [showPlayStoreGuide, setShowPlayStoreGuide] = useState(true);
 
   useEffect(() => {
     if (isOpen) {
@@ -45,6 +50,12 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
       });
     }
   }, [isOpen]);
+
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      onShowToast(`${label} kopierad! 📋`);
+    });
+  };
 
   const handleEnableNotifications = async () => {
     const res = await requestAndroidNotificationPermission();
@@ -141,8 +152,8 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
         onClick={(e) => e.stopPropagation()}
         style={{
           width: '100%',
-          maxWidth: '620px',
-          maxHeight: '90vh',
+          maxWidth: '660px',
+          maxHeight: '92vh',
           overflowY: 'auto',
           background: '#ffffff',
           borderRadius: '20px',
@@ -179,10 +190,10 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
             </div>
             <div>
               <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800 }}>
-                Android-App, Kamera & Notiser
+                Android-App, Google Play & Enhetsbehörigheter
               </h2>
               <p style={{ margin: 0, fontSize: '0.76rem', color: '#bae6fd' }}>
-                Enhetsbehörigheter, bakgrundslarm, kameraskanning & installation
+                Play Store Testapp (.aab), Direkt-APK, Kamera & Infusionslarm
               </p>
             </div>
           </div>
@@ -207,13 +218,237 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
 
         {/* Body */}
         <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {/* 1. INSTALLERA SOM ANDROID-APP */}
+          {/* 1. GOOGLE PLAY STORE TESTAPP (.AAB) & APK NEDLADDNING */}
+          <div
+            style={{
+              background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%)',
+              border: '1.5px solid #34d399',
+              borderRadius: '16px',
+              padding: '1.1rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.6rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ fontSize: '1.25rem' }}>▶️</span>
+                <div>
+                  <strong style={{ fontSize: '0.96rem', color: '#065f46', display: 'block' }}>
+                    Google Play Store (Intern Testapp) & Signerad APK
+                  </strong>
+                  <span style={{ fontSize: '0.75rem', color: '#047857' }}>
+                    Automatiskt byggd och signerad i Build Mode (Package ID: <code>se.vgregion.su.ivaostra</code>)
+                  </span>
+                </div>
+              </div>
+              <span
+                style={{
+                  background: '#059669',
+                  color: '#ffffff',
+                  fontSize: '0.7rem',
+                  fontWeight: 800,
+                  padding: '0.25rem 0.6rem',
+                  borderRadius: '999px',
+                }}
+              >
+                PLAY STORE REDO
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginTop: '0.75rem' }}>
+              <a
+                href={AAB_DOWNLOAD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  flex: 1,
+                  minWidth: '210px',
+                  background: '#059669',
+                  color: '#ffffff',
+                  textDecoration: 'none',
+                  padding: '0.65rem 0.9rem',
+                  borderRadius: '10px',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  textAlign: 'center',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.4rem',
+                  boxShadow: '0 4px 12px rgba(5, 150, 105, 0.25)',
+                }}
+              >
+                📦 Ladda ner .AAB (För Google Play)
+              </a>
+
+              <a
+                href={APK_DOWNLOAD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  flex: 1,
+                  minWidth: '210px',
+                  background: '#0284c7',
+                  color: '#ffffff',
+                  textDecoration: 'none',
+                  padding: '0.65rem 0.9rem',
+                  borderRadius: '10px',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  textAlign: 'center',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.4rem',
+                  boxShadow: '0 4px 12px rgba(2, 132, 199, 0.25)',
+                }}
+              >
+                📲 Ladda ner .APK (Direktinstallation)
+              </a>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.7rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <a
+                href={`${GITHUB_REPO_URL}/actions`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ fontSize: '0.75rem', color: '#0369a1', fontWeight: 700, textDecoration: 'underline' }}
+              >
+                ⚙️ Se live-bygge i GitHub Actions / Releases →
+              </a>
+              <button
+                type="button"
+                onClick={() => setShowPlayStoreGuide((p) => !p)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#065f46',
+                  fontSize: '0.76rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  padding: 0,
+                }}
+              >
+                {showPlayStoreGuide ? 'Dölj Play Console-guide ▲' : 'Visa Play Console-guide ▼'}
+              </button>
+            </div>
+
+            {showPlayStoreGuide && (
+              <div
+                style={{
+                  marginTop: '0.85rem',
+                  paddingTop: '0.85rem',
+                  borderTop: '1px solid #a7f3d0',
+                  fontSize: '0.78rem',
+                  color: '#1e293b',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.55rem',
+                }}
+              >
+                <div style={{ fontWeight: 800, color: '#065f46' }}>
+                  Så publicerar du som Intern Testapp i Google Play Console (2 minuter):
+                </div>
+                <ol style={{ margin: 0, paddingLeft: '1.2rem', lineHeight: 1.55, color: '#334155' }}>
+                  <li>
+                    Öppna <a href="https://play.google.com/console" target="_blank" rel="noopener noreferrer" style={{ color: '#0284c7', fontWeight: 700 }}>Google Play Console</a> och klicka på <strong>Skapa app</strong> (Appnamn: <em>Intensivvårdsenheten Östra</em>, Språk: <em>Svenska</em>, Typ: <em>App</em>, <em>Gratis</em>).
+                  </li>
+                  <li>
+                    Gå till <strong>Testning → Intern testning (Internal testing)</strong> i vänstermenyn och klicka på <strong>Skapa ny version</strong>.
+                  </li>
+                  <li>
+                    Ladda upp filen <strong><code>IVA-Ostra-PlayStore-Test.aab</code></strong> från knappen ovan och spara/publicera till intern testkanal.
+                  </li>
+                  <li>
+                    Under fliken <strong>Testare</strong>: lägg till din och dina kollegors Gmail-adresser och kopiera inbjudningslänken — appen kan laddas ner direkt via Google Play Store utan väntetid!
+                  </li>
+                </ol>
+
+                {/* Snabbkopiering för Google Play Console */}
+                <div
+                  style={{
+                    background: '#ffffff',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '10px',
+                    padding: '0.65rem 0.8rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.45rem',
+                  }}
+                >
+                  <div style={{ fontSize: '0.74rem', fontWeight: 800, color: '#475569' }}>
+                    📋 Snabbkopiera fält som Google Play Console efterfrågar:
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => copyToClipboard(PRIVACY_POLICY_URL, 'Integritetspolicy-URL')}
+                      style={{
+                        background: '#f1f5f9',
+                        border: '1px solid #cbd5e1',
+                        borderRadius: '7px',
+                        padding: '0.35rem 0.6rem',
+                        fontSize: '0.73rem',
+                        fontWeight: 700,
+                        color: '#0f172a',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      🔗 Kopiera Integritetspolicy-URL (krävs för Kamera)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        copyToClipboard(
+                          'Kliniska rutiner, PM, spädningstabeller och beräkningsstöd för IVA Östra.',
+                          'Kort beskrivning'
+                        )
+                      }
+                      style={{
+                        background: '#f1f5f9',
+                        border: '1px solid #cbd5e1',
+                        borderRadius: '7px',
+                        padding: '0.35rem 0.6rem',
+                        fontSize: '0.73rem',
+                        fontWeight: 700,
+                        color: '#0f172a',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      📝 Kopiera Kort beskrivning
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        copyToClipboard(
+                          'Kliniskt beslutsstöd och kunskapsbank för Intensivvårdsenheten Östra (IVA Östra). Innehåller strukturerade rutiner och PM, läkemedelsspädningar, infusionskalkylator, blodgastolkning med kameraskanning samt Gemini IVA Notebook.',
+                          'Fullständig beskrivning'
+                        )
+                      }
+                      style={{
+                        background: '#f1f5f9',
+                        border: '1px solid #cbd5e1',
+                        borderRadius: '7px',
+                        padding: '0.35rem 0.6rem',
+                        fontSize: '0.73rem',
+                        fontWeight: 700,
+                        color: '#0f172a',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      📄 Kopiera Fullständig beskrivning
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 2. INSTALLERA DIREKT FRÅN WEBBLÄSAREN (PWA) */}
           <div
             style={{
               background: '#f0f9ff',
               border: '1px solid #bae6fd',
               borderRadius: '14px',
-              padding: '1rem',
+              padding: '0.95rem 1rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -223,15 +458,15 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
           >
             <div style={{ flex: 1, minWidth: '220px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.2rem' }}>
-                <span style={{ fontSize: '1.1rem' }}>📲</span>
-                <strong style={{ fontSize: '0.95rem', color: '#0c4a6e' }}>
-                  {isInstalled ? 'Installerad som App (Standalone)' : 'Installera som Android-App'}
+                <span style={{ fontSize: '1.05rem' }}>⚡</span>
+                <strong style={{ fontSize: '0.9rem', color: '#0c4a6e' }}>
+                  {isInstalled ? 'Installerad som App (Standalone)' : 'Snabbinstallation via Chrome (Utan Play Store)'}
                 </strong>
               </div>
-              <p style={{ margin: 0, fontSize: '0.8rem', color: '#0369a1', lineHeight: 1.4 }}>
+              <p style={{ margin: 0, fontSize: '0.76rem', color: '#0369a1', lineHeight: 1.4 }}>
                 {isInstalled
-                  ? 'Appen körs i fullskärmsläge som en native Android-app med offline-stöd.'
-                  : 'Installera direkt på hemskärmen i Android för helskärmsläge, offline-PM och systemnotiser.'}
+                  ? 'Appen körs i fullskärmsläge med offline-stöd.'
+                  : 'Installera direkt på hemskärmen med 1 klick i väntan på Google Play-länken.'}
               </p>
             </div>
             <div>
@@ -259,52 +494,50 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
                     background: '#0284c7',
                     color: '#ffffff',
                     border: 'none',
-                    padding: '0.6rem 1rem',
+                    padding: '0.55rem 0.95rem',
                     borderRadius: '10px',
                     fontWeight: 800,
-                    fontSize: '0.84rem',
+                    fontSize: '0.82rem',
                     cursor: 'pointer',
                   }}
                 >
-                  📥 Installera Android-App
+                  📥 Installera Direkt
                 </button>
               ) : (
                 <span
                   style={{
                     background: '#e0f2fe',
                     color: '#0369a1',
-                    padding: '0.4rem 0.75rem',
+                    padding: '0.35rem 0.7rem',
                     borderRadius: '8px',
-                    fontSize: '0.75rem',
+                    fontSize: '0.73rem',
                     fontWeight: 700,
                     display: 'inline-block',
                   }}
                 >
                   {isIOS
-                    ? 'iOS: Tryck Dela → Lägg till på hemskärmen'
-                    : isAndroid
-                    ? 'Android Chrome: Meny (⋮) → Installera app'
-                    : 'Öppna i Chrome på Android för 1-klicksinstallation'}
+                    ? 'iOS: Dela → Lägg till på hemskärmen'
+                    : 'Android Chrome: Meny (⋮) → Installera app'}
                 </span>
               )}
             </div>
           </div>
 
-          {/* 2. KAMERA-BEHÖRIGHET & SKANNER */}
+          {/* 3. KAMERA-BEHÖRIGHET & SKANNER */}
           <div
             style={{
               background: '#f8fafc',
               border: '1px solid #e2e8f0',
               borderRadius: '14px',
-              padding: '1rem',
+              padding: '0.95rem 1rem',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.6rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <div
                   style={{
-                    width: '38px',
-                    height: '38px',
+                    width: '36px',
+                    height: '36px',
                     borderRadius: '10px',
                     background: '#ede9fe',
                     color: '#7c3aed',
@@ -313,13 +546,13 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
                     justifyContent: 'center',
                   }}
                 >
-                  <CameraIcon size={20} />
+                  <CameraIcon size={19} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#0f172a' }}>
+                  <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f172a' }}>
                     Kamera & Bildskanning (Blodgas OCR & Gemini Notebook)
                   </div>
-                  <div style={{ fontSize: '0.76rem', color: '#64748b' }}>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
                     Status:{' '}
                     <strong
                       style={{
@@ -334,7 +567,7 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
                       {cameraPerm === 'granted'
                         ? '✓ Tillåten & Redo'
                         : cameraPerm === 'denied'
-                        ? '✕ Blockerad i webbläsaren'
+                        ? '✕ Blockerad'
                         : 'Väntar på godkännande'}
                     </strong>
                   </div>
@@ -349,10 +582,10 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
                     background: cameraPerm === 'granted' ? '#dcfce7' : '#7c3aed',
                     color: cameraPerm === 'granted' ? '#15803d' : '#ffffff',
                     border: 'none',
-                    padding: '0.5rem 0.85rem',
+                    padding: '0.48rem 0.8rem',
                     borderRadius: '9px',
                     fontWeight: 700,
-                    fontSize: '0.8rem',
+                    fontSize: '0.78rem',
                     cursor: 'pointer',
                   }}
                 >
@@ -368,10 +601,10 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
                     background: '#0f172a',
                     color: '#ffffff',
                     border: 'none',
-                    padding: '0.5rem 0.85rem',
+                    padding: '0.48rem 0.8rem',
                     borderRadius: '9px',
                     fontWeight: 700,
-                    fontSize: '0.8rem',
+                    fontSize: '0.78rem',
                     cursor: 'pointer',
                   }}
                 >
@@ -381,21 +614,21 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
             </div>
           </div>
 
-          {/* 3. NOTISER, LJUDLARM & VIBRATION PÅ ANDROID */}
+          {/* 4. NOTISER, LJUDLARM & VIBRATION PÅ ANDROID */}
           <div
             style={{
               background: '#f8fafc',
               border: '1px solid #e2e8f0',
               borderRadius: '14px',
-              padding: '1rem',
+              padding: '0.95rem 1rem',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.6rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <div
                   style={{
-                    width: '38px',
-                    height: '38px',
+                    width: '36px',
+                    height: '36px',
                     borderRadius: '10px',
                     background: '#fef3c7',
                     color: '#d97706',
@@ -404,13 +637,13 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
                     justifyContent: 'center',
                   }}
                 >
-                  <BellIcon size={20} />
+                  <BellIcon size={19} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#0f172a' }}>
+                  <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f172a' }}>
                     Notiser, Infusionslarm & Haptisk Vibration
                   </div>
-                  <div style={{ fontSize: '0.76rem', color: '#64748b' }}>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
                     Status:{' '}
                     <strong
                       style={{
@@ -441,10 +674,10 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
                       background: '#0284c7',
                       color: '#ffffff',
                       border: 'none',
-                      padding: '0.5rem 0.85rem',
+                      padding: '0.48rem 0.8rem',
                       borderRadius: '9px',
                       fontWeight: 700,
-                      fontSize: '0.8rem',
+                      fontSize: '0.78rem',
                       cursor: 'pointer',
                     }}
                   >
@@ -458,10 +691,10 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
                     background: '#f1f5f9',
                     color: '#0f172a',
                     border: '1px solid #cbd5e1',
-                    padding: '0.5rem 0.85rem',
+                    padding: '0.48rem 0.8rem',
                     borderRadius: '9px',
                     fontWeight: 700,
-                    fontSize: '0.8rem',
+                    fontSize: '0.78rem',
                     cursor: 'pointer',
                   }}
                 >
@@ -471,13 +704,13 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
             </div>
           </div>
 
-          {/* 4. HÅLL SKÄRMEN VAKEN (SCREEN WAKE LOCK) */}
+          {/* 5. HÅLL SKÄRMEN VAKEN (SCREEN WAKE LOCK) */}
           <div
             style={{
               background: '#f8fafc',
               border: '1px solid #e2e8f0',
               borderRadius: '14px',
-              padding: '0.9rem 1rem',
+              padding: '0.85rem 1rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -485,10 +718,10 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
             }}
           >
             <div>
-              <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f172a' }}>
+              <div style={{ fontWeight: 800, fontSize: '0.88rem', color: '#0f172a' }}>
                 💡 Håll skärmen vaken på sal (Android Wake Lock)
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+              <div style={{ fontSize: '0.74rem', color: '#64748b' }}>
                 Förhindrar att mobilskärmen slocknar under pågående spädning eller akutlarm.
               </div>
             </div>
@@ -499,65 +732,16 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
                 background: wakeLockActive ? '#10b981' : '#e2e8f0',
                 color: wakeLockActive ? '#ffffff' : '#334155',
                 border: 'none',
-                padding: '0.5rem 0.9rem',
+                padding: '0.48rem 0.85rem',
                 borderRadius: '9px',
                 fontWeight: 800,
-                fontSize: '0.78rem',
+                fontSize: '0.76rem',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
               }}
             >
               {wakeLockActive ? '✓ Skärm hålls vaken' : 'Aktivera Wake Lock'}
             </button>
-          </div>
-
-          {/* 5. CAPACITOR / APK KONFIGURATION FÖR ANDROID STUDIO */}
-          <div
-            style={{
-              border: '1px solid #e2e8f0',
-              borderRadius: '12px',
-              overflow: 'hidden',
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setShowBuildDetails((prev) => !prev)}
-              style={{
-                width: '100%',
-                background: '#f1f5f9',
-                border: 'none',
-                padding: '0.75rem 1rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                fontWeight: 700,
-                fontSize: '0.82rem',
-                color: '#334155',
-                cursor: 'pointer',
-              }}
-            >
-              <span>📦 Förberedd för Android APK / Capacitor / PWABuilder (Visa detaljer)</span>
-              <span>{showBuildDetails ? '▲' : '▼'}</span>
-            </button>
-
-            {showBuildDetails && (
-              <div style={{ padding: '0.9rem 1rem', background: '#0f172a', color: '#e2e8f0', fontSize: '0.76rem', lineHeight: 1.5 }}>
-                <div style={{ marginBottom: '0.5rem', color: '#38bdf8', fontWeight: 700 }}>
-                  Appen har nu komplett konfiguration (`capacitor.config.json`, `manifest.json` & `sw.js`) med behörigheter för:
-                </div>
-                <ul style={{ margin: '0 0 0.75rem 1.1rem', padding: 0 }}>
-                  <li><code>android.permission.CAMERA</code> (Blodgas OCR & Notebook-foton)</li>
-                  <li><code>android.permission.POST_NOTIFICATIONS</code> (Infusionsslut & Medicintider)</li>
-                  <li><code>android.permission.VIBRATE</code> & <code>WAKE_LOCK</code></li>
-                </ul>
-                <div style={{ background: '#020617', padding: '0.6rem', borderRadius: '8px', fontFamily: 'monospace', fontSize: '0.72rem', color: '#a5f3fc' }}>
-                  # Bygga APK via Capacitor eller PWABuilder:<br />
-                  npm run build<br />
-                  npx cap add android &amp;&amp; npx cap sync android<br />
-                  npx cap open android
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
