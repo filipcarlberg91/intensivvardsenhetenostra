@@ -10,55 +10,89 @@ const app = express();
 const port = parseInt(process.env.PORT || '3000', 10);
 const isProd = process.env.NODE_ENV === 'production';
 
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '15mb' }));
 
-// Gemini IVA-Assistent AI API Endpoint
+// Gemini IVA Notebook & Assistent AI API Endpoint
 app.post('/api/gemini', async (req, res) => {
   try {
-    const { prompt, context, history } = req.body;
+    const { prompt, context, history, imageBase64, mimeType, studioMode } = req.body;
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
       return res.status(200).json({
         success: false,
         fallback: true,
-        message: 'No GEMINI_API_KEY environment variable found.'
+        message: 'No GEMINI_API_KEY environment variable found.',
       });
     }
 
-    const ai = new GoogleGenAI({ apiKey });
+    const ai = new GoogleGenAI({
+      apiKey,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build',
+        },
+      },
+    });
 
-    const systemInstruction = `Du är Gemini IVA-Assistenten för Intensivvårdsenheten Östra (IVA Östra).
-Du är en specialiserad klinisk AI-kollega för IVA-läkare och IVA-sjuksköterskor.
-Du har full access till alla avdelningens rutiner, vård-PM, spädningsregister, CVK-blandbarhet, sjukdomsprotokoll, blodgaskalkylator, vätsketerapi och nutritionsberäkningar.
+    const systemInstruction = `Du är Gemini IVA Notebook för Intensivvårdsenheten Östra (IVA Östra, Sahlgrenska Universitetssjukhuset).
+Du fungerar som ett intelligent kliniskt NotebookLM / antecknings- och beslutsstöd för IVA-läkare och intensivvårdssjuksköterskor.
+Du baserar dina svar på användarens valda källor (avdelningens rutiner, vård-PM, läkemedelsregister, CVK-blandbarhet, blodgaskalkylator, vätsketerapi, nutrition samt eventuella egna anteckningar eller kamerabilder).
 
 VIKTIGA RIKTLINJER FÖR DINA SVAR:
 1. Svara alltid på professionell, saklig och tydlig svenska anpassad för svensk intensivvård.
 2. Strukturera dina svar pedagogiskt med tydliga rubriker (###), punktlistor och fetstil för doser, enheter och gränsvärden.
-3. Hänvisa specifikt till avdelningens rutiner och verktyg (t.ex. [Doskalkylatorn], [Syra-Bas Kalkylatorn], [PM: Septisk chock]).
-4. Framhäv alltid viktiga kliniska säkerhetsvarningar (t.ex. maxdoseringar, inkompatibiliteter vid Y-koppling, hernieringsrisk vid ICP, risk för hyperkloremisk acidos vid NaCl).
-5. Vid frågor om blodgaser, använd systematisk tolkningsmetodik (pH, respiratorisk/metabolisk komponent, anjongap, albuminkorrigering och kompensationsgrad).
+3. Ange alltid källhänvisningar inom hakparentes baserat på de valda källorna (t.ex. [Källa: Läkemedelsregistret], [Källa: PM Respiration], [Källa: Egen Anteckning]).
+4. Framhäv alltid viktiga kliniska säkerhetsvarningar (t.ex. maxdoseringar, inkompatibiliteter vid Y-koppling, PRIS vid Propofol, kalcium-fosfatutfällning).
+5. Om användaren ber om en Studio-generering (Sammanfattning, Instuderingsfrågor/Quiz, SBAR-Rondstöd eller Audio-manus), leverera ett välstrukturerat och direkt användbart underlag.
 6. Detta är ett kliniskt beslutsstöd; ordinationer beslutas alltid av patientansvarig läkare.
 
-Följande är den fullständiga kunskapsbasen för Intensivvårdsenheten Östra:
+VALDA KÄLLOR I ANTECKNINGSBOKEN:
 ${context || ''}`;
 
-    let fullPrompt = prompt;
-    if (history && Array.isArray(history) && history.length > 0) {
+    let fullPrompt = prompt || '';
+    if (studioMode === 'summary') {
+      fullPrompt = `Skapa en strukturerad Klinisk Notebook-Sammanfattning av de valda källorna ovan. Inkludera:
+1. Huvudpunkter & Kritiska Målvärden
+2. Dosering & Inställningar att ha koll på
+3. Viktigaste Säkerhetsvarningarna ("Röda Flaggor")
+${prompt ? `\nFokusområde: ${prompt}` : ''}`;
+    } else if (studioMode === 'study_guide') {
+      fullPrompt = `Skapa en Instuderingsguide & Kliniska Förhörsfrågor (5 skarpa frågor med tydliga facit/nyckelsvar) baserat på de valda källorna i anteckningsboken.
+${prompt ? `\nFokusområde: ${prompt}` : ''}`;
+    } else if (studioMode === 'sbar') {
+      fullPrompt = `Skapa en strukturerad SBAR-mall & Rondchecklista (Situation, Bakgrund, Aktuellt tillstånd, Rekommendation) anpassad efter de valda källorna och anteckningarna i Notebooken.
+${prompt ? `\nPatientkontext/fokus: ${prompt}` : ''}`;
+    } else if (studioMode === 'audio_script') {
+      fullPrompt = `Skriv en kortfattad, muntlig och engagerande klinisk genomgång (som en 60-sekunders röstöversikt för ronden) av de viktigaste punkterna i de valda källorna. Skriv i ren löpande talvänlig text utan komplicerade tabeller så den passar perfekt för uppläsning.
+${prompt ? `\nFokus: ${prompt}` : ''}`;
+    } else if (history && Array.isArray(history) && history.length > 0) {
       const formattedHistory = history
         .slice(-6)
-        .map((m: any) => `${m.role === 'user' ? 'Användare' : 'Gemini IVA'}: ${m.text}`)
+        .map((m: any) => `${m.role === 'user' ? 'Användare' : 'Gemini Notebook'}: ${m.text}`)
         .join('\n');
-      fullPrompt = `Tidigare samtal:\n${formattedHistory}\n\nAktuell fråga från IVA-personal:\n${prompt}`;
+      fullPrompt = `Tidigare samtal i anteckningsboken:\n${formattedHistory}\n\nAktuell fråga/uppgift:\n${prompt}`;
     }
+
+    const parts: any[] = [];
+    if (imageBase64) {
+      const cleanBase64 = imageBase64.replace(/^data:[a-zA-Z0-9/+-]+;base64,/, '');
+      parts.push({
+        inlineData: {
+          data: cleanBase64,
+          mimeType: mimeType || 'image/jpeg',
+        },
+      });
+    }
+    parts.push({ text: fullPrompt });
 
     const response = await ai.models.generateContent({
       model: 'gemini-3.8-flash',
-      contents: fullPrompt,
+      contents: { parts },
       config: {
         systemInstruction,
         temperature: 0.2,
-      }
+      },
     });
 
     const reply = response.text || 'Inget svar kunde genereras.';
@@ -68,7 +102,7 @@ ${context || ''}`;
     return res.status(200).json({
       success: false,
       error: err.message,
-      fallback: true
+      fallback: true,
     });
   }
 });
@@ -87,11 +121,18 @@ app.post('/api/bloodgas-ocr', async (req, res) => {
       return res.status(200).json({
         success: false,
         fallback: true,
-        message: 'No GEMINI_API_KEY environment variable configured.'
+        message: 'No GEMINI_API_KEY environment variable configured.',
       });
     }
 
-    const ai = new GoogleGenAI({ apiKey });
+    const ai = new GoogleGenAI({
+      apiKey,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build',
+        },
+      },
+    });
     const cleanBase64 = imageBase64.replace(/^data:[a-zA-Z0-9/+-]+;base64,/, '');
     const detectedMime = mimeType || 'image/jpeg';
 
@@ -133,18 +174,18 @@ Notera:
               inlineData: {
                 data: cleanBase64,
                 mimeType: detectedMime,
-              }
+              },
             },
             {
               text: promptText,
-            }
-          ]
-        }
+            },
+          ],
+        },
       ],
       config: {
         responseMimeType: 'application/json',
         temperature: 0.1,
-      }
+      },
     });
 
     const reply = response.text;
@@ -168,11 +209,10 @@ Notera:
     return res.status(200).json({
       success: false,
       error: err.message,
-      fallback: true
+      fallback: true,
     });
   }
 });
-
 
 async function startServer() {
   if (!isProd) {

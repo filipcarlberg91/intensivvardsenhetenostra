@@ -30,6 +30,7 @@ interface FloatingMenuProps {
   onOpenGlobalSearch: () => void;
   onOpenUploadModal: () => void;
   onOpenGeminiChat: () => void;
+  onOpenAndroidSetup?: () => void;
   canEdit: boolean;
 }
 
@@ -44,7 +45,6 @@ interface ClinicalToolItem {
 }
 
 const DEFAULT_CLINICAL_TOOLS: ClinicalToolItem[] = [
-  { id: 'GEMINI_AI', name: 'Fråga Gemini IVA AI', color: '#7c3aed', isAi: true },
   { id: 'PAIN_SEDATION', name: 'CPOT & RASS', color: '#d946ef' },
   { id: 'DISEASES', name: 'Sjukdomar', color: '#e11d48' },
   { id: 'ACID_BASE', name: 'Syra-Bas', color: '#7c3aed' },
@@ -53,12 +53,13 @@ const DEFAULT_CLINICAL_TOOLS: ClinicalToolItem[] = [
   { id: 'DRUGS', name: 'Dos & CVK', color: '#0ea5e9' },
   { id: 'EQUIPMENT', name: 'Apparatur', color: '#0891b2' },
   { id: 'ALL', name: 'Alla PM', color: '#64749b', showDocCount: true },
+  { id: 'GEMINI_AI', name: 'Gemini IVA Notebook (AI)', color: '#7c3aed', isAi: true },
 ];
 
 const DEFAULT_SECTION_ORDER: SectionKey[] = ['top_cards', 'rutiner_pm', 'clinical_modules'];
 const DEFAULT_TOP_CARDS: ('HOME' | 'MY_PAGE')[] = ['HOME', 'MY_PAGE'];
 
-const STORAGE_KEY_FAB_CONFIG = 'iva_fab_menu_layout_v1';
+const STORAGE_KEY_FAB_CONFIG = 'iva_fab_menu_layout_v2';
 
 export const FloatingMenu: React.FC<FloatingMenuProps> = ({
   isOpen,
@@ -74,11 +75,11 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
   onOpenGlobalSearch,
   onOpenUploadModal,
   onOpenGeminiChat,
+  onOpenAndroidSetup,
   canEdit,
 }) => {
   const [isEditingLayout, setIsEditingLayout] = useState(false);
 
-  // Spara/ladda anpassad ordning för FAB-menyn
   const [sectionOrder, setSectionOrder] = useState<SectionKey[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_FAB_CONFIG);
@@ -137,7 +138,6 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
     return DEFAULT_CLINICAL_TOOLS.map((t) => t.id);
   });
 
-  // Drag-and-drop state
   const [draggedCatId, setDraggedCatId] = useState<string | null>(null);
   const [draggedToolId, setDraggedToolId] = useState<string | null>(null);
 
@@ -155,7 +155,6 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
     } catch (e) {}
   }, [sectionOrder, topCardsOrder, categoryIdsOrder, toolIdsOrder]);
 
-  // Synka med föräldrakomponent om kategorier ändras
   const orderedCategories = categoryIdsOrder
     .map((id) => categories.find((c) => c.id === id))
     .filter((c): c is CategoryItem => Boolean(c));
@@ -330,7 +329,7 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                     <div className="fab-mypage-title" style={{ color: '#ffffff' }}>
                       Startsida
                     </div>
-                    <div className="fab-mypage-sub">IVA Översikt & Guider</div>
+                    <div className="fab-mypage-sub">IVA Översikt & Verktyg</div>
                   </div>
                   {isEditingLayout ? (
                     <div style={{ display: 'flex', gap: '0.25rem' }}>
@@ -539,7 +538,7 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
       );
     }
 
-    // clinical_modules
+    // clinical_modules (med Gemini AI Notebook längst ner som standard!)
     return (
       <div key="clinical_modules" style={{ marginBottom: '0.5rem' }}>
         <div className="fab-section-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -565,6 +564,7 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                 }}
                 style={{
                   gridColumn: isAi ? '1 / -1' : undefined,
+                  marginTop: isAi ? '0.25rem' : undefined,
                   position: 'relative',
                 }}
               >
@@ -578,10 +578,12 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                     border: isEditingLayout
                       ? '1px dashed rgba(167, 139, 250, 0.7)'
                       : isAi
-                      ? 'none'
+                      ? '1px solid rgba(196, 181, 253, 0.45)'
                       : undefined,
+                    padding: isAi ? '0.68rem 0.85rem' : undefined,
                     paddingBottom: isEditingLayout ? '1.6rem' : undefined,
                     cursor: isEditingLayout ? 'grab' : 'pointer',
+                    boxShadow: isAi ? '0 8px 20px -4px rgba(124, 58, 237, 0.45)' : undefined,
                   }}
                   onClick={() => {
                     if (isEditingLayout) return;
@@ -597,9 +599,23 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                   <span className="fab-cat-icon" style={{ color: isAi ? '#ffffff' : tool.color }}>
                     {renderToolIcon(tool.id)}
                   </span>
-                  <span className="fab-cat-name" style={{ flex: 1, textAlign: 'left' }}>
+                  <span className="fab-cat-name" style={{ flex: 1, textAlign: 'left', fontWeight: isAi ? 800 : undefined }}>
                     {tool.name}
                   </span>
+                  {isAi && (
+                    <span
+                      style={{
+                        background: 'rgba(255,255,255,0.2)',
+                        color: '#ffffff',
+                        fontSize: '0.65rem',
+                        fontWeight: 800,
+                        padding: '0.12rem 0.45rem',
+                        borderRadius: '6px',
+                      }}
+                    >
+                      Notebook
+                    </span>
+                  )}
                   {tool.showDocCount && <span className="fab-badge">{documents.length}</span>}
                 </button>
 
@@ -825,6 +841,20 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                 <span>{isEditingLayout ? '✓ Klar' : '✏️ Redigera'}</span>
               </button>
 
+              {onOpenAndroidSetup && (
+                <button
+                  type="button"
+                  className="fab-mini-btn"
+                  onClick={() => {
+                    onClose();
+                    onOpenAndroidSetup();
+                  }}
+                  title="Android-App, Kamera & Notiser"
+                >
+                  🤖
+                </button>
+              )}
+
               <button
                 className="fab-mini-btn"
                 onClick={() => {
@@ -850,7 +880,6 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
             </div>
           </div>
 
-          {/* Redigerings-info när man flyttar runt i FAB-menyn */}
           {isEditingLayout && (
             <div
               style={{

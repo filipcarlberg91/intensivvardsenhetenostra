@@ -1,25 +1,18 @@
-const CACHE_NAME = "iva-ostra-v9";
+const CACHE_NAME = "iva-ostra-v10";
 const ASSETS_TO_CACHE = [
-  "./",
-  "./index.html",
-  "./styles.css",
-  "./icons.js",
-  "./clinical-data.js",
-  "./sample-docs.js",
-  "./drugs-data.js",
-  "./gemini-assistant.js",
-  "./app.js",
-  "./manifest.json",
-  "./icon-192.png",
-  "./icon-512.png",
-  "./iva_pocketguide.png",
-  "./kaloritabell_iva_343.png"
+  "/",
+  "/index.html",
+  "/manifest.json",
+  "/icon-192.png",
+  "/icon-512.png",
+  "/iva_pocketguide.png",
+  "/kaloritabell_iva_343.png"
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      return cache.addAll(ASSETS_TO_CACHE).catch(() => {});
     })
   );
   self.skipWaiting();
@@ -40,9 +33,10 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Network-first strategi med offline cache fallback så att uppdateringar slår igenom direkt
+// Network-first strategi med offline cache fallback
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  if (event.request.url.includes("/api/")) return;
 
   event.respondWith(
     fetch(event.request)
@@ -57,27 +51,53 @@ self.addEventListener("fetch", (event) => {
       })
       .catch(() => {
         return caches.match(event.request).then((cachedResponse) => {
-          return cachedResponse || caches.match("./index.html");
+          return cachedResponse || caches.match("/index.html");
         });
       })
   );
 });
 
-// Hantera klick på systemnotiser (Windows / Android)
+// Ta emot meddelanden från klienten för att trigga Android-kompatibla systemnotiser
+self.addEventListener("message", (event) => {
+  if (!event.data) return;
+
+  if (event.data.type === "SHOW_ANDROID_NOTIFICATION") {
+    const { title, body, tag, data } = event.data;
+    event.waitUntil(
+      self.registration.showNotification(title || "IVA Östra Larm", {
+        body: body || "Klinisk påminnelse",
+        icon: "/icon-192.png",
+        badge: "/icon-192.png",
+        vibrate: [250, 100, 250, 100, 400],
+        tag: tag || "iva-alarm-" + Date.now(),
+        renotify: true,
+        requireInteraction: true,
+        data: data || {},
+      })
+    );
+  }
+});
+
+// Hantera klick på systemnotiser (Android / Windows / iOS)
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
   const notifData = event.notification.data || {};
   const docId = notifData.docId;
   const category = notifData.category;
-  const targetUrl = docId ? `./index.html?docId=${encodeURIComponent(docId)}` : "./index.html";
+  const targetUrl = docId ? `/?docId=${encodeURIComponent(docId)}` : "/";
 
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
       for (const client of windowClients) {
         if ("focus" in client) {
-          if (docId && client.postMessage) {
-            client.postMessage({ type: "OPEN_DOCUMENT", docId, category });
+          if (client.postMessage) {
+            client.postMessage({
+              type: "NOTIFICATION_CLICKED",
+              docId,
+              category,
+              reminderId: notifData.reminderId,
+            });
           }
           return client.focus();
         }
@@ -88,4 +108,3 @@ self.addEventListener("notificationclick", (event) => {
     })
   );
 });
-

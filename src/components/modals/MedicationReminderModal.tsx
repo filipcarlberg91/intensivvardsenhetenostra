@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ClockIcon } from '../Icons';
+import {
+  playClinicalAlarmSound,
+  sendAndroidNotification,
+  requestAndroidNotificationPermission,
+} from '../../utils/androidBridge';
 
 export interface MedicationReminder {
   id: string;
@@ -75,45 +80,16 @@ export const MedicationReminderModal: React.FC<MedicationReminderModalProps> = (
   const [notes, setNotes] = useState('');
   const [nowTime, setNowTime] = useState(Date.now());
 
-  // Ljud & Notislarm
+  // Ljud & Notislarm (med fullt Android ServiceWorker-stöd)
   const triggerAlarm = useCallback((rem: MedicationReminder) => {
-    // 1. Spela ljud via Web Audio API (enkelt kliniskt tvåtonsljud)
-    try {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      if (AudioCtx) {
-        const ctx = new AudioCtx();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.15); // A5
-        gain.gain.setValueAtTime(0.3, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.6);
-      }
-    } catch (e) {}
+    playClinicalAlarmSound();
 
-    // 2. Vibration på mobil
-    if (typeof navigator !== 'undefined' && navigator.vibrate) {
-      try {
-        navigator.vibrate([200, 100, 200, 100, 300]);
-      } catch (e) {}
-    }
+    sendAndroidNotification(
+      `IVA Larm: ${rem.name}`,
+      `Dags för ${rem.type === 'infusion' ? 'infusionsbyte' : 'läkemedelsadministrering'}! (${rem.location || ''})`,
+      { tag: 'iva-rem-' + rem.id, reminderId: rem.id }
+    );
 
-    // 3. Web Notification
-    if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
-      try {
-        new Notification(`IVA Larm: ${rem.name}`, {
-          body: `Dags för ${rem.type === 'infusion' ? 'infusionsbyte' : 'läkemedelsadministrering'}! (${rem.location || ''})`,
-          icon: './icon-192.png',
-        });
-      } catch (e) {}
-    }
-
-    // 4. Lägg till i appens notiscenter
     onAddNotification(
       `Påminnelse: ${rem.name}`,
       `Dags för ${rem.type === 'infusion' ? 'infusionsbyte' : 'läkemedel/åtgärd'} vid ${rem.targetTime}. ${rem.notes || ''}`
@@ -121,9 +97,7 @@ export const MedicationReminderModal: React.FC<MedicationReminderModalProps> = (
   }, [onAddNotification]);
 
   const requestNotificationPermission = useCallback(() => {
-    if (typeof window !== 'undefined' && 'Notification' in window) {
-      Notification.requestPermission();
-    }
+    requestAndroidNotificationPermission();
   }, []);
 
   // Klockuppdatering för nedräkning

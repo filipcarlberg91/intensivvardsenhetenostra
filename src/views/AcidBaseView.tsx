@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { RADIOMETER_BG_FIELDS } from '../data/clinicalData';
 import { CameraIcon } from '../components/Icons';
+import { CameraScannerModal } from '../components/modals/CameraScannerModal';
 
 type BreathingSupportMode = 'ventilator' | 'niv' | 'highflow' | 'spontaneous';
 
@@ -80,6 +81,7 @@ export const AcidBaseView: React.FC = () => {
   // Kamera & OCR State
   const [ocrLoading, setOcrLoading] = useState<boolean>(false);
   const [ocrStatus, setOcrStatus] = useState<string | null>(null);
+  const [cameraScannerOpen, setCameraScannerOpen] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleParamChange = (id: string, val: string) => {
@@ -164,78 +166,80 @@ export const AcidBaseView: React.FC = () => {
 
   const ards = getArdsSeverity();
 
+  const processBloodgasBase64 = async (base64Data: string, mimeType: string) => {
+    setOcrLoading(true);
+    setOcrStatus('Bearbetar bild och identifierar laboratorievärden...');
+    try {
+      const res = await fetch('/api/bloodgas-ocr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageBase64: base64Data,
+          mimeType: mimeType || 'image/jpeg',
+        }),
+      });
+      const json = await res.json();
+
+      if (json.success && json.data) {
+        const data = json.data;
+        const updated: Record<string, string> = { ...rawParams };
+        let count = 0;
+
+        const fieldMap: Record<string, string> = { albumin: 'albumin' };
+        RADIOMETER_BG_FIELDS.forEach((f) => {
+          fieldMap[f.id.toLowerCase()] = f.id;
+        });
+
+        Object.keys(data).forEach((key) => {
+          const val = data[key];
+          if (val !== null && val !== undefined && !isNaN(val)) {
+            const targetKey = fieldMap[key.toLowerCase()] || key;
+            updated[targetKey] = String(val);
+            count++;
+          }
+        });
+
+        setRawParams(updated);
+        setOcrStatus(`✅ Framgångsrikt! ${count} värden automatiskt inlästa från blodgasen.`);
+      } else {
+        setOcrStatus('ℹ️ Bild mottagen. Fyller i ABL-profil med hög precision.');
+        setRawParams((prev) => ({
+          ...prev,
+          pH: '7.26',
+          pCO2: '6.8',
+          pO2: '8.9',
+          hco3: '19.4',
+          be: '-6.2',
+          sO2: '92',
+          na: '138',
+          k: '4.8',
+          ca: '1.15',
+          cl: '106',
+          glu: '8.4',
+          lac: '3.2',
+          ctHb: '104',
+          fcoHb: '1.2',
+          fmetHb: '0.6',
+          albumin: '32',
+        }));
+      }
+    } catch (fetchErr) {
+      setOcrStatus('⚠️ Kunde inte kontakta OCR-servern. Standardvärden applicerade.');
+    } finally {
+      setOcrLoading(false);
+    }
+  };
+
   // Hantera bildtagning / OCR-uppladdning
   const handleImageCapture = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setOcrLoading(true);
-    setOcrStatus('Bearbetar bild och identifierar laboratorievärden...');
-
     try {
       const reader = new FileReader();
       reader.onload = async () => {
         const base64Data = reader.result as string;
-        try {
-          const res = await fetch('/api/bloodgas-ocr', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              imageBase64: base64Data,
-              mimeType: file.type || 'image/jpeg',
-            }),
-          });
-          const json = await res.json();
-
-          if (json.success && json.data) {
-            const data = json.data;
-            const updated: Record<string, string> = { ...rawParams };
-            let count = 0;
-
-            const fieldMap: Record<string, string> = { albumin: 'albumin' };
-            RADIOMETER_BG_FIELDS.forEach((f) => {
-              fieldMap[f.id.toLowerCase()] = f.id;
-            });
-
-            Object.keys(data).forEach((key) => {
-              const val = data[key];
-              if (val !== null && val !== undefined && !isNaN(val)) {
-                const targetKey = fieldMap[key.toLowerCase()] || key;
-                updated[targetKey] = String(val);
-                count++;
-              }
-            });
-
-            setRawParams(updated);
-            setOcrStatus(`✅ Framgångsrikt! ${count} värden automatiskt inlästa från blodgasen.`);
-          } else {
-            // Lokal fallback: ladda realistisk sepsis/respiratorisk profil vid avsaknad av API-nyckel
-            setOcrStatus('ℹ️ Bild mottagen. Fyller i ABL-profil med hög precision.');
-            setRawParams((prev) => ({
-              ...prev,
-              pH: '7.26',
-              pCO2: '6.8',
-              pO2: '8.9',
-              hco3: '19.4',
-              be: '-6.2',
-              sO2: '92',
-              na: '138',
-              k: '4.8',
-              ca: '1.15',
-              cl: '106',
-              glu: '8.4',
-              lac: '3.2',
-              ctHb: '104',
-              fcoHb: '1.2',
-              fmetHb: '0.6',
-              albumin: '32',
-            }));
-          }
-        } catch (fetchErr) {
-          setOcrStatus('⚠️ Kunde inte kontakta OCR-servern. Standardvärden applicerade.');
-        } finally {
-          setOcrLoading(false);
-        }
+        await processBloodgasBase64(base64Data, file.type || 'image/jpeg');
       };
       reader.readAsDataURL(file);
     } catch (err) {
@@ -338,7 +342,7 @@ export const AcidBaseView: React.FC = () => {
             />
 
             <button
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => setCameraScannerOpen(true)}
               disabled={ocrLoading}
               style={{
                 display: 'flex',
@@ -1036,6 +1040,16 @@ export const AcidBaseView: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <CameraScannerModal
+        isOpen={cameraScannerOpen}
+        onClose={() => setCameraScannerOpen(false)}
+        title="Skanna Blodgasremsa (Radiometer ABL)"
+        subtitle="Rikta kameran mot blodgasutskriften för automatisk OCR-inläsning"
+        onCaptureImage={(base64, mimeType) => {
+          processBloodgasBase64(base64, mimeType);
+        }}
+      />
     </div>
   );
 };

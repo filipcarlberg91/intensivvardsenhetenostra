@@ -39,6 +39,9 @@ import { UploadModal } from './components/modals/UploadModal';
 import { LoginModal } from './components/modals/LoginModal';
 import { PermissionsModal } from './components/modals/PermissionsModal';
 import { MedicationReminderModal } from './components/modals/MedicationReminderModal';
+import { AndroidSetupModal } from './components/modals/AndroidSetupModal';
+import { CameraScannerModal } from './components/modals/CameraScannerModal';
+import { playClinicalAlarmSound, sendAndroidNotification } from './utils/androidBridge';
 
 const OWNER_EMAIL = 'filipcarlberg91@gmail.com';
 
@@ -78,7 +81,7 @@ export const App: React.FC = () => {
   // Användarens valda ordning på kategorier (Rutiner/PM)
   const [orderedCategories, setOrderedCategories] = useState(() => {
     try {
-      const saved = localStorage.getItem('iva_fab_menu_layout_v1');
+      const saved = localStorage.getItem('iva_fab_menu_layout_v2') || localStorage.getItem('iva_fab_menu_layout_v1');
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed.categoryIdsOrder) && parsed.categoryIdsOrder.length > 0) {
@@ -212,6 +215,8 @@ export const App: React.FC = () => {
   const [permissionsModalOpen, setPermissionsModalOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [medicationModalOpen, setMedicationModalOpen] = useState(false);
+  const [androidSetupModalOpen, setAndroidSetupModalOpen] = useState(false);
+  const [globalCameraScannerOpen, setGlobalCameraScannerOpen] = useState(false);
   const [floatingMenuOpen, setFloatingMenuOpen] = useState(false);
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -260,36 +265,17 @@ export const App: React.FC = () => {
             rem.notified = true;
             updated = true;
 
-            // 1. Kliniskt varningsljud via Web Audio API
-            try {
-              const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-              const osc = ctx.createOscillator();
-              const gain = ctx.createGain();
-              osc.type = 'sine';
-              osc.frequency.setValueAtTime(587.33, ctx.currentTime);
-              osc.frequency.setValueAtTime(880, ctx.currentTime + 0.15);
-              gain.gain.setValueAtTime(0.3, ctx.currentTime);
-              gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
-              osc.connect(gain);
-              gain.connect(ctx.destination);
-              osc.start();
-              osc.stop(ctx.currentTime + 0.6);
-            } catch (e) {}
+            // 1. Kliniskt varningsljud & haptisk vibration (Android)
+            playClinicalAlarmSound();
 
-            // 2. Vibration på mobil
-            if (navigator.vibrate) {
-              navigator.vibrate([200, 100, 200, 100, 300]);
-            }
+            // 2. Android ServiceWorker Notification / Web Notification
+            sendAndroidNotification(
+              `IVA Larm: ${rem.name}`,
+              `Dags för ${rem.type === 'infusion' ? 'infusionsbyte' : 'läkemedelsadministrering'}! (${rem.location || ''})`,
+              { tag: 'iva-bg-alarm-' + rem.id, reminderId: rem.id }
+            );
 
-            // 3. Web Notification API
-            if ('Notification' in window && Notification.permission === 'granted') {
-              new Notification(`IVA Larm: ${rem.name}`, {
-                body: `Dags för ${rem.type === 'infusion' ? 'infusionsbyte' : 'läkemedelsadministrering'}! (${rem.location || ''})`,
-                icon: '/icon-192.png',
-              });
-            }
-
-            // 4. Toast & In-App Notification
+            // 3. Toast & In-App Notification
             showToast(`🔔 IVA Larm: ${rem.name} (${rem.location || 'Dags för byte/dosering'})`);
             handleCreateNotification(
               `Larm: ${rem.name}`,
@@ -633,6 +619,7 @@ export const App: React.FC = () => {
         onLogout={handleLogout}
         onOpenUploadModal={() => setUploadModalOpen(true)}
         onOpenPermissionsModal={() => setPermissionsModalOpen(true)}
+        onOpenAndroidSetup={() => setAndroidSetupModalOpen(true)}
         onExportBackup={handleExportBackup}
         onImportBackup={handleImportBackup}
         canEdit={canEdit}
@@ -658,6 +645,7 @@ export const App: React.FC = () => {
             onOpenShiftModal={() => setShiftModalOpen(true)}
             onOpenPocketguideModal={() => setPocketguideModalOpen(true)}
             onOpenMedicationModal={() => setMedicationModalOpen(true)}
+            onOpenAndroidSetup={() => setAndroidSetupModalOpen(true)}
             activeReminderCount={activeReminderCount}
             onSelectCategory={(cat) => {
               setActiveCategory(cat);
@@ -799,6 +787,7 @@ export const App: React.FC = () => {
           setGeminiInitialPrompt('');
           setGeminiChatOpen(true);
         }}
+        onOpenAndroidSetup={() => setAndroidSetupModalOpen(true)}
         canEdit={canEdit}
       />
 
@@ -871,6 +860,25 @@ export const App: React.FC = () => {
         onClose={() => setMedicationModalOpen(false)}
         onAddNotification={(title, desc) => {
           handleCreateNotification(title, desc);
+        }}
+      />
+
+      <AndroidSetupModal
+        isOpen={androidSetupModalOpen}
+        onClose={() => setAndroidSetupModalOpen(false)}
+        onOpenCameraScanner={() => setGlobalCameraScannerOpen(true)}
+        onShowToast={showToast}
+      />
+
+      <CameraScannerModal
+        isOpen={globalCameraScannerOpen}
+        onClose={() => setGlobalCameraScannerOpen(false)}
+        title="IVA Kameraskanner (Android)"
+        subtitle="Fota blodgasremsa, läkemedel eller PM och skicka till Gemini Notebook"
+        onCaptureImage={(base64) => {
+          showToast('📸 Bild tagen! Öppnar Syra-Bas / Gemini Notebook...');
+          setGeminiInitialPrompt('Analysera denna kamerabild och sammanfatta kliniskt viktiga värden.');
+          setGeminiChatOpen(true);
         }}
       />
     </div>

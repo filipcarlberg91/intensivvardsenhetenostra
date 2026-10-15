@@ -9,6 +9,8 @@ import {
   PillIcon,
   VentilatorIcon,
   SearchIcon,
+  SparklesIcon,
+  CameraIcon,
 } from '../components/Icons';
 
 interface HomeViewProps {
@@ -17,6 +19,7 @@ interface HomeViewProps {
   onOpenShiftModal: () => void;
   onOpenPocketguideModal: () => void;
   onOpenMedicationModal: () => void;
+  onOpenAndroidSetup?: () => void;
   activeReminderCount?: number;
   onSelectCategory: (cat: string) => void;
   onOpenDoc: (doc: DocumentItem) => void;
@@ -25,14 +28,12 @@ interface HomeViewProps {
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({
-  documents,
   shiftChecklist,
   onOpenShiftModal,
-  onOpenPocketguideModal,
   onOpenMedicationModal,
+  onOpenAndroidSetup,
   activeReminderCount = 0,
   onSelectCategory,
-  onOpenDoc,
   onGlobalSearch,
   onQuickAskGemini,
 }) => {
@@ -51,10 +52,103 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
   const handleSearchSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (searchInput.trim()) {
-      onGlobalSearch(searchInput.trim());
-    }
+    onGlobalSearch(searchInput.trim());
   };
+
+  const clinicalTools = [
+    {
+      id: 'PAIN_SEDATION',
+      label: 'CPOT & RASS',
+      bg: '#fae8ff',
+      color: '#d946ef',
+      border: '#f5d0fe',
+      icon: <HeartPulseIcon size={26} />,
+      onClick: () => onSelectCategory('PAIN_SEDATION'),
+    },
+    {
+      id: 'DISEASES',
+      label: 'Sjukdomar',
+      bg: '#ffe4e6',
+      color: '#e11d48',
+      border: '#fecdd3',
+      icon: <StethoscopeIcon size={26} />,
+      onClick: () => onSelectCategory('DISEASES'),
+    },
+    {
+      id: 'ACID_BASE',
+      label: 'Blodgas & Syra-Bas',
+      bg: '#f3e8ff',
+      color: '#7c3aed',
+      border: '#ddd6fe',
+      icon: <FlaskIcon size={26} />,
+      onClick: () => onSelectCategory('ACID_BASE'),
+    },
+    {
+      id: 'FLUID_BALANCE',
+      label: 'Vätskor & ROSE',
+      bg: '#d1fae5',
+      color: '#059669',
+      border: '#a7f3d0',
+      icon: <DropletIcon size={26} />,
+      onClick: () => onSelectCategory('FLUID_BALANCE'),
+    },
+    {
+      id: 'NUTRITION',
+      label: 'Nutrition',
+      bg: '#fef3c7',
+      color: '#d97706',
+      border: '#fde68a',
+      icon: <NutritionIcon size={26} />,
+      onClick: () => onSelectCategory('NUTRITION'),
+    },
+    {
+      id: 'DRUGS',
+      label: 'Dos & CVK',
+      bg: '#e0f2fe',
+      color: '#0284c7',
+      border: '#bae6fd',
+      icon: <PillIcon size={26} />,
+      onClick: () => onSelectCategory('DRUGS'),
+    },
+    {
+      id: 'Läkemedel',
+      label: 'Läkemedel',
+      bg: '#f5f3ff',
+      color: '#6d28d9',
+      border: '#ddd6fe',
+      icon: <PillIcon size={26} />,
+      onClick: () => onSelectCategory('Läkemedel'),
+    },
+    {
+      id: 'EQUIPMENT',
+      label: 'Apparatur',
+      bg: '#cffafe',
+      color: '#0891b2',
+      border: '#a5f3fc',
+      icon: <VentilatorIcon size={26} />,
+      onClick: () => onSelectCategory('EQUIPMENT'),
+    },
+    {
+      id: 'GEMINI_NOTEBOOK',
+      label: 'Gemini Notebook',
+      bg: '#eef2ff',
+      color: '#4f46e5',
+      border: '#c7d2fe',
+      icon: <SparklesIcon size={26} />,
+      onClick: () => onQuickAskGemini(''),
+    },
+    {
+      id: 'ANDROID_CAMERA',
+      label: 'Kamera & Notiser',
+      bg: '#f1f5f9',
+      color: '#0f172a',
+      border: '#cbd5e1',
+      icon: <CameraIcon size={26} />,
+      onClick: () => {
+        if (onOpenAndroidSetup) onOpenAndroidSetup();
+      },
+    },
+  ];
 
   return (
     <div className="home-view-container">
@@ -69,21 +163,32 @@ export const HomeView: React.FC<HomeViewProps> = ({
           </div>
           <h1 className="home-hero-title">Intensivvårdsenheten Östra</h1>
           <p className="home-hero-subtitle">
-            Kliniskt beslutsstöd, interaktiva kalkylatorer, läkemedelsspädningar, styrande rutiner och evidensbaserade PM för IVA-läkare och intensivvårdssjuksköterskor.
+            Snabbåtkomst till kliniska kalkylatorer, spädningar, arbetspass och larm.
           </p>
 
           {/* DUBBLA ÅTGÄRDSKORT: START AV ARBETSPASS & MEDICINTIDER/INFUSIONSSLUT */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1rem', marginTop: '1.25rem' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))',
+              gap: '0.85rem',
+              marginTop: '1.1rem',
+            }}
+          >
             {/* KORT 1: START AV ARBETSPASS */}
             <div className="shift-start-hero-card" style={{ margin: 0 }}>
               <div className="shift-hero-left">
                 <div className="shift-hero-badge">📋 Skiftöverlämning</div>
                 <h2 className="shift-hero-title">Start av arbetspass</h2>
                 <p className="shift-hero-desc">
-                  Strukturerad checklista i 12 punkter: RLS, pupiller, auskultation, buk, hud, infarter, KAD, V-sond, respirator och RASS.
+                  Checklista i 12 punkter: RLS, pupiller, auskultation, buk, infarter, respirator och RASS.
                 </p>
                 <div className="shift-hero-status-row">
-                  <span className={`shift-status-pill ${shiftChecked === shiftTotal && shiftTotal > 0 ? 'complete' : ''}`}>
+                  <span
+                    className={`shift-status-pill ${
+                      shiftChecked === shiftTotal && shiftTotal > 0 ? 'complete' : ''
+                    }`}
+                  >
                     {shiftChecked} av {shiftTotal} ({shiftPercent}%)
                   </span>
                   <span style={{ fontSize: '0.75rem', color: '#bae6fd' }}>Sparat lokalt</span>
@@ -97,7 +202,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 >
                   <span style={{ fontSize: '1.3rem' }}>📋</span>
                   <span>Checklista</span>
-                  <span style={{ fontSize: '0.72rem', opacity: 0.85, fontWeight: 600 }}>(12 punkter)</span>
+                  <span style={{ fontSize: '0.72rem', opacity: 0.85, fontWeight: 600 }}>
+                    (12 punkter)
+                  </span>
                 </button>
               </div>
             </div>
@@ -112,24 +219,34 @@ export const HomeView: React.FC<HomeViewProps> = ({
               }}
             >
               <div className="shift-hero-left">
-                <div className="shift-hero-badge" style={{ background: 'rgba(238, 242, 255, 0.2)', color: '#e0e7ff', borderColor: 'rgba(238, 242, 255, 0.3)' }}>
+                <div
+                  className="shift-hero-badge"
+                  style={{
+                    background: 'rgba(238, 242, 255, 0.2)',
+                    color: '#e0e7ff',
+                    borderColor: 'rgba(238, 242, 255, 0.3)',
+                  }}
+                >
                   ⏰ Påminnelser & Sprutbyte
                 </div>
                 <h2 className="shift-hero-title">Medicintider & Infusionsslut</h2>
                 <p className="shift-hero-desc">
-                  Räkna ut när sprutor tar slut (ml kvar & ml/h) och få automatiska notislarm i god tid före byte!
+                  Räkna ut när sprutor tar slut (ml kvar & ml/h) och få automatiska notislarm före byte.
                 </p>
                 <div className="shift-hero-status-row">
                   <span
                     className="shift-status-pill"
                     style={{
-                      background: activeReminderCount > 0 ? '#4338ca' : 'rgba(255,255,255,0.15)',
+                      background:
+                        activeReminderCount > 0 ? '#4338ca' : 'rgba(255,255,255,0.15)',
                       color: '#ffffff',
                     }}
                   >
-                    {activeReminderCount > 0 ? `🔔 ${activeReminderCount} aktiva larm` : 'Inga aktiva larm'}
+                    {activeReminderCount > 0
+                      ? `🔔 ${activeReminderCount} aktiva larm`
+                      : 'Inga aktiva larm'}
                   </span>
-                  <span style={{ fontSize: '0.75rem', color: '#c7d2fe' }}>Larm & notis</span>
+                  <span style={{ fontSize: '0.75rem', color: '#c7d2fe' }}>Android-notis</span>
                 </div>
               </div>
               <div className="shift-hero-right">
@@ -144,14 +261,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 >
                   <span style={{ fontSize: '1.3rem' }}>⏰</span>
                   <span>Medicintider</span>
-                  <span style={{ fontSize: '0.72rem', opacity: 0.85, fontWeight: 600 }}>& Infusionsslut</span>
+                  <span style={{ fontSize: '0.72rem', opacity: 0.85, fontWeight: 600 }}>
+                    & Infusionsslut
+                  </span>
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Sökruta i Hero */}
-          <div className="home-hero-search-box" style={{ marginTop: '1.25rem' }}>
+          {/* Sökruta i Hero (utan taggar under) */}
+          <div className="home-hero-search-box" style={{ marginTop: '1.1rem' }}>
             <form onSubmit={handleSearchSubmit} className="home-search-input-wrapper">
               <span className="home-search-icon">
                 <SearchIcon size={18} />
@@ -161,282 +280,91 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 className="home-search-input"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Sök bland PM, kalkylatorer, doser (t.ex. Befuktare 950, Noradrenalin, ARDS, CPOT)..."
+                placeholder="Sök bland rutiner/PM, läkemedel och kalkylatorer..."
               />
               <button type="submit" className="home-search-submit-btn">
-                Sök i hubben
+                Sök
               </button>
             </form>
-            <div className="home-quick-tags">
-              <span className="home-quick-label">Snabbval:</span>
-              <button className="home-tag-btn" onClick={() => onSelectCategory('Läkemedel')}>
-                #Läkemedel (IVA-Register)
-              </button>
-              <button className="home-tag-btn" onClick={() => onSelectCategory('PAIN_SEDATION')}>
-                #CPOT & RASS
-              </button>
-              <button className="home-tag-btn" onClick={() => onSelectCategory('Sedering')}>
-                #Sedering
-              </button>
-              <button className="home-tag-btn" onClick={() => onSelectCategory('Buk')}>
-                #Buk & IAP
-              </button>
-              <button className="home-tag-btn" onClick={() => onSelectCategory('Infektion')}>
-                #Sepsis & Infektion
-              </button>
-              <button className="home-tag-btn" onClick={() => onSelectCategory('Gynekologi')}>
-                #Preeklampsi
-              </button>
-              <button className="home-tag-btn" onClick={() => onSelectCategory('Avslut')}>
-                #Avslut & Palliation
-              </button>
-              <button className="home-tag-btn" onClick={() => onSelectCategory('Donation')}>
-                #Organdonation
-              </button>
-              <button className="home-tag-btn" onClick={() => onSelectCategory('ACID_BASE')}>
-                #Blodgas & Ventilator
-              </button>
-              <button className="home-tag-btn" onClick={() => onSelectCategory('FLUID_BALANCE')}>
-                #Vätskebalans & Diures
-              </button>
-              <button className="home-tag-btn" onClick={() => onSelectCategory('DRUGS')}>
-                #Dos & CVK
-              </button>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* 2. KLINISKA MODULER & INTERAKTIVA VERKTYG */}
-      <section className="home-modules-section">
-        <div className="home-section-header">
+      {/* 2. KLINISKA VERKTYG — ENBART IKONER MED TEXT UNDER */}
+      <section className="home-modules-section" style={{ marginTop: '1.5rem' }}>
+        <div className="home-section-header" style={{ marginBottom: '0.85rem' }}>
           <div className="home-section-title-wrap">
             <span className="home-section-dot blue"></span>
-            <h2 className="home-section-title">Kliniska Moduler & Interaktiva Verktyg</h2>
-          </div>
-          <span className="home-section-hint">Välj modul för att starta</span>
-        </div>
-
-        <div className="home-modules-grid">
-          {/* Modul 1: Smärta & Sedering */}
-          <div className="home-module-card" onClick={() => onSelectCategory('PAIN_SEDATION')}>
-            <div className="module-card-icon" style={{ background: '#fae8ff', color: '#d946ef', borderColor: '#f5d0fe' }}>
-              <HeartPulseIcon size={24} />
-            </div>
-            <div className="module-card-content">
-              <h3 className="module-card-title">Smärta & Sedering (CPOT & RASS)</h3>
-              <p className="module-card-desc">
-                Validerad smärtskattning med CPOT (0–8 poäng) och sederingsbedömning med RASS (+4 till -5). Interaktiva poängkalkylatorer och titreringsråd.
-              </p>
-              <div className="module-card-footer">
-                <span className="module-pill-tag" style={{ background: '#fdf4ff', color: '#c026d3' }}>CPOT 0–8</span>
-                <span className="module-pill-tag" style={{ background: '#fdf4ff', color: '#c026d3' }}>RASS -5 till +4</span>
-                <span className="module-arrow">→</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Modul 2: Sjukdomar på IVA */}
-          <div className="home-module-card" onClick={() => onSelectCategory('DISEASES')}>
-            <div className="module-card-icon" style={{ background: '#ffe4e6', color: '#e11d48', borderColor: '#fecdd3' }}>
-              <StethoscopeIcon size={24} />
-            </div>
-            <div className="module-card-content">
-              <h3 className="module-card-title">Sjukdomstillstånd på IVA</h3>
-              <p className="module-card-desc">
-                15 fördjupade intensivvårdstillstånd: Septisk chock, Kardiogen chock, ARDS typ 1 & 2, KDIGO AKI, Status Epilepticus, ACS, Malign hypertermi m.fl.
-              </p>
-              <div className="module-card-footer">
-                <span className="module-pill-tag" style={{ background: '#fff1f2', color: '#be123c' }}>15 Tillstånd</span>
-                <span className="module-pill-tag" style={{ background: '#fff1f2', color: '#be123c' }}>Patofysiologi</span>
-                <span className="module-arrow">→</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Modul 3: Syra-Bas & Blodgas */}
-          <div className="home-module-card" onClick={() => onSelectCategory('ACID_BASE')}>
-            <div className="module-card-icon" style={{ background: '#f3e8ff', color: '#7c3aed', borderColor: '#ddd6fe' }}>
-              <FlaskIcon size={24} />
-            </div>
-            <div className="module-card-content">
-              <h3 className="module-card-title">Syra-Bas & Blodgaskalkylator</h3>
-              <p className="module-card-desc">
-                Mata in 16 Radiometer ABL-parametrar direkt från remsan. Automatisk beräkning av Anjongap, albuminkorrigering, Winters formel, Delta Ratio och PaO2/FiO2.
-              </p>
-              <div className="module-card-footer">
-                <span className="module-pill-tag" style={{ background: '#faf5ff', color: '#6d28d9' }}>Radiometer ABL</span>
-                <span className="module-pill-tag" style={{ background: '#faf5ff', color: '#6d28d9' }}>Winters Formel</span>
-                <span className="module-arrow">→</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Modul 4: Vätskor & ROSE */}
-          <div className="home-module-card" onClick={() => onSelectCategory('FLUID_BALANCE')}>
-            <div className="module-card-icon" style={{ background: '#d1fae5', color: '#059669', borderColor: '#a7f3d0' }}>
-              <DropletIcon size={24} />
-            </div>
-            <div className="module-card-content">
-              <h3 className="module-card-title">Vätsketerapi, ROSE & Dropptakt</h3>
-              <p className="module-card-desc">
-                Östra Excel-vätskebalans, % Fluid Overload kumulativ riskkalkylator, dropptaktsomräknare samt jämförelse mellan Ringer-Acetat, Plasmalyte, NaCl och Albumin.
-              </p>
-              <div className="module-card-footer">
-                <span className="module-pill-tag" style={{ background: '#ecfdf5', color: '#047857' }}>Östra Excel</span>
-                <span className="module-pill-tag" style={{ background: '#ecfdf5', color: '#047857' }}>% Fluid Overload</span>
-                <span className="module-arrow">→</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Modul 5: Nutrition */}
-          <div className="home-module-card" onClick={() => onSelectCategory('NUTRITION')}>
-            <div className="module-card-icon" style={{ background: '#fef3c7', color: '#d97706', borderColor: '#fde68a' }}>
-              <NutritionIcon size={24} />
-            </div>
-            <div className="module-card-content">
-              <h3 className="module-card-title">Nutritionskalkylator & Kaloritabell IVA 343</h3>
-              <p className="module-card-desc">
-                ESPEN energimål (20–30 kcal/kg) och proteinmål (1.2–2.0 g/kg). Automatisk avräkning för Propofol och citratdialys. Autentisk kaloritabell från IVA 343 Östra sjukhuset.
-              </p>
-              <div className="module-card-footer">
-                <span className="module-pill-tag" style={{ background: '#fffbeb', color: '#b45309' }}>ESPEN Mål</span>
-                <span className="module-pill-tag" style={{ background: '#fffbeb', color: '#b45309' }}>IVA 343 Meny</span>
-                <span className="module-arrow">→</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Modul 6: Dos & CVK */}
-          <div className="home-module-card" onClick={() => onSelectCategory('DRUGS')}>
-            <div className="module-card-icon" style={{ background: '#e0f2fe', color: '#0284c7', borderColor: '#bae6fd' }}>
-              <PillIcon size={24} />
-            </div>
-            <div className="module-card-content">
-              <h3 className="module-card-title">Doskalkylator & Blandbarhet i CVK</h3>
-              <p className="module-card-desc">
-                Komplett infusions- och doseringsstöd för samtliga IVA- och PostOp-läkemedel (Vasoaktiva, Sedation, Opioider, Antibiotika m.fl.) samt CVK Y-kopplingsmatris.
-              </p>
-              <div className="module-card-footer">
-                <span className="module-pill-tag" style={{ background: '#f0f9ff', color: '#0369a1' }}>Alla IVA/PostOp Läkemedel</span>
-                <span className="module-pill-tag" style={{ background: '#f0f9ff', color: '#0369a1' }}>Y-Koppling</span>
-                <span className="module-arrow">→</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Modul 6B: Rutiner/PM Läkemedel */}
-          <div className="home-module-card" onClick={() => onSelectCategory('Läkemedel')}>
-            <div className="module-card-icon" style={{ background: '#f5f3ff', color: '#7c3aed', borderColor: '#ddd6fe' }}>
-              <PillIcon size={24} />
-            </div>
-            <div className="module-card-content">
-              <h3 className="module-card-title">Läkemedel (Klinisk Hubb & Kompakt Register)</h3>
-              <p className="module-card-desc">
-                Kompakt och sökbar läkemedelslista med favoritmarkering, vad läkemedlet gör, biverkningar, halveringstid, anslagstid och spädning. Tryck för helskärmsinfo.
-              </p>
-              <div className="module-card-footer">
-                <span className="module-pill-tag" style={{ background: '#f5f3ff', color: '#6d28d9' }}>Sök & Favoriter ★</span>
-                <span className="module-pill-tag" style={{ background: '#f5f3ff', color: '#6d28d9' }}>Effekt, Biverkningar & T½</span>
-                <span className="module-arrow">→</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Modul 7: Apparatur */}
-          <div className="home-module-card" onClick={() => onSelectCategory('EQUIPMENT')}>
-            <div className="module-card-icon" style={{ background: '#cffafe', color: '#0891b2', borderColor: '#a5f3fc' }}>
-              <VentilatorIcon size={24} />
-            </div>
-            <div className="module-card-content">
-              <h3 className="module-card-title">Servo-U Ventilator & Apparatur</h3>
-              <p className="module-card-desc">
-                Ventilationsmoder (PRVC, PC, PS, NAVA), diagnostiska manövrar (Pplat, Auto-PEEP, ΔP drivtryck), larmlista och PBW-kalkylator för tidalvolym (4–8 ml/kg).
-              </p>
-              <div className="module-card-footer">
-                <span className="module-pill-tag" style={{ background: '#ecfeff', color: '#0e7490' }}>Servo-U</span>
-                <span className="module-pill-tag" style={{ background: '#ecfeff', color: '#0e7490' }}>PBW & ΔP</span>
-                <span className="module-arrow">→</span>
-              </div>
-            </div>
+            <h2 className="home-section-title">Kliniska Verktyg</h2>
           </div>
         </div>
-      </section>
 
-      {/* 4. SENASTE PM & PROTOKOLL */}
-      <section className="home-recent-section" style={{ marginTop: '2rem' }}>
-        <div className="home-section-header">
-          <div className="home-section-title-wrap">
-            <span className="home-section-dot green"></span>
-            <h2 className="home-section-title">Styrande Rutiner & PM</h2>
-          </div>
-          <button className="btn-view-all-docs" onClick={() => onSelectCategory('Respiration')}>
-            Visa alla ({documents.length} st) →
-          </button>
-        </div>
-
-        <div className="home-docs-preview-grid">
-          {documents.slice(0, 3).map((doc) => (
-            <div key={doc.id} className="home-doc-card" onClick={() => onOpenDoc(doc)}>
-              <div className="home-doc-header">
-                <span className="home-doc-category">{doc.category}</span>
-                <span className="home-doc-priority">{doc.priority}</span>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(112px, 1fr))',
+            gap: '0.75rem',
+          }}
+        >
+          {clinicalTools.map((tool) => (
+            <button
+              key={tool.id}
+              type="button"
+              onClick={tool.onClick}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.55rem',
+                padding: '0.95rem 0.5rem',
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
+                borderRadius: '16px',
+                cursor: 'pointer',
+                boxShadow: '0 2px 6px rgba(15, 23, 42, 0.04)',
+                transition: 'transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.borderColor = tool.color;
+                e.currentTarget.style.boxShadow = '0 8px 18px rgba(15, 23, 42, 0.08)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.borderColor = '#e2e8f0';
+                e.currentTarget.style.boxShadow = '0 2px 6px rgba(15, 23, 42, 0.04)';
+              }}
+            >
+              <div
+                style={{
+                  width: '52px',
+                  height: '52px',
+                  borderRadius: '14px',
+                  background: tool.bg,
+                  color: tool.color,
+                  border: `1.5px solid ${tool.border}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                {tool.icon}
               </div>
-              <h4 className="home-doc-title">{doc.title}</h4>
-              <p className="home-doc-desc">{doc.description}</p>
-              <div className="home-doc-footer">
-                <span className="home-doc-tag">PDF & Protokoll</span>
-                <span className="home-doc-read-cta">Läs PM →</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 5. SNABBFRÅGOR TILL GEMINI IVA */}
-      <section className="home-ai-quick-section" style={{ marginTop: '2.5rem' }}>
-        <div className="home-ai-card">
-          <div className="home-ai-content">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <span className="ai-sparkle-dot"></span>
-              <span style={{ fontWeight: 700, color: '#4f46e5', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em' }}>
-                Gemini IVA-Assistent
+              <span
+                style={{
+                  fontSize: '0.8rem',
+                  fontWeight: 800,
+                  color: '#0f172a',
+                  textAlign: 'center',
+                  lineHeight: 1.25,
+                }}
+              >
+                {tool.label}
               </span>
-            </div>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: '0.35rem 0', color: '#0f172a' }}>
-              Fråga kliniska expertassistenten
-            </h3>
-            <p style={{ fontSize: '0.875rem', color: '#64748b', margin: '0 0 1rem' }}>
-              Få omedelbara svar om läkemedelsspädningar, Y-kopplingsblandbarhet, syra-baskorrigering eller Servo-U ventilatorlarm.
-            </p>
-            <div className="home-ai-quick-buttons">
-              <button
-                className="btn-ai-prompt"
-                onClick={() => onQuickAskGemini('Vad är standardspädning och dosering för Noradrenalin på IVA Östra?')}
-              >
-                💉 Hur späds Noradrenalin?
-              </button>
-              <button
-                className="btn-ai-prompt"
-                onClick={() => onQuickAskGemini('Kan Noradrenalin och Furosemid gå i samma skänkel i CVK?')}
-              >
-                ⚡ Noradrenalin + Furosemid blandbarhet?
-              </button>
-              <button
-                className="btn-ai-prompt"
-                onClick={() => onQuickAskGemini('Hur tolkar jag Högt Luftvägstryck (High Paw) på Servo-U?')}
-              >
-                🫁 Felsök High Paw på Servo-U
-              </button>
-              <button
-                className="btn-ai-prompt"
-                onClick={() => onQuickAskGemini('Hur räknar jag av kalorier för Propofol 10 mg/ml?')}
-              >
-                🥗 Kalorier från Propofol
-              </button>
-            </div>
-          </div>
+            </button>
+          ))}
         </div>
       </section>
     </div>

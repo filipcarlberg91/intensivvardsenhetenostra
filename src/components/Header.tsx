@@ -21,6 +21,7 @@ interface HeaderProps {
   onLogout: () => void;
   onOpenUploadModal: () => void;
   onOpenPermissionsModal: () => void;
+  onOpenAndroidSetup?: () => void;
   onExportBackup: () => void;
   onImportBackup: (event: React.ChangeEvent<HTMLInputElement>) => void;
   canEdit: boolean;
@@ -46,6 +47,7 @@ export const Header: React.FC<HeaderProps> = ({
   onLogout,
   onOpenUploadModal,
   onOpenPermissionsModal,
+  onOpenAndroidSetup,
   onExportBackup,
   onImportBackup,
   canEdit,
@@ -79,12 +81,24 @@ export const Header: React.FC<HeaderProps> = ({
               <kbd>Ctrl K</kbd>
             </button>
 
-            {/* Gemini AI Assistent knapp */}
-            <button className="btn-gemini-ai" onClick={onOpenGeminiChat} title="Fråga Gemini IVA-Assistent (Ctrl+J)">
+            {/* Gemini IVA Notebook knapp */}
+            <button className="btn-gemini-ai" onClick={onOpenGeminiChat} title="Öppna Gemini IVA Notebook (Ctrl+J)">
               <span className="ai-sparkle-dot"></span>
               <SparklesIcon size={16} />
-              <span>Fråga Gemini</span>
+              <span>Gemini Notebook</span>
             </button>
+
+            {/* Android, Kamera & Notiser knapp */}
+            {onOpenAndroidSetup && (
+              <button
+                className="btn-header-secondary btn-icon-compact"
+                onClick={onOpenAndroidSetup}
+                title="Android-App, Kamera & Notiser"
+              >
+                <span style={{ fontSize: '1rem' }}>🤖</span>
+                <span className="btn-compact-text">App & Kamera</span>
+              </button>
+            )}
 
             {/* Notiser & Händelser */}
             <div className="notification-center-wrapper">

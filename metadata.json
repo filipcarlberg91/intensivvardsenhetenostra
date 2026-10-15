@@ -1,7 +1,14 @@
 {
   "name": "Intensivvårdsenheten Östra - Kliniska Rutiner & Kalkylatorer",
   "description": "Kliniska riktlinjer, rutiner, PM, protokoll och interaktiva kalkylatorer för Intensivvårdsenheten Östra (IVA).",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
   "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ],
+  "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
   ]
 }
