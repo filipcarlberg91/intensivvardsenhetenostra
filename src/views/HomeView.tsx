@@ -326,13 +326,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </div>
           </div>
 
-          {/* Modul 6B: IVA-Kategori Läkemedel */}
+          {/* Modul 6B: Rutiner/PM Läkemedel */}
           <div className="home-module-card" onClick={() => onSelectCategory('Läkemedel')}>
             <div className="module-card-icon" style={{ background: '#f5f3ff', color: '#7c3aed', borderColor: '#ddd6fe' }}>
               <PillIcon size={24} />
             </div>
             <div className="module-card-content">
-              <h3 className="module-card-title">IVA-Kategori: Läkemedel (Kompakt Register)</h3>
+              <h3 className="module-card-title">Läkemedel (Klinisk Hubb & Kompakt Register)</h3>
               <p className="module-card-desc">
                 Kompakt och sökbar läkemedelslista med favoritmarkering, vad läkemedlet gör, biverkningar, halveringstid, anslagstid och spädning. Tryck för helskärmsinfo.
               </p>

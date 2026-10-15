@@ -3,6 +3,7 @@ import { CategoryItem, DocumentItem, DrugCategory, DrugItem } from '../types';
 import { IVA_DRUGS, DRUG_CATEGORIES } from '../data/drugsData';
 import { SearchIcon, StarIcon, CategoryIcon, PillIcon } from '../components/Icons';
 import { DrugDetailModal } from '../components/modals/DrugDetailModal';
+import { CategoryHubSection } from '../components/CategoryHubSection';
 
 interface MedicationCatalogViewProps {
   categories: CategoryItem[];
@@ -30,6 +31,7 @@ export const MedicationCatalogView: React.FC<MedicationCatalogViewProps> = ({
   const [selectedSubCategory, setSelectedSubCategory] = useState<DrugCategory | 'ALL' | 'FAVORITES'>('ALL');
   const [sortBy, setSortBy] = useState<'name' | 'category' | 'favorites'>('category');
   const [selectedDrug, setSelectedDrug] = useState<DrugItem | null>(null);
+  const [showHubOverview, setShowHubOverview] = useState<boolean>(true);
 
   const allDrugs = useMemo(() => [...IVA_DRUGS, ...customDrugs], [customDrugs]);
 
@@ -106,52 +108,59 @@ export const MedicationCatalogView: React.FC<MedicationCatalogViewProps> = ({
               <CategoryIcon icon={catObj?.icon || 'syringe'} size={24} color={catObj?.color || '#7c3aed'} />
             </div>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
                 <h1 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                  IVA-Kategori: Läkemedel (IVA & PostOp)
+                  Läkemedel (IVA & PostOp)
                 </h1>
-                <span
-                  style={{
-                    background: '#f5f3ff',
-                    color: '#7c3aed',
-                    border: '1px solid #ddd6fe',
-                    fontSize: '0.75rem',
-                    fontWeight: 800,
-                    padding: '0.15rem 0.55rem',
-                    borderRadius: '999px',
-                  }}
-                >
-                  {allDrugs.length} preparat
+                <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#7c3aed' }}>
+                  • {allDrugs.length} preparat & Klinisk Hubb
                 </span>
               </div>
               <p style={{ fontSize: '0.84rem', color: '#64748b', margin: '0.15rem 0 0' }}>
-                Kompakt kliniskt läkemedelsregister med verkningsmekanism, biverkningar, halveringstid, spädning och dosering. Klicka på ett läkemedel för fullständig vy.
+                Klinisk farmakologihubb (normalvärden, antidoter, CVK-skänklar) samt kompakt läkemedelsregister och styrande PM.
               </p>
             </div>
           </div>
 
-          <button
-            onClick={() => onOpenInCalculator(allDrugs[0]?.id || 'noradrenalin')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.45rem',
-              background: '#0f172a',
-              color: '#ffffff',
-              border: 'none',
-              padding: '0.55rem 1rem',
-              borderRadius: '10px',
-              fontSize: '0.82rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-            }}
-          >
-            <PillIcon size={16} />
-            <span>Öppna Dos & CVK-kalkylator →</span>
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => setShowHubOverview((prev) => !prev)}
+              style={{
+                background: showHubOverview ? '#f5f3ff' : '#f1f5f9',
+                color: showHubOverview ? '#6d28d9' : '#475569',
+                border: showHubOverview ? '1px solid #ddd6fe' : '1px solid #cbd5e1',
+                padding: '0.55rem 0.9rem',
+                borderRadius: '10px',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+              }}
+            >
+              {showHubOverview ? 'Dölj Normalvärden & Antidoter ▲' : 'Visa Normalvärden & Antidoter ▼'}
+            </button>
+            <button
+              onClick={() => onOpenInCalculator(allDrugs[0]?.id || 'noradrenalin')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                background: '#0f172a',
+                color: '#ffffff',
+                border: 'none',
+                padding: '0.55rem 1rem',
+                borderRadius: '10px',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+              }}
+            >
+              <PillIcon size={16} />
+              <span>Öppna Dos & CVK-kalkylator →</span>
+            </button>
+          </div>
         </div>
 
-        {/* Kategoriväljare (Pills för att byta mellan IVA-kategorier) */}
+        {/* Kategoriväljare (Rutiner/PM) */}
         <div style={{ display: 'flex', gap: '0.35rem', marginTop: '1rem', overflowX: 'auto', paddingBottom: '0.2rem' }}>
           <button
             onClick={() => onSelectCategory('ALL')}
@@ -161,13 +170,13 @@ export const MedicationCatalogView: React.FC<MedicationCatalogViewProps> = ({
               color: '#475569',
               fontSize: '0.78rem',
               fontWeight: 700,
-              padding: '0.35rem 0.75rem',
-              borderRadius: '9999px',
+              padding: '0.38rem 0.8rem',
+              borderRadius: '8px',
               cursor: 'pointer',
               whiteSpace: 'nowrap',
             }}
           >
-            Alla PM ({documents.length})
+            Alla Rutiner/PM ({documents.length})
           </button>
           {categories.map((c) => {
             const isAct = c.id === 'Läkemedel';
@@ -182,8 +191,8 @@ export const MedicationCatalogView: React.FC<MedicationCatalogViewProps> = ({
                   color: isAct ? c.color : '#475569',
                   fontSize: '0.78rem',
                   fontWeight: 700,
-                  padding: '0.35rem 0.75rem',
-                  borderRadius: '9999px',
+                  padding: '0.38rem 0.8rem',
+                  borderRadius: '8px',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                 }}
@@ -194,6 +203,16 @@ export const MedicationCatalogView: React.FC<MedicationCatalogViewProps> = ({
           })}
         </div>
       </div>
+
+      {/* KATEGORI-STARTSIDA / HUBB FÖR LÄKEMEDEL */}
+      {showHubOverview && (
+        <CategoryHubSection
+          categoryId="Läkemedel"
+          categoryObj={catObj}
+          onSelectCategory={onSelectCategory}
+          pmCount={categoryDocs.length}
+        />
+      )}
 
       {/* Sök, Favoritfilter & Underkategorier */}
       <div
@@ -534,32 +553,49 @@ export const MedicationCatalogView: React.FC<MedicationCatalogViewProps> = ({
         </div>
       )}
 
-      {/* Eventuella uppladdade PM under kategorin Läkemedel */}
+      {/* Kompakt lista med Rutiner & PM under Läkemedel */}
       {categoryDocs.length > 0 && (
         <div style={{ marginTop: '1.5rem' }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.75rem' }}>
-            📄 Styrande PM & Dokument under Läkemedel ({categoryDocs.length})
+          <h3 style={{ fontSize: '1.02rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.6rem' }}>
+            Rutiner & PM – Läkemedel ({categoryDocs.length})
           </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1rem' }}>
-            {categoryDocs.map((doc) => (
+          <div
+            style={{
+              background: '#ffffff',
+              borderRadius: '14px',
+              border: '1px solid #cbd5e1',
+              overflow: 'hidden',
+            }}
+          >
+            {categoryDocs.map((doc, idx) => (
               <div
                 key={doc.id}
                 onClick={() => onOpenDoc(doc)}
                 style={{
-                  background: '#ffffff',
-                  borderRadius: '12px',
-                  border: '1px solid #e2e8f0',
-                  padding: '1rem',
+                  padding: '0.65rem 1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '1rem',
+                  borderBottom: idx < categoryDocs.length - 1 ? '1px solid #f1f5f9' : 'none',
                   cursor: 'pointer',
+                  background: idx % 2 === 0 ? '#ffffff' : '#fafbfc',
                 }}
               >
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#7c3aed', marginBottom: '0.25rem' }}>
-                  {doc.priority} • {doc.category}
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+                    <strong style={{ fontSize: '0.86rem', color: '#0f172a' }}>{doc.title}</strong>
+                    <span style={{ fontSize: '0.72rem', color: '#7c3aed', fontWeight: 700 }}>
+                      · {doc.priority}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: '0.76rem', color: '#64748b', marginTop: '0.1rem' }}>
+                    {doc.description}
+                  </div>
                 </div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.35rem' }}>
-                  {doc.title}
-                </div>
-                <div style={{ fontSize: '0.8rem', color: '#64748b' }}>{doc.description}</div>
+                <span style={{ color: '#0284c7', fontWeight: 800, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
+                  Läs PM →
+                </span>
               </div>
             ))}
           </div>

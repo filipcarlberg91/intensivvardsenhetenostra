@@ -75,6 +75,32 @@ export const App: React.FC = () => {
   // Navigation / Aktiv kategori
   const [activeCategory, setActiveCategory] = useState<string>('HOME');
 
+  // Användarens valda ordning på kategorier (Rutiner/PM)
+  const [orderedCategories, setOrderedCategories] = useState(() => {
+    try {
+      const saved = localStorage.getItem('iva_fab_menu_layout_v1');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed.categoryIdsOrder) && parsed.categoryIdsOrder.length > 0) {
+          const ordered = parsed.categoryIdsOrder
+            .map((id: string) => CATEGORIES.find((c) => c.id === id))
+            .filter(Boolean);
+          const missing = CATEGORIES.filter((c) => !parsed.categoryIdsOrder.includes(c.id));
+          return [...ordered, ...missing];
+        }
+      }
+    } catch (e) {}
+    return CATEGORIES;
+  });
+
+  const handleReorderCategories = (newOrderIds: string[]) => {
+    const ordered = newOrderIds
+      .map((id) => CATEGORIES.find((c) => c.id === id))
+      .filter((c): c is (typeof CATEGORIES)[0] => Boolean(c));
+    const missing = CATEGORIES.filter((c) => !newOrderIds.includes(c.id));
+    setOrderedCategories([...ordered, ...missing]);
+  };
+
   // Dokument
   const [documents, setDocuments] = useState<DocumentItem[]>(() => {
     try {
@@ -672,7 +698,7 @@ export const App: React.FC = () => {
 
         {activeCategory === 'Läkemedel' && (
           <MedicationCatalogView
-            categories={CATEGORIES}
+            categories={orderedCategories}
             documents={documents}
             favoriteDrugs={favoriteDrugs}
             onToggleFavoriteDrug={handleToggleFavoriteDrug}
@@ -715,10 +741,11 @@ export const App: React.FC = () => {
           />
         )}
 
-        {/* Om kategorin är en av dokumentkategorierna (inklusive de 6 nya IVA-kategorierna) */}
+        {/* Om kategorin är en av Rutiner/PM-kategorierna */}
         {[
           'Respiration',
           'Circulation',
+          'Nutrition',
           'Nutrition_Docs',
           'CRRT',
           'Elimination',
@@ -734,7 +761,7 @@ export const App: React.FC = () => {
         ].includes(activeCategory) && (
           <DocumentsView
             currentCategory={activeCategory}
-            categories={CATEGORIES}
+            categories={orderedCategories}
             documents={documents}
             favorites={favorites}
             onToggleFavorite={handleToggleFavorite}
@@ -761,7 +788,8 @@ export const App: React.FC = () => {
           setFloatingMenuOpen(false);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
-        categories={CATEGORIES}
+        categories={orderedCategories}
+        onReorderCategories={handleReorderCategories}
         documents={documents}
         favoritesCount={favorites.length}
         currentUser={currentUser}

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * IVA Dokumenthub - Applikationslogik & Tillståndshantering
  * Intensivvårdsapplikation med lokal IndexedDB-lagring, flytande meny,
  * rutnätsvy, sid- och totalsökning samt dokumenthantering.
@@ -1432,8 +1432,8 @@ class IvaDocApp {
           <span class="fab-badge" id="fab-badge-MYPAGE">${favCount}</span>
         </div>
 
-        <!-- De 7 medicinska IVA-kategorierna -->
-        <div class="fab-section-label">IVA-Kategorier</div>
+        <!-- Rutiner/PM -->
+        <div class="fab-section-label">Rutiner/PM</div>
         <div class="fab-category-grid">
     `;
 

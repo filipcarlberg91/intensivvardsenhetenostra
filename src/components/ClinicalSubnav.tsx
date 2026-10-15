@@ -239,7 +239,7 @@ export const ClinicalSubnav: React.FC<ClinicalSubnavProps> = ({
           <span className="subnav-pill-desc">Servo-U Ventilator</span>
         </button>
 
-        {/* Övriga Rutiner & PM */}
+        {/* Övriga Rutiner/PM */}
         <button
           className={`subnav-pill-btn ${isDocumentCategory ? 'active' : ''}`}
           onClick={() => onSelectCategory('Respiration')}
@@ -248,8 +248,8 @@ export const ClinicalSubnav: React.FC<ClinicalSubnavProps> = ({
           <span className="subnav-pill-icon" style={{ color: '#475569' }}>
             <LayersIcon size={16} />
           </span>
-          <span className="subnav-pill-title">Rutiner & PM</span>
-          <span className="subnav-pill-desc">Alla sektioner</span>
+          <span className="subnav-pill-title">Rutiner/PM</span>
+          <span className="subnav-pill-desc">Kliniska hubbar</span>
         </button>
 
         {/* Min Sida */}

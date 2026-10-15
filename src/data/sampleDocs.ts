@@ -3,7 +3,7 @@ import { CategoryItem, DocumentItem } from '../types';
 export const CATEGORIES: CategoryItem[] = [
   { id: "Läkemedel", name: "Läkemedel", subtitle: "IVA & PostOp Register, Effekt, Biverkningar, T½", color: "#2563eb", colorLight: "#eff6ff", colorBorder: "#bfdbfe", icon: "syringe", description: "Komplett läkemedelsregister för IVA & PostOp – sökfunktion, favoriter, vad läkemedlet gör, biverkningar, halveringstid, spädning och dosering." },
   { id: "Respiration", name: "Respiration", subtitle: "Ventilator, PEEP, Befuktning, ARDS", color: "#0284c7", colorLight: "#e0f2fe", colorBorder: "#bae6fd", icon: "lungs", description: "Riktlinjer och rutiner för invasiv och icke-invasiv ventilation, befuktning, trakeostomi och ARDS-vård." },
-  { id: "Circulation", name: "Circulation", subtitle: "Chock, Inotropa, MAP, Arytmier", color: "#e11d48", colorLight: "#ffe4e6", colorBorder: "#fecdd3", icon: "heartPulse", description: "Hemodynamisk monitorering, chockbehandling, inotropi, vasoaktiva infusioner och arytmihantering." },
+  { id: "Circulation", name: "Cirkulation", subtitle: "Chock, Inotropa, MAP, Arytmier", color: "#e11d48", colorLight: "#ffe4e6", colorBorder: "#fecdd3", icon: "heartPulse", description: "Hemodynamisk monitorering, chockbehandling, inotropi, vasoaktiva infusioner och arytmihantering." },
   { id: "Nutrition", name: "Nutrition", subtitle: "ESPEN, Enteral, TPN, Kalorier", color: "#d97706", colorLight: "#fef3c7", colorBorder: "#fde68a", icon: "apple", description: "ESPEN-riktlinjer, sondmatning, parenteral nutrition (TPN), ventrikelretention och energimål." },
   { id: "CRRT", name: "CRRT", subtitle: "Dialys, Citrat, Filter, Vätskedrag", color: "#7c3aed", colorLight: "#f3e8ff", colorBorder: "#e9d5ff", icon: "filter", description: "Kontinuerlig njurersättningsterapi, regional citratantikoagulation, filterbyte och vätskebalansering." },
   { id: "Elimination", name: "Elimination", subtitle: "KAD, Diures, Buktryck, Dränage", color: "#059669", colorLight: "#d1fae5", colorBorder: "#a7f3d0", icon: "droplet", description: "Urinmätning, KAD-skötsel, intraabdominellt tryck (IAP), ventrikelsond och bukskötsel." },
@@ -848,8 +848,202 @@ Identifiera och dränera abscesser, avlägsna infekterade katetrar (CVK, dialysk
 - **Elektrolyter & Urinmätning:** Korrigera hypernatremi vid diabetes insipidus med Minirin (Desmopressin) 1–4 µg i.v.
 - **Normotermi:** Håll temperatur 36–37.5 °C med aktiv värmetäcke.
 - **Ventilation:** Lungprotektiv ventilation med PEEP 8–10 cmH2O och rekrytering före uttag.`
+  },
+  {
+    id: "doc-circ-1",
+    title: "Hemodynamisk Övervakning, Vasopressor & Inotropititrering på IVA",
+    category: "Circulation",
+    dateAdded: "2026-10-14T08:00:00Z",
+    priority: "Riktlinje",
+    isPinned: true,
+    tags: ["Cirkulation", "Noradrenalin", "Vasopressin", "Dobutamin", "Levosimendan", "MAP", "PiCCO", "Artärnål"],
+    description: "Klinisk riktlinje för hemodynamisk målstyrning (MAP ≥ 65 mmHg, Laktat, ScvO2, PiCCO), titrering av Noradrenalin, Vasopressin och inotropa läkemedel samt handhavande av artärnål och CVP.",
+    content: `# Hemodynamisk Övervakning, Vasopressor & Inotropititrering på IVA
+
+> **Avdelningsriktlinje – Intensivvårdsenheten Östra**  
+> **Kategori:** Cirkulation | **Målgrupp:** IVA-läkare och intensivvårdssjuksköterskor
+
+---
+
+## 1. Hemodynamiska Målvärden vid Chock
+- **Medelartärtryck (MAP):** **≥ 65 mmHg** (vid kronisk hypertoni eller hög AKI-risk ofta **70–75 mmHg**).
+- **S-Laktat:** **< 2,0 mmol/L** (mål: laktatclearance ≥ 10–20 % per 2 timmar).
+- **Centralvenös syremättnad ($\text{ScvO}_2$):** **≥ 70 %**.
+- **Ven-artär $\text{pCO}_2$-differens ($\Delta \text{pCO}_2$):** **< 0,8 kPa (< 6 mmHg)**. Högre gap talar för lågt Cardiac Output.
+- **Timdiures:** **≥ 0,5 mL/kg/h** och kapillär återfyllnadstid (**CRT**) **< 3 sekunder**.
+
+---
+
+## 2. Vasopressor- & Inotropitrappa
+1. **Noradrenalin (0,1 mg/ml eller 0,2 mg/ml):**
+   - Förstahandspressor vid alla former av vasodilatatorisk/septisk chock.
+   - Dosintervall: **0,02–0,50 µg/kg/min** i dedikerad CVK-skänkel.
+2. **Vasopressin (Empressin 0,4 E/ml):**
+   - Tillägg vid septisk chock när Noradrenalin överstiger **0,25–0,30 µg/kg/min**.
+   - Dosering: **0,01–0,03 E/min** (fast dosering, ej viktbaserad).
+3. **Inotropi vid Kardiogen Dysfunktion (Lågt CI < 2,2 L/min/m² & Lågt $\text{ScvO}_2$):**
+   - **Dobutamin:** **2–15 µg/kg/min**.
+   - **Levosimendan (Simdax):** **0,05–0,2 µg/kg/min** under 24 timmar (ingen laddningsdos på IVA).
+   - **Milrinon (Corotrop):** **0,25–0,75 µg/kg/min** (särskilt vid högerkammarsvikt/pulmonell hypertension).
+
+---
+
+## 3. Artärnål & Tryckset – Rutin vid Sängkant
+- **Nollställning:** I **flebostatiska axeln** (4:e revbensinterstitiet i mellersta axillarlinjen) vid varje skiftstart och lägesändring.
+- **Övertrycksmanschett:** **300 mmHg** med ren **NaCl 9 mg/ml** (ger kontinuerligt spolflöde ~3 mL/h).
+- **Dubbelpumpsteknik:** Vid byte av vasoaktiv spruta används alltid överlappande sprutbyte för att undvika blodtrycksfall.`
+  },
+  {
+    id: "doc-crrt-1",
+    title: "CRRT med Regional Citratantikoagulation (RCA) – Uppstart, Provtagning & Felsökning",
+    category: "CRRT",
+    dateAdded: "2026-10-14T08:00:00Z",
+    priority: "Riktlinje",
+    isPinned: true,
+    tags: ["CRRT", "Dialys", "Citrat", "Kalcium", "CVVHDF", "AKI", "Filter", "CDK"],
+    description: "Styrande PM för kontinuerlig njurersättningsterapi (CVVHDF) med citrat på IVA Östra. Styrning av post-filter iCa och systemiskt iCa, kalciumkvot (Tot-Ca/iCa < 2,25) och larmhantering.",
+    content: `# CRRT med Regional Citratantikoagulation (RCA)
+
+> **Avdelningsriktlinje – Intensivvårdsenheten Östra**  
+> **Kategori:** CRRT | **Målgrupp:** IVA-läkare, intensivvårdssjuksköterskor och undersköterskor
+
+---
+
+## 1. Grundinställningar & Målvärden vid Citrat-CVVHDF
+- **Blodflöde ($Q_b$):** **100–130 mL/min**.
+- **Citratdos:** **3,0 mmol/L blod** (mål för **Filter-iCa: 0,25–0,35 mmol/L**).
+- **Kalciumkompensation:** Start **100 %** (mål för **Patient-iCa i artärblod: 1,00–1,20 mmol/L**).
+- **Effluentdos:** **25–30 mL/kg/h**.
+- **Maximal filtertid:** **72 timmar**.
+
+---
+
+## 2. Provtagnings- & Justeringsschema
+1. Kontrollera **Patient-iCa** (artär) och **Filter-iCa** (post-filter) **1 timme** efter start samt efter varje ändring av citrat- eller kalciumdos, därefter var **4–6:e timme**.
+2. **Om Patient-iCa < 1,00 mmol/L:** Öka Ca-kompensationen med **+10 till +20 %** (ge ev. bolus Kalciumglukonat 10 % 10 mL i.v. vid < 0,90 mmol/L).
+3. **Om Filter-iCa > 0,35 mmol/L:** Öka citratdosen med **+0,1 till +0,2 mmol/L**.
+4. **Daglig kontroll av Citratackumulering:** Beräkna kvoten **$\text{Total-Kalcium} / \text{Patient-iCa}$** varje morgon. Kvoten ska vara **< 2,25**. Vid kvot ≥ 2,25 + metabol acidos föreligger citratackumulering (ses vid svår leversvikt/chock) – kontakta ansvarig IVA-läkare för sänkning av blodflöde/citrat eller byte till citratfri drift.`
+  },
+  {
+    id: "doc-elim-1",
+    title: "Diuresövervakning, Oliguriutredning (KDIGO) & Tarmprotokoll på IVA",
+    category: "Elimination",
+    dateAdded: "2026-10-14T08:00:00Z",
+    priority: "Rutin",
+    isPinned: true,
+    tags: ["Elimination", "Diures", "Oliguri", "AKI", "KAD", "Furosemid", "Obstipation", "Tarmprotokoll"],
+    description: "Rutin för timdiuresmätning, utredning av akut oliguri vid sängkant (Bladderscan, Furosemid Stress Test) samt strukturerat tarm- och laxeringsprotokoll för IVA-patienter.",
+    content: `# Diuresövervakning, Oliguriutredning & Tarmprotokoll på IVA
+
+> **Avdelningsrutin – Intensivvårdsenheten Östra**  
+> **Kategori:** Elimination | **Målgrupp:** Intensivvårdssjuksköterskor, läkare och undersköterskor
+
+---
+
+## 1. Timdiures & Akut Oliguri (< 0,5 mL/kg/h)
+- **Måldiures:** **≥ 0,5 mL/kg/h** (avstämning kl. 12, 18, 24 och 06).
+- **Steg 1 vid plötsligt diuresfall:** Kontrollera alltid KAD-slangen för knickning/luftlås, spola KAD aseptiskt med 20–40 mL steril NaCl och utför **Bladderscan** för att utesluta postrenalt stopp.
+- **Steg 2 – Perfusion:** Kontrollera MAP (≥ 65–75 mmHg), CVP, buktryck (IAP) och vätskestatus. Undvik slentrianmässiga vätskebolusar vid venös stas/övervätskning.
+- **Steg 3 – Diuretikastyrning:** Vid hypervolemi ges Furosemid som bolus följt av ev. kontinuerlig infusion (2–10 mg/h).
+
+---
+
+## 2. Tarmprotokoll på IVA
+1. **Basprofylax (från dag 1–2 vid opioider/sondmat):** Movicol 1–2 påsar × 2 enteralt.
+2. **Dag 3 utan avföring:** Lägg till Cilaxoral 10–15 droppar till natten + **Naloxon 4–8 mg × 3 i V-sond** (vid samtidig opioidbehandling).
+3. **Dag 4+ utan avföring:** Rektal palpation följt av Dulcolax suppositorium eller Klyx 120–240 mL efter att mekaniskt hinder uteslutits.`
+  },
+  {
+    id: "doc-omv-1",
+    title: "Basal Intensivvårdsomvårdnad: VAP-Bundle, Munvård, CVK-Skötsel & Mobilisering",
+    category: "Omvårdnad",
+    dateAdded: "2026-10-14T08:00:00Z",
+    priority: "Rutin",
+    isPinned: true,
+    tags: ["Omvårdnad", "VAP", "Munvård", "CVK", "Trycksår", "Mobilisering", "Ögonvård", "IVA-Dagbok"],
+    description: "Sammanhållen omvårdnadsrutin för intuberad och kritiskt sjuk patient på IVA Östra: VAP-prevention, subglottisk sugning, mun- och ögonvård, aggregatbyten och trycksårsprevention.",
+    content: `# Basal Intensivvårdsomvårdnad: VAP-Bundle, Infarter & Mobilisering
+
+> **Avdelningsrutin – Intensivvårdsenheten Östra**  
+> **Kategori:** Omvårdnad | **Målgrupp:** Intensivvårdssjuksköterskor, undersköterskor och fysioterapeuter
+
+---
+
+## 1. Luftväg & VAP-Bundle
+- **Huvudända:** Håll sängens huvudända höjd **30–45°** (om ej kontraindicerat).
+- **Cufftryck:** Kontrollera varje pass (**25–28 cmH₂O**) samt dokumentera tubens läge (cm i mungipa).
+- **Subglottisk sugning:** Aspirera sekret ovan kuffen var **2–4:e timme** samt alltid före vändning eller kuffjustering.
+- **Munvård:** Tandborstning morgon och kväll samt fuktning/rengöring av munslemhinna var **2–4:e timme**.
+
+---
+
+## 2. Infarter & Bytesintervall för Aggregat
+- **CVK & Artärnål:** Inspektera insticksställe varje pass. Omläggning med Klorhexidinsprit 5 mg/ml och semipermeabelt förband var **7:e dag** (eller direkt vid fukt/blod).
+- **Propofol-spruta & aggregat:** Byts var **12:e timme**.
+- **TPN (SmofKabiven) & Sondmatsaggregat:** Byts var **24:e timme**.
+- **Standardinfusionsaggregat & Tryckset:** Byts var **72:a timme (3 dygn)**.`
+  },
+  {
+    id: "doc-anh-1",
+    title: "Närståendemottagande, Krisstöd & Barn som Anhöriga (HSL 5 kap. 7 §) på IVA",
+    category: "Anhöriga",
+    dateAdded: "2026-10-14T08:00:00Z",
+    priority: "Rutin",
+    isPinned: true,
+    tags: ["Anhöriga", "Närstående", "Barn som anhöriga", "Krisstöd", "Kurator", "IVA-Dagbok", "Post-IVA"],
+    description: "Riktlinje för bemötande och omhändertagande av närstående samt lagstadgad kartläggning och stöd till minderåriga barn som anhöriga på Intensivvårdsenheten Östra.",
+    content: `# Närståendemottagande, Krisstöd & Barn som Anhöriga på IVA
+
+> **Avdelningsrutin – Intensivvårdsenheten Östra**  
+> **Kategori:** Anhöriga | **Målgrupp:** All personal på IVA samt kurator
+
+---
+
+## 1. Mottagande av Närstående vid Akut Inläggning
+1. Utse en **huvudkontaktperson** i familjen och dokumentera namn, relation och telefonnummer i Melior.
+2. Förbered alltid närstående i anhörigrummet innan de går in på salen första gången (förklara respirator, övervakningslarm, slangar och sederingsgrad).
+3. Planera strukturerat läkarsamtal (där även ansvarig sjuksköterska/undersköterska deltar) inom 24 timmar.
+
+---
+
+## 2. Barn som Anhöriga (0–18 år – HSL 5 kap. 7 §)
+- Kartlägg alltid vid inskrivning om patienten har minderåriga barn eller syskon.
+- Förbered barnet med åldersanpassad information inför besök, avlasta skuldkänslor och koppla in IVA-kurator för stödmaterial.`
+  },
+  {
+    id: "doc-lak-1",
+    title: "Säker Läkemedelshantering på IVA: Högriskpreparat, CVK-Skänklar & Dubbelkontroll",
+    category: "Läkemedel",
+    dateAdded: "2026-10-14T08:00:00Z",
+    priority: "Riktlinje",
+    isPinned: true,
+    tags: ["Läkemedel", "CVK", "Blandbarhet", "Vasoaktiva", "Kalium", "Fosfat", "Dubbelkontroll", "Patientsäkerhet"],
+    description: "Avdelningsrutin för iordningställande, märkning, dubbelkontroll och administrering av kontinuerliga infusioner och högriskläkemedel via CVK och PVK på IVA Östra.",
+    content: `# Säker Läkemedelshantering på IVA: Högriskpreparat & CVK-Rutin
+
+> **Avdelningsriktlinje – Intensivvårdsenheten Östra**  
+> **Kategori:** Läkemedel | **Målgrupp:** Intensivvårdssjuksköterskor och IVA-läkare
+
+---
+
+## 1. Högriskläkemedel & Dubbelkontroll
+Vid iordningställande och programmering av sprutpump/volympump utförs kollegial kontroll av styrka och hastighet för:
+- **Vasoaktiva och inotropa läkemedel** (Noradrenalin, Adrenalin, Vasopressin, Dobutamin, Levosimendan, Milrinon)
+- **Kaliumkoncentrat (Addex-Kalium)** och **Fosfat (Glycophos / Addex-Fosfat)**
+- **Insulin (Actrapid 1 E/ml)** och **Heparininfusion**
+- **Potenta opioider och sedativa** (Remifentanil, Fentanyl, Morfin, Propofol, Midazolam, Dexdor)
+
+---
+
+## 2. Skänkelfördelning i CVK & Inkompatibiliteter
+1. **Dedikerad Vaso-skänkel:** Vasoaktiva infusioner går i en egen, tydligt märkt CVK-skänkel där **inga bolusinjektioner eller snabba flushar** får ges.
+2. **Kritiska Inkompatibiliteter (Fällningsrisk):**
+   - **Furosemid** får aldrig gå i samma skänkel som sura lösningar (Noradrenalin, Adrenalin, Dobutamin, Midazolam).
+   - **Fosfat (Glycophos)** och **Bikarbonat** fäller ut omedelbart med **Kalcium** och **Magnesium**.
+   - **Amiodaron (Cordarone)** späds ENDAST i **Glukos 50 mg/ml (5 %)**.`
   }
 ];
 
 export const SAMPLE_DOCUMENTS = DEFAULT_DOCUMENTS;
+
 
