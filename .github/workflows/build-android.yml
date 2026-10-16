@@ -127,34 +127,108 @@ jobs:
             }
             fs.writeFileSync(manifestPath, xml, "utf8");
 
-            // 6. Fix Android 15/16/17 (API 36) Edge-to-Edge Status Bar & Navigation Bar Insets + Google M3 Theme
-            const bridgeLayoutPath = "node_modules/@capacitor/android/capacitor/src/main/res/layout/bridge_layout_main.xml";
-            if (fs.existsSync(bridgeLayoutPath)) {
-              let bridgeXml = fs.readFileSync(bridgeLayoutPath, "utf8");
-              if (!bridgeXml.includes("android:fitsSystemWindows=\"true\"")) {
-                bridgeXml = bridgeXml.replace(
-                  "<androidx.coordinatorlayout.widget.CoordinatorLayout",
-                  "<androidx.coordinatorlayout.widget.CoordinatorLayout android:fitsSystemWindows=\"true\" android:background=\"#F8FAFD\""
-                );
-                fs.writeFileSync(bridgeLayoutPath, bridgeXml, "utf8");
-                console.log("Enabled fitsSystemWindows=true on Capacitor CoordinatorLayout for API 36 edge-to-edge safety");
-              }
-            }
-
+            // 6. Fix Android 15/16/17 (API 36) Status Bar Visibility (Dark Icons on Light Bar) & Exact Single Insets
             const stylesPath = "android/app/src/main/res/values/styles.xml";
-            if (fs.existsSync(stylesPath)) {
-              let stylesXml = fs.readFileSync(stylesPath, "utf8");
-              const m3StatusItems = `
-                <item name="android:fitsSystemWindows">true</item>
-                <item name="android:statusBarColor">#F8FAFD</item>
-                <item name="android:windowLightStatusBar">true</item>
-                <item name="android:navigationBarColor">#F8FAFD</item>
-              `;
-              if (!stylesXml.includes("android:windowLightStatusBar")) {
-                stylesXml = stylesXml.replace("</style>", m3StatusItems + "\n    </style>");
-                fs.writeFileSync(stylesPath, stylesXml, "utf8");
-              }
-            }
+            const cleanStylesXml = `<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#0B57D0</item>
+        <item name="colorPrimaryDark">#E9EEF6</item>
+        <item name="colorAccent">#0B57D0</item>
+        <item name="android:statusBarColor">#E9EEF6</item>
+        <item name="android:navigationBarColor">#F8FAFD</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:background">@null</item>
+        <item name="android:statusBarColor">#E9EEF6</item>
+        <item name="android:navigationBarColor">#F8FAFD</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
+        <item name="android:background">@drawable/splash</item>
+        <item name="android:statusBarColor">#E9EEF6</item>
+        <item name="android:navigationBarColor">#F8FAFD</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
+    </style>
+</resources>
+`;
+            fs.writeFileSync(stylesPath, cleanStylesXml, "utf8");
+            console.log("Wrote Google M3 Light Theme styles.xml with windowLightStatusBar=true");
+
+            const mainActivityPath = "android/app/src/main/java/com/iva/ostra/MainActivity.java";
+            const mainActivityJava = `package com.iva.ostra;
+
+import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.graphics.Color;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
+import com.getcapacitor.BridgeActivity;
+
+public class MainActivity extends BridgeActivity {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        applySystemBarAppearance();
+
+        View contentView = findViewById(android.R.id.content);
+        if (contentView != null) {
+            contentView.setBackgroundColor(Color.parseColor("#F8FAFD"));
+            ViewCompat.setOnApplyWindowInsetsListener(contentView, (v, windowInsets) -> {
+                Insets insets = windowInsets.getInsets(
+                    WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout()
+                );
+                v.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+                return WindowInsetsCompat.CONSUMED;
+            });
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        applySystemBarAppearance();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            applySystemBarAppearance();
+        }
+    }
+
+    private void applySystemBarAppearance() {
+        Window window = getWindow();
+        if (window == null) return;
+        window.getDecorView().setBackgroundColor(Color.parseColor("#F8FAFD"));
+        window.setStatusBarColor(Color.parseColor("#E9EEF6"));
+        window.setNavigationBarColor(Color.parseColor("#F8FAFD"));
+        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(window, window.getDecorView());
+        if (controller != null) {
+            controller.setAppearanceLightStatusBars(true);
+            controller.setAppearanceLightNavigationBars(true);
+        }
+    }
+}
+`;
+            fs.writeFileSync(mainActivityPath, mainActivityJava, "utf8");
+            console.log("Updated MainActivity.java with WindowInsetsControllerCompat light status bar (dark icons) and exact single insets");
           '
 
       - name: Ensure Persistent Play Store Upload Keystore

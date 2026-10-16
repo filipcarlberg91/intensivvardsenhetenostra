@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   DocumentItem,
   UserProfile,
@@ -217,6 +217,26 @@ export const App: React.FC = () => {
   const [floatingMenuOpen, setFloatingMenuOpen] = useState(false);
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const topShellRef = useRef<HTMLDivElement | null>(null);
+  const [topShellHeight, setTopShellHeight] = useState<number>(106);
+
+  useEffect(() => {
+    const el = topShellRef.current;
+    if (!el) return;
+    const updateHeight = () => {
+      const h = el.getBoundingClientRect().height;
+      if (h > 0) setTopShellHeight(Math.ceil(h));
+    };
+    updateHeight();
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(updateHeight);
+      ro.observe(el);
+      return () => ro.disconnect();
+    } else {
+      window.addEventListener('resize', updateHeight);
+      return () => window.removeEventListener('resize', updateHeight);
+    }
+  }, []);
 
   // Räkna aktiva medicinpåminnelser med aktiv bakgrundsövervakning
   const [activeReminderCount, setActiveReminderCount] = useState<number>(() => {
@@ -454,11 +474,15 @@ export const App: React.FC = () => {
       prev.map((n) => (n.id === notifId ? { ...n, read: true } : n))
     );
     setNotifDropdownOpen(false);
+    if (!docId) {
+      setMedicationModalOpen(true);
+      return;
+    }
     const doc = documents.find((d) => d.id === docId);
     if (doc) {
       setSelectedDoc(doc);
     } else {
-      showToast('Kunde inte hitta dokumentet.');
+      setMedicationModalOpen(true);
     }
   };
 
@@ -565,40 +589,50 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      {/* Toppheader */}
-      <Header
-        currentUser={currentUser}
-        userRole={userRole}
-        favoritesCount={favorites.length}
-        unreadNotifsCount={unreadNotifsCount}
-        notifications={notifications}
-        notifDropdownOpen={notifDropdownOpen}
-        onToggleNotifDropdown={() => setNotifDropdownOpen((prev) => !prev)}
-        onMarkAllNotifsRead={handleMarkAllNotifsRead}
-        onClearAllNotifs={handleClearAllNotifs}
-        onOpenNotifDoc={handleOpenNotifDoc}
-        onNavigateHome={() => setActiveCategory('HOME')}
-        onNavigateMyPage={() => setActiveCategory('MY_PAGE')}
-        onOpenGlobalSearch={() => setGlobalSearchOpen(true)}
-        onOpenLoginModal={() => setLoginModalOpen(true)}
-        onLogout={handleLogout}
-        onOpenUploadModal={() => setUploadModalOpen(true)}
-        onOpenPermissionsModal={() => setPermissionsModalOpen(true)}
-        onOpenAndroidSetup={() => setAndroidSetupModalOpen(true)}
-        onExportBackup={handleExportBackup}
-        onImportBackup={handleImportBackup}
-        canEdit={canEdit}
-        isOwnerOrEditor={isOwnerOrEditor}
-      />
+      {/* Fastlåst översta rad + klinisk sektionsmeny vid scroll */}
+      <div className="m3-sticky-top-shell" ref={topShellRef}>
+        <Header
+          currentUser={currentUser}
+          userRole={userRole}
+          favoritesCount={favorites.length}
+          unreadNotifsCount={unreadNotifsCount}
+          notifications={notifications}
+          notifDropdownOpen={notifDropdownOpen}
+          onToggleNotifDropdown={() => setNotifDropdownOpen((prev) => !prev)}
+          onCloseNotifDropdown={() => setNotifDropdownOpen(false)}
+          onMarkAllNotifsRead={handleMarkAllNotifsRead}
+          onClearAllNotifs={handleClearAllNotifs}
+          onOpenNotifDoc={handleOpenNotifDoc}
+          onOpenMedicationModal={() => setMedicationModalOpen(true)}
+          onNavigateHome={() => setActiveCategory('HOME')}
+          onNavigateMyPage={() => setActiveCategory('MY_PAGE')}
+          onOpenGlobalSearch={() => setGlobalSearchOpen(true)}
+          onOpenLoginModal={() => setLoginModalOpen(true)}
+          onLogout={handleLogout}
+          onOpenUploadModal={() => setUploadModalOpen(true)}
+          onOpenPermissionsModal={() => setPermissionsModalOpen(true)}
+          onOpenAndroidSetup={() => setAndroidSetupModalOpen(true)}
+          onExportBackup={handleExportBackup}
+          onImportBackup={handleImportBackup}
+          canEdit={canEdit}
+          isOwnerOrEditor={isOwnerOrEditor}
+        />
 
-      {/* Klinisk sektionsnavigering */}
-      <ClinicalSubnav
-        activeCategory={activeCategory}
-        onSelectCategory={(cat) => {
-          setActiveCategory(cat);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        favoritesCount={favorites.length}
+        {/* Klinisk sektionsnavigering */}
+        <ClinicalSubnav
+          activeCategory={activeCategory}
+          onSelectCategory={(cat) => {
+            setActiveCategory(cat);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          favoritesCount={favorites.length}
+        />
+      </div>
+
+      {/* Dynamisk platshållare för den fastlåsta toppmenyn */}
+      <div
+        className="m3-top-shell-spacer"
+        style={{ height: `${topShellHeight}px`, flexShrink: 0 }}
       />
 
       {/* Huvudinnehåll / Aktiv Vy */}

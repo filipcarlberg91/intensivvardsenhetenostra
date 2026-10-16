@@ -55,7 +55,7 @@ html, body {
   padding: 0;
   width: 100%;
   max-width: 100vw;
-  overflow-x: hidden;
+  overflow-x: clip;
   background-color: var(--m3-surface) !important;
   color: #1F1F1F;
   font-family: var(--font-sans) !important;
@@ -67,24 +67,36 @@ html, body {
   min-height: 100dvh;
   width: 100%;
   max-width: 100vw;
-  overflow-x: hidden;
+  overflow-x: clip;
   display: flex;
   flex-direction: column;
 }
 
 /* ==========================================================================
-   1. GOOGLE APP TOP BAR (FLAT, MATTE, CLEAN)
+   1. GOOGLE APP TOP BAR & STICKY SHELL (FLAT, MATTE, CLEAN)
    ========================================================================== */
+
+.m3-sticky-top-shell {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 950 !important;
+  background: #F8FAFD !important;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
 
 .m3-top-app-bar {
   background: #F8FAFD !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   border-bottom: 1px solid #E1E5EA !important;
-  position: sticky !important;
-  top: 0 !important;
+  position: relative !important;
   z-index: 200 !important;
-  padding-top: env(safe-area-inset-top, 0px) !important;
+  padding-top: 0 !important;
   box-shadow: none !important;
 }
 
@@ -206,7 +218,8 @@ html, body {
 }
 
 /* Flat Icon Button (Notifications) */
-.m3-icon-btn {
+.m3-icon-btn,
+.btn-notification-trigger {
   width: 40px !important;
   height: 40px !important;
   border-radius: 9999px !important;
@@ -218,11 +231,58 @@ html, body {
   justify-content: center !important;
   position: relative !important;
   cursor: pointer !important;
+  touch-action: manipulation !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
   transition: background-color 0.15s ease !important;
 }
 
-.m3-icon-btn:hover {
-  background: #E9EEF6 !important;
+.m3-icon-btn:hover,
+.m3-icon-btn.active,
+.btn-notification-trigger:hover,
+.btn-notification-trigger.active {
+  background: #D3E3FD !important;
+  color: #0B57D0 !important;
+}
+
+.notification-badge {
+  pointer-events: none !important;
+  background: #B3261E !important;
+  color: #FFFFFF !important;
+  border: 2px solid #F8FAFD !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+.notification-dropdown,
+.notification-dropdown.is-open,
+.m3-expressive-popover {
+  display: flex !important;
+  flex-direction: column !important;
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  width: 360px !important;
+  max-width: calc(100vw - 24px) !important;
+  background: #FFFFFF !important;
+  border: 1px solid #DDE3EA !important;
+  border-radius: 20px !important;
+  box-shadow: var(--m3-shadow-3) !important;
+  z-index: 1200 !important;
+  overflow: hidden !important;
+}
+
+@media (max-width: 680px) {
+  .notification-dropdown,
+  .notification-dropdown.is-open,
+  .m3-expressive-popover {
+    position: fixed !important;
+    top: 56px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: none !important;
+  }
 }
 
 /* Flat Avatar Chip (No Gradient) */

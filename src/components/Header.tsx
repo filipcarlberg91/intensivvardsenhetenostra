@@ -10,9 +10,11 @@ interface HeaderProps {
   notifications: NotificationItem[];
   notifDropdownOpen: boolean;
   onToggleNotifDropdown: () => void;
+  onCloseNotifDropdown?: () => void;
   onMarkAllNotifsRead: () => void;
   onClearAllNotifs: () => void;
   onOpenNotifDoc: (notifId: string, docId: string) => void;
+  onOpenMedicationModal?: () => void;
   onNavigateHome: () => void;
   onNavigateMyPage: () => void;
   onOpenGlobalSearch: () => void;
@@ -34,9 +36,11 @@ export const Header: React.FC<HeaderProps> = ({
   notifications,
   notifDropdownOpen,
   onToggleNotifDropdown,
+  onCloseNotifDropdown,
   onMarkAllNotifsRead,
   onClearAllNotifs,
   onOpenNotifDoc,
+  onOpenMedicationModal,
   onNavigateHome,
   onNavigateMyPage,
   onOpenGlobalSearch,
@@ -53,18 +57,29 @@ export const Header: React.FC<HeaderProps> = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const moreMenuRef = useRef<HTMLDivElement | null>(null);
+  const notifMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) {
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node;
+      if (moreMenuOpen && moreMenuRef.current && !moreMenuRef.current.contains(target)) {
         setMoreMenuOpen(false);
       }
+      if (notifDropdownOpen && notifMenuRef.current && !notifMenuRef.current.contains(target)) {
+        if (onCloseNotifDropdown) {
+          onCloseNotifDropdown();
+        } else {
+          onToggleNotifDropdown();
+        }
+      }
     };
-    if (moreMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [moreMenuOpen]);
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [moreMenuOpen, notifDropdownOpen, onCloseNotifDropdown, onToggleNotifDropdown]);
 
   return (
     <header className="app-header m3-top-app-bar">
@@ -89,6 +104,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="header-actions">
             {/* Global sökknapp (Matt Google-stil sökfält) */}
             <button
+              type="button"
               className="global-search-btn m3-tonal-search-trigger"
               onClick={onOpenGlobalSearch}
               title="Sök i alla PM, läkemedel & verktyg (Ctrl+K)"
@@ -102,6 +118,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Desktop/Tablet snabba knappar */}
             {onOpenAndroidSetup && (
               <button
+                type="button"
                 className="btn-header-secondary btn-icon-compact hide-on-compact"
                 onClick={onOpenAndroidSetup}
                 title="Android-App, Kamera & Notiser"
@@ -113,6 +130,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             {canEdit && (
               <button
+                type="button"
                 className="btn-upload-primary btn-upload-compact hide-on-compact"
                 onClick={onOpenUploadModal}
                 title="Ladda upp nytt PM"
@@ -123,36 +141,104 @@ export const Header: React.FC<HeaderProps> = ({
             )}
 
             {/* Notiser & Händelser */}
-            <div className="notification-center-wrapper">
+            <div
+              className="notification-center-wrapper"
+              ref={notifMenuRef}
+              style={{ position: 'relative' }}
+            >
               <button
-                className="btn-notification-trigger m3-icon-btn"
+                type="button"
+                className={`btn-notification-trigger m3-icon-btn ${notifDropdownOpen ? 'active' : ''}`}
                 title="Notiser och larm"
                 aria-label="Notiser"
-                onClick={onToggleNotifDropdown}
+                aria-expanded={notifDropdownOpen}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMoreMenuOpen(false);
+                  onToggleNotifDropdown();
+                }}
               >
-                <BellIcon size={19} />
+                <BellIcon size={20} />
                 {unreadNotifsCount > 0 && (
-                  <span className="notification-badge">{unreadNotifsCount}</span>
+                  <span className="notification-badge" style={{ pointerEvents: 'none' }}>
+                    {unreadNotifsCount}
+                  </span>
                 )}
               </button>
 
               {notifDropdownOpen && (
-                <div className="notification-dropdown m3-expressive-popover">
+                <div
+                  className="notification-dropdown is-open m3-expressive-popover"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <div className="notification-dropdown-header">
                     <div className="notification-dropdown-title">
                       <strong>Notiser & Kliniska Larm</strong>
-                      <span className="notif-count-tag">{unreadNotifsCount} nya</span>
+                      <span className="notif-count-tag">{unreadNotifsCount} olästa</span>
                     </div>
-                    <div className="notification-header-actions">
+                    <div className="notification-header-actions" style={{ display: 'flex', gap: '0.35rem' }}>
+                      {unreadNotifsCount > 0 && (
+                        <button
+                          type="button"
+                          className="btn-notif-action"
+                          onClick={onMarkAllNotifsRead}
+                          title="Markera alla som lästa"
+                        >
+                          Markera lästa
+                        </button>
+                      )}
                       <button
+                        type="button"
                         className="btn-notif-action"
-                        onClick={onMarkAllNotifsRead}
-                        title="Markera alla som lästa"
+                        onClick={() => {
+                          if (onCloseNotifDropdown) onCloseNotifDropdown();
+                          else onToggleNotifDropdown();
+                        }}
+                        title="Stäng notiser"
+                        style={{ color: '#444746', fontWeight: 700 }}
                       >
-                        Markera lästa
+                        ✕
                       </button>
                     </div>
                   </div>
+
+                  {/* Snabbknapp till Medicintider & Infusionslarm */}
+                  {onOpenMedicationModal && (
+                    <div
+                      style={{
+                        padding: '0.55rem 0.85rem',
+                        background: '#EDF2FC',
+                        borderBottom: '1px solid #E1E5EA',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '0.5rem',
+                      }}
+                    >
+                      <span style={{ fontSize: '0.76rem', fontWeight: 600, color: '#1F1F1F' }}>
+                        ⏰ Medicintider & Infusionslarm
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (onCloseNotifDropdown) onCloseNotifDropdown();
+                          onOpenMedicationModal();
+                        }}
+                        style={{
+                          background: '#0B57D0',
+                          color: '#FFFFFF',
+                          border: 'none',
+                          borderRadius: '9999px',
+                          padding: '0.28rem 0.7rem',
+                          fontSize: '0.73rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Öppna larm →
+                      </button>
+                    </div>
+                  )}
 
                   <div className="notification-dropdown-list">
                     {notifications.length === 0 ? (
@@ -180,6 +266,11 @@ export const Header: React.FC<HeaderProps> = ({
                           </div>
                           <div className="notif-item-body">
                             <div className="notif-item-title">{notif.docTitle || notif.title}</div>
+                            {notif.message && (
+                              <div style={{ fontSize: '0.75rem', color: '#444746', marginBottom: '0.2rem' }}>
+                                {notif.message}
+                              </div>
+                            )}
                             <div className="notif-item-meta">
                               <span className="notif-item-category">{notif.category || 'IVA'}</span>
                               <span>• {notif.timestamp || 'Nyligen'}</span>
@@ -193,7 +284,7 @@ export const Header: React.FC<HeaderProps> = ({
 
                   {notifications.length > 0 && (
                     <div className="notification-dropdown-footer">
-                      <button className="btn-clear-notifs" onClick={onClearAllNotifs}>
+                      <button type="button" className="btn-clear-notifs" onClick={onClearAllNotifs}>
                         Rensa historik
                       </button>
                     </div>
@@ -206,6 +297,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="m3-profile-menu-wrapper" ref={moreMenuRef} style={{ position: 'relative' }}>
               {!currentUser ? (
                 <button
+                  type="button"
                   className="btn-google-login m3-pill-btn"
                   onClick={onOpenLoginModal}
                   title="Logga in"
@@ -217,7 +309,11 @@ export const Header: React.FC<HeaderProps> = ({
                 <button
                   type="button"
                   className="user-profile-badge m3-avatar-chip"
-                  onClick={() => setMoreMenuOpen((prev) => !prev)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (onCloseNotifDropdown) onCloseNotifDropdown();
+                    setMoreMenuOpen((prev) => !prev);
+                  }}
                   title={`Konto & verktyg (${currentUser.email})`}
                   aria-expanded={moreMenuOpen}
                 >
@@ -232,7 +328,7 @@ export const Header: React.FC<HeaderProps> = ({
 
               {/* Google-stil Konto- & Verktygsmeny */}
               {moreMenuOpen && (
-                <div className="m3-user-dropdown-sheet">
+                <div className="m3-user-dropdown-sheet" onClick={(e) => e.stopPropagation()}>
                   {currentUser && (
                     <div className="m3-user-sheet-header">
                       <div className="user-avatar-circle" style={{ width: '40px', height: '40px', fontSize: '1rem' }}>
