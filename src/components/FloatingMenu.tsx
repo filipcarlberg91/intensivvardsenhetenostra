@@ -695,17 +695,7 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
   return (
     <div
       id="floatingMenuContainer"
-      className={`fab-container ${isOpen ? 'is-open' : ''}`}
-      style={{
-        position: 'fixed',
-        bottom: 'calc(1.5rem + env(safe-area-inset-bottom, 0px))',
-        right: '1.25rem',
-        left: 'auto',
-        zIndex: 99999,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-      }}
+      className={`fab-container m3-fab-wrapper ${isOpen ? 'is-open' : ''}`}
     >
       {/* Backdrop */}
       {isOpen && (
@@ -718,17 +708,17 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(15, 23, 42, 0.65)',
-            backdropFilter: 'blur(4px)',
-            WebkitBackdropFilter: 'blur(4px)',
+            background: 'rgba(15, 23, 42, 0.55)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
             zIndex: 99990,
           }}
         />
       )}
 
-      {/* FAB main button */}
+      {/* M3 Expressive Squircle FAB button */}
       <button
-        className="fab-main-btn"
+        className="fab-main-btn m3-expressive-fab"
         onClick={(e) => {
           e.stopPropagation();
           onToggle();
@@ -736,31 +726,15 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
         title="Öppna IVA-menyn (Rutiner/PM & Verktyg)"
         aria-label="Öppna navigationsmeny"
         aria-expanded={isOpen}
-        style={{
-          width: '58px',
-          height: '58px',
-          borderRadius: '50%',
-          background: isOpen ? '#0f172a' : 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
-          color: '#ffffff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          border: '2.5px solid rgba(255, 255, 255, 0.4)',
-          boxShadow: '0 10px 25px -4px rgba(2, 132, 199, 0.5), 0 4px 10px rgba(0, 0, 0, 0.25)',
-          cursor: 'pointer',
-          zIndex: 100000,
-          touchAction: 'manipulation',
-          transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
-          position: 'relative',
-        }}
       >
         {isOpen ? (
-          <span style={{ fontSize: '1.4rem', fontWeight: 700, lineHeight: 1 }}>✕</span>
+          <span style={{ fontSize: '1.35rem', fontWeight: 800, lineHeight: 1 }}>✕</span>
         ) : (
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="18" x2="21" y2="18" />
+            <rect x="3" y="3" width="7" height="7" rx="2" />
+            <rect x="14" y="3" width="7" height="7" rx="2" />
+            <rect x="14" y="14" width="7" height="7" rx="2" />
+            <rect x="3" y="14" width="7" height="7" rx="2" />
           </svg>
         )}
         {favoritesCount > 0 && !isOpen && (
@@ -768,19 +742,19 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
             className="fab-badge-pill"
             style={{
               position: 'absolute',
-              top: '-4px',
-              right: '-4px',
-              background: '#ef4444',
+              top: '-5px',
+              right: '-5px',
+              background: '#BA1A1A',
               color: 'white',
-              fontSize: '0.7rem',
+              fontSize: '0.68rem',
               fontWeight: 800,
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
+              width: '21px',
+              height: '21px',
+              borderRadius: '9999px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              border: '2px solid white',
+              border: '2px solid #F4F7FC',
             }}
           >
             {favoritesCount}
@@ -788,36 +762,17 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
         )}
       </button>
 
-      {/* Utfällbar meny-panel */}
+      {/* Utfällbar M3 Expressive meny-panel */}
       {isOpen && (
         <div
-          className="fab-menu-panel"
+          className="fab-menu-panel m3-fab-sheet"
           onClick={(e) => e.stopPropagation()}
           role="menu"
-          style={{
-            position: 'fixed',
-            right: '1.25rem',
-            bottom: 'calc(5.5rem + env(safe-area-inset-bottom, 0px))',
-            width: 'min(395px, calc(100vw - 2.5rem))',
-            maxHeight: 'calc(82vh - env(safe-area-inset-bottom, 0px))',
-            overflowY: 'auto',
-            background: '#0f172a',
-            backdropFilter: 'none',
-            WebkitBackdropFilter: 'none',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '20px',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.1)',
-            padding: '1.15rem',
-            zIndex: 99998,
-            color: '#f8fafc',
-            pointerEvents: 'auto',
-            opacity: 1,
-          }}
         >
           <div className="fab-panel-header">
             <div className="fab-panel-title">
-              <span style={{ color: '#0284c7' }}>🏥</span>
-              <span>IVA Navigering</span>
+              <span style={{ color: '#38bdf8' }}>🏥</span>
+              <span>IVA Navigering & Hubbar</span>
             </div>
             <div className="fab-header-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <button

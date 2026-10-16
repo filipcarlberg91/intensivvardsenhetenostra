@@ -108,9 +108,12 @@ jobs:
               }
             }
 
-            // 5. Inject AndroidManifest.xml permissions
+            // 5. Inject AndroidManifest.xml permissions & Adaptive Form-Factor (Foldable/Tablet) support
             const manifestPath = "android/app/src/main/AndroidManifest.xml";
             let xml = fs.readFileSync(manifestPath, "utf8");
+            if (!xml.includes("android:resizeableActivity")) {
+              xml = xml.replace("<application", "<application android:resizeableActivity=\"true\"");
+            }
             const perms = `
               <uses-permission android:name="android.permission.CAMERA" />
               <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -121,7 +124,36 @@ jobs:
             `;
             if (!xml.includes("android.permission.CAMERA")) {
               xml = xml.replace("</manifest>", perms + "\n</manifest>");
-              fs.writeFileSync(manifestPath, xml, "utf8");
+            }
+            fs.writeFileSync(manifestPath, xml, "utf8");
+
+            // 6. Fix Android 15/16/17 (API 36) Edge-to-Edge Status Bar & Navigation Bar Insets + M3 Expressive Theme
+            const bridgeLayoutPath = "node_modules/@capacitor/android/capacitor/src/main/res/layout/bridge_layout_main.xml";
+            if (fs.existsSync(bridgeLayoutPath)) {
+              let bridgeXml = fs.readFileSync(bridgeLayoutPath, "utf8");
+              if (!bridgeXml.includes("android:fitsSystemWindows=\"true\"")) {
+                bridgeXml = bridgeXml.replace(
+                  "<androidx.coordinatorlayout.widget.CoordinatorLayout",
+                  "<androidx.coordinatorlayout.widget.CoordinatorLayout android:fitsSystemWindows=\"true\" android:background=\"#F4F7FC\""
+                );
+                fs.writeFileSync(bridgeLayoutPath, bridgeXml, "utf8");
+                console.log("Enabled fitsSystemWindows=true on Capacitor CoordinatorLayout for API 36 edge-to-edge safety");
+              }
+            }
+
+            const stylesPath = "android/app/src/main/res/values/styles.xml";
+            if (fs.existsSync(stylesPath)) {
+              let stylesXml = fs.readFileSync(stylesPath, "utf8");
+              const m3StatusItems = `
+                <item name="android:fitsSystemWindows">true</item>
+                <item name="android:statusBarColor">#F4F7FC</item>
+                <item name="android:windowLightStatusBar">true</item>
+                <item name="android:navigationBarColor">#EEF3FA</item>
+              `;
+              if (!stylesXml.includes("android:windowLightStatusBar")) {
+                stylesXml = stylesXml.replace("</style>", m3StatusItems + "\n    </style>");
+                fs.writeFileSync(stylesPath, stylesXml, "utf8");
+              }
             }
           '
 

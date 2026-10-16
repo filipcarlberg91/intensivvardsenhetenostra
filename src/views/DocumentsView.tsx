@@ -354,37 +354,14 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
             </p>
           </div>
         ) : viewMode === 'list' ? (
-          /* KOMPAKT LISTVY (Standard) */
-          <div
-            style={{
-              background: '#ffffff',
-              borderRadius: '14px',
-              border: '1px solid #cbd5e1',
-              overflow: 'hidden',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
-            }}
-          >
-            {/* Kompakt Tabell-Header */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '32px minmax(220px, 1.6fr) minmax(240px, 2.2fr) minmax(130px, 0.9fr) 110px',
-                gap: '0.75rem',
-                padding: '0.5rem 0.9rem',
-                background: '#f1f5f9',
-                borderBottom: '1px solid #cbd5e1',
-                fontSize: '0.68rem',
-                fontWeight: 800,
-                color: '#475569',
-                textTransform: 'uppercase',
-                letterSpacing: '0.04em',
-                alignItems: 'center',
-              }}
-            >
+          /* KOMPAKT LISTVY (Standard - Adaptiv för Mobil, Foldable, Surfplatta & Desktop) */
+          <div className="m3-surface-card" style={{ overflow: 'hidden', padding: 0 }}>
+            {/* Kompakt Tabell-Header (Visas på tablet/desktop) */}
+            <div className="m3-pm-list-header">
               <div style={{ textAlign: 'center' }}>★</div>
               <div>Rutin / PM & Kategori</div>
-              <div>Kort sammanfattning & Innehåll</div>
-              <div>Taggar & Typ</div>
+              <div className="hide-on-medium-table">Kort sammanfattning & Innehåll</div>
+              <div className="hide-on-compact-table">Taggar & Datum</div>
               <div style={{ textAlign: 'right' }}>Åtgärd</div>
             </div>
 
@@ -395,44 +372,31 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
                 <div
                   key={doc.id}
                   onClick={() => onOpenDoc(doc)}
+                  className={`m3-pm-list-row ${doc.isPinned ? 'is-pinned' : ''}`}
                   style={{
-                    display: 'grid',
-                    gridTemplateColumns: '32px minmax(220px, 1.6fr) minmax(240px, 2.2fr) minmax(130px, 0.9fr) 110px',
-                    gap: '0.75rem',
-                    padding: '0.55rem 0.9rem',
-                    alignItems: 'center',
-                    borderBottom: idx < sorted.length - 1 ? '1px solid #f1f5f9' : 'none',
-                    cursor: 'pointer',
-                    background: doc.isPinned ? '#fffdf5' : idx % 2 === 0 ? '#ffffff' : '#fafbfc',
-                    transition: 'background 0.12s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#f0f9ff';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = doc.isPinned ? '#fffdf5' : idx % 2 === 0 ? '#ffffff' : '#fafbfc';
+                    borderBottom: idx < sorted.length - 1 ? '1px solid #eef2f6' : 'none',
                   }}
                 >
                   {/* 1. Favorit */}
-                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <div className="m3-pm-col-fav">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         onToggleFavorite(doc.id);
                       }}
-                      style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: '0.15rem' }}
+                      style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: '0.25rem' }}
                       title={isFav ? 'Ta bort favorit' : 'Spara som favorit'}
                     >
-                      <StarIcon filled={isFav} size={16} />
+                      <StarIcon filled={isFav} size={17} />
                     </button>
                   </div>
 
                   {/* 2. Titel & Kategori */}
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <div className="m3-pm-col-main" style={{ minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
                       <strong
                         style={{
-                          fontSize: '0.85rem',
+                          fontSize: '0.88rem',
                           fontWeight: 800,
                           color: '#0f172a',
                           lineHeight: 1.3,
@@ -441,35 +405,44 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
                         {doc.title}
                       </strong>
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '0.1rem', display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
-                      <span style={{ color: docCatObj?.color || '#0284c7', fontWeight: 700 }}>
+                    <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '0.18rem', display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
+                      <span
+                        style={{
+                          background: docCatObj?.colorLight || '#e0f2fe',
+                          color: docCatObj?.color || '#00639B',
+                          fontWeight: 800,
+                          padding: '0.1rem 0.45rem',
+                          borderRadius: '9999px',
+                          fontSize: '0.68rem',
+                        }}
+                      >
                         {docCatObj?.name || doc.category}
                       </span>
-                      <span>·</span>
                       <span
                         style={{
                           color: doc.priority === 'Akut' ? '#b91c1c' : doc.priority === 'Riktlinje' ? '#1d4ed8' : '#475569',
                           fontWeight: 700,
                         }}
                       >
-                        {doc.priority}
+                        • {doc.priority}
                       </span>
                       {doc.isPinned && (
-                        <>
-                          <span>·</span>
-                          <span style={{ color: '#b45309', fontWeight: 700 }}>Nålat PM</span>
-                        </>
+                        <span style={{ color: '#b45309', fontWeight: 700 }}>• 📌 Nålat</span>
                       )}
+                    </div>
+                    {/* Mobil-beskrivning (visas när kolumn 3 döljs på mindre skärmar) */}
+                    <div className="show-on-compact-only" style={{ fontSize: '0.76rem', color: '#475569', marginTop: '0.25rem', lineHeight: 1.35 }}>
+                      {doc.description}
                     </div>
                   </div>
 
-                  {/* 3. Beskrivning */}
-                  <div style={{ minWidth: 0 }}>
+                  {/* 3. Beskrivning (Desktop/Stor surfplatta) */}
+                  <div className="m3-pm-col-desc hide-on-medium-table" style={{ minWidth: 0 }}>
                     <div
                       style={{
-                        fontSize: '0.77rem',
+                        fontSize: '0.78rem',
                         color: '#334155',
-                        lineHeight: 1.35,
+                        lineHeight: 1.4,
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
@@ -481,17 +454,17 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
                   </div>
 
                   {/* 4. Taggar & Datum */}
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: '0.71rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <div className="m3-pm-col-tags hide-on-compact-table" style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: '0.72rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {doc.tags && doc.tags.length > 0 ? doc.tags.slice(0, 3).map((t) => `#${t}`).join(' · ') : 'Rutin/PM'}
                     </div>
-                    <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontVariantNumeric: 'tabular-nums' }}>
+                    <div style={{ fontSize: '0.69rem', color: '#94a3b8', fontVariantNumeric: 'tabular-nums' }}>
                       {new Date(doc.dateAdded).toLocaleDateString('sv-SE')}
                     </div>
                   </div>
 
                   {/* 5. Åtgärder */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.4rem' }}>
+                  <div className="m3-pm-col-actions" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.4rem' }}>
                     {canEdit && (
                       <>
                         <button
@@ -499,7 +472,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
                             e.stopPropagation();
                             onTogglePinDoc(doc.id);
                           }}
-                          style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '0.8rem', padding: '0.15rem' }}
+                          style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '0.82rem', padding: '0.2rem' }}
                           title={doc.isPinned ? 'Lossa nål' : 'Nåla PM'}
                         >
                           📌
@@ -509,26 +482,15 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
                             e.stopPropagation();
                             onDeleteDoc(doc.id);
                           }}
-                          style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '0.8rem', color: '#b91c1c', padding: '0.15rem' }}
+                          style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '0.82rem', color: '#b91c1c', padding: '0.2rem' }}
                           title="Ta bort PM"
                         >
                           🗑️
                         </button>
                       </>
                     )}
-                    <span
-                      style={{
-                        background: '#f1f5f9',
-                        color: '#0284c7',
-                        fontWeight: 800,
-                        fontSize: '0.72rem',
-                        padding: '0.28rem 0.55rem',
-                        borderRadius: '6px',
-                        border: '1px solid #e2e8f0',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      Läs PM →
+                    <span className="m3-tonal-open-pill">
+                      Läs →
                     </span>
                   </div>
                 </div>
@@ -536,8 +498,8 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
             })}
           </div>
         ) : (
-          /* KORTVY (Grid) */
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1.1rem' }}>
+          /* KORTVY (Grid - Adaptiv) */
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 310px), 1fr))', gap: '1rem' }}>
             {sorted.map((doc) => {
               const isFav = favorites.includes(doc.id);
               const docCatObj = categories.find((c) => c.id === doc.category);

@@ -364,7 +364,7 @@ export const CategoryHubSection: React.FC<CategoryHubSectionProps> = ({
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
               gap: '0.9rem',
             }}
           >
@@ -442,7 +442,7 @@ export const CategoryHubSection: React.FC<CategoryHubSectionProps> = ({
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
               gap: '0.9rem',
             }}
           >

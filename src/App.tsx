@@ -14,6 +14,7 @@ import { IVA_SHIFT_CHECKLIST } from './data/clinicalData';
 import { Header } from './components/Header';
 import { ClinicalSubnav } from './components/ClinicalSubnav';
 import { FloatingMenu } from './components/FloatingMenu';
+import { M3BottomNav } from './components/M3BottomNav';
 
 // Vyer
 import { HomeView } from './views/HomeView';
@@ -557,39 +558,14 @@ export const App: React.FC = () => {
   const unreadNotifsCount = notifications.filter((n) => !n.read).length;
 
   return (
-    <div className="app-layout" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Toast-notifiering */}
+    <div className="app-layout m3-expressive-app" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* M3 Expressive Toast-notifiering */}
       {toastMessage && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '1.25rem',
-            right: '1.25rem',
-            zIndex: 9999,
-            background: '#0f172a',
-            color: '#ffffff',
-            padding: '0.75rem 1.25rem',
-            borderRadius: '10px',
-            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
-            fontSize: '0.9rem',
-            fontWeight: 600,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.65rem',
-            animation: 'fadeIn 0.2s ease',
-          }}
-        >
+        <div className="m3-expressive-snackbar">
           <span>{toastMessage}</span>
           <button
             onClick={() => setToastMessage(null)}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#94a3b8',
-              cursor: 'pointer',
-              marginLeft: '0.5rem',
-              fontSize: '1rem',
-            }}
+            className="m3-snackbar-close"
           >
             ✕
           </button>
@@ -626,7 +602,7 @@ export const App: React.FC = () => {
         isOwnerOrEditor={isOwnerOrEditor}
       />
 
-      {/* Klinisk sektionsnavigering */}
+      {/* Klinisk sektionsnavigering (M3 Expressive Filter Chips Strip) */}
       <ClinicalSubnav
         activeCategory={activeCategory}
         onSelectCategory={(cat) => {
@@ -637,7 +613,7 @@ export const App: React.FC = () => {
       />
 
       {/* Huvudinnehåll / Aktiv Vy */}
-      <main className="main-content" style={{ flex: 1, paddingBottom: '5rem' }}>
+      <main className="main-content m3-adaptive-main">
         {activeCategory === 'HOME' && (
           <HomeView
             documents={documents}
@@ -765,7 +741,23 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* Flytande snabbmeny & drawer */}
+      {/* M3 Expressive Bottennavigering (för Mobil & Vikbara skärmar < 1024px) */}
+      <M3BottomNav
+        activeCategory={activeCategory}
+        onSelectCategory={(cat) => {
+          setActiveCategory(cat);
+          setFloatingMenuOpen(false);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        onOpenGeminiChat={() => {
+          setGeminiInitialPrompt('');
+          setGeminiChatOpen(true);
+        }}
+        onToggleFabMenu={() => setFloatingMenuOpen((prev) => !prev)}
+        isFabOpen={floatingMenuOpen}
+      />
+
+      {/* Flytande M3 Expressive snabbmeny & drawer */}
       <FloatingMenu
         isOpen={floatingMenuOpen}
         onToggle={() => setFloatingMenuOpen((prev) => !prev)}

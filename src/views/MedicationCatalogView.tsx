@@ -377,39 +377,15 @@ export const MedicationCatalogView: React.FC<MedicationCatalogViewProps> = ({
           </p>
         </div>
       ) : (
-        <div
-          style={{
-            background: '#ffffff',
-            borderRadius: '14px',
-            border: '1px solid #cbd5e1',
-            overflow: 'hidden',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
-          }}
-        >
-          {/* Kompakt Tabell-Header (dold på riktigt smala skärmar via flex/grid anpassning) */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '32px minmax(190px, 1.3fr) minmax(220px, 1.8fr) minmax(180px, 1.4fr) minmax(130px, 1fr) minmax(140px, 1.1fr) 74px',
-              gap: '0.65rem',
-              padding: '0.5rem 0.85rem',
-              background: '#f1f5f9',
-              borderBottom: '1px solid #cbd5e1',
-              fontSize: '0.68rem',
-              fontWeight: 800,
-              color: '#475569',
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
-              alignItems: 'center',
-            }}
-            className="compact-drug-header"
-          >
+        <div className="m3-surface-card" style={{ overflow: 'hidden', padding: 0 }}>
+          {/* Kompakt Tabell-Header (Adaptiv) */}
+          <div className="m3-drug-list-header">
             <div style={{ textAlign: 'center' }}>★</div>
             <div>Läkemedel & Klass</div>
-            <div>Vad det gör (Effekt & Indikation)</div>
-            <div>Biverkningar (Urval)</div>
-            <div>T½ & Anslag</div>
-            <div>Styrka & Dosering</div>
+            <div className="hide-on-compact-table">Vad det gör (Effekt & Indikation)</div>
+            <div className="hide-on-medium-table">Biverkningar (Urval)</div>
+            <div className="hide-on-medium-table">T½ & Anslag</div>
+            <div className="hide-on-compact-table">Styrka & Dosering</div>
             <div style={{ textAlign: 'right' }}>Detaljer</div>
           </div>
 
@@ -421,28 +397,14 @@ export const MedicationCatalogView: React.FC<MedicationCatalogViewProps> = ({
                 <div
                   key={drug.id}
                   onClick={() => setSelectedDrug(drug)}
+                  className={`m3-drug-list-row ${isFav ? 'is-fav' : ''}`}
                   style={{
-                    display: 'grid',
-                    gridTemplateColumns: '32px minmax(190px, 1.3fr) minmax(220px, 1.8fr) minmax(180px, 1.4fr) minmax(130px, 1fr) minmax(140px, 1.1fr) 74px',
-                    gap: '0.65rem',
-                    padding: '0.48rem 0.85rem',
-                    borderBottom: idx < filteredDrugs.length - 1 ? '1px solid #f1f5f9' : 'none',
+                    borderBottom: idx < filteredDrugs.length - 1 ? '1px solid #eef2f6' : 'none',
                     borderLeft: `4px solid ${drug.color}`,
-                    background: isFav ? '#fffdf5' : idx % 2 === 0 ? '#ffffff' : '#fafbfc',
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                    transition: 'background 0.12s ease',
-                    fontSize: '0.78rem',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#f0f9ff';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = isFav ? '#fffdf5' : idx % 2 === 0 ? '#ffffff' : '#fafbfc';
                   }}
                 >
                   {/* 1. Favoritknapp */}
-                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <div className="m3-drug-col-fav" style={{ display: 'flex', justifyContent: 'center' }}>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -452,36 +414,52 @@ export const MedicationCatalogView: React.FC<MedicationCatalogViewProps> = ({
                         border: 'none',
                         background: 'transparent',
                         cursor: 'pointer',
-                        padding: '0.15rem',
+                        padding: '0.2rem',
                         display: 'flex',
                         alignItems: 'center',
                       }}
                       title={isFav ? 'Ta bort favorit' : 'Favoritmarkera'}
                     >
-                      <StarIcon filled={isFav} size={16} />
+                      <StarIcon filled={isFav} size={17} />
                     </button>
                   </div>
 
                   {/* 2. Namn, Varunamn & Kategori */}
-                  <div style={{ minWidth: 0 }}>
+                  <div className="m3-drug-col-main" style={{ minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
-                      <strong style={{ fontSize: '0.84rem', fontWeight: 800, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <strong style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0f172a' }}>
                         {drug.name}
                       </strong>
+                      <span
+                        style={{
+                          fontSize: '0.68rem',
+                          fontWeight: 800,
+                          color: drug.color,
+                          background: `${drug.color}15`,
+                          padding: '0.08rem 0.45rem',
+                          borderRadius: '9999px',
+                        }}
+                      >
+                        {drug.category}
+                      </span>
                     </div>
-                    <div style={{ fontSize: '0.7rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {drug.tradeNames} • <span style={{ color: drug.color, fontWeight: 700 }}>{drug.category}</span>
+                    <div style={{ fontSize: '0.73rem', color: '#64748b', marginTop: '0.1rem' }}>
+                      {drug.tradeNames} • <span style={{ color: '#0369a1', fontWeight: 700 }}>{drug.standardConc}</span>
+                    </div>
+                    {/* Mobil-sammanfattning */}
+                    <div className="show-on-compact-only" style={{ fontSize: '0.75rem', color: '#334155', marginTop: '0.22rem', lineHeight: 1.35 }}>
+                      {drug.shortEffect}
                     </div>
                   </div>
 
                   {/* 3. Vad det gör (Kort effekt) */}
-                  <div style={{ minWidth: 0 }}>
+                  <div className="hide-on-compact-table" style={{ minWidth: 0 }}>
                     <div
                       style={{
-                        fontSize: '0.77rem',
+                        fontSize: '0.78rem',
                         color: '#1e293b',
                         fontWeight: 600,
-                        lineHeight: 1.3,
+                        lineHeight: 1.35,
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
@@ -493,12 +471,12 @@ export const MedicationCatalogView: React.FC<MedicationCatalogViewProps> = ({
                   </div>
 
                   {/* 4. Biverkningar */}
-                  <div style={{ minWidth: 0 }}>
+                  <div className="hide-on-medium-table" style={{ minWidth: 0 }}>
                     <div
                       style={{
-                        fontSize: '0.73rem',
+                        fontSize: '0.74rem',
                         color: '#9f1239',
-                        lineHeight: 1.3,
+                        lineHeight: 1.35,
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
@@ -510,7 +488,7 @@ export const MedicationCatalogView: React.FC<MedicationCatalogViewProps> = ({
                   </div>
 
                   {/* 5. Halveringstid & Anslag */}
-                  <div style={{ minWidth: 0 }}>
+                  <div className="hide-on-medium-table" style={{ minWidth: 0 }}>
                     <div style={{ fontSize: '0.73rem', fontWeight: 700, color: '#4c1d95', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       T½: {drug.halfLife}
                     </div>
@@ -520,30 +498,19 @@ export const MedicationCatalogView: React.FC<MedicationCatalogViewProps> = ({
                   </div>
 
                   {/* 6. Koncentration & Dosering */}
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: '0.73rem', fontWeight: 700, color: '#0369a1', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <div className="hide-on-compact-table" style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: '0.74rem', fontWeight: 700, color: '#00639B', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {drug.standardConc}
                     </div>
-                    <div style={{ fontSize: '0.69rem', color: '#475569', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <div style={{ fontSize: '0.7rem', color: '#475569', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {drug.standardDoseRange}
                     </div>
                   </div>
 
                   {/* 7. Öppna-knapp */}
                   <div style={{ textAlign: 'right' }}>
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        background: '#f1f5f9',
-                        color: '#0284c7',
-                        fontSize: '0.7rem',
-                        fontWeight: 800,
-                        padding: '0.25rem 0.5rem',
-                        borderRadius: '6px',
-                        border: '1px solid #e2e8f0',
-                      }}
-                    >
-                      Visa info
+                    <span className="m3-tonal-open-pill">
+                      Info →
                     </span>
                   </div>
                 </div>
