@@ -166,8 +166,9 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
         <div
           style={{
             padding: '1.15rem 1.35rem',
-            background: 'linear-gradient(135deg, #0f172a 0%, #0284c7 100%)',
-            color: '#ffffff',
+            background: '#F0F4F9',
+            color: '#1F1F1F',
+            borderBottom: '1px solid #E1E5EA',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -179,7 +180,8 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
                 width: '42px',
                 height: '42px',
                 borderRadius: '12px',
-                background: 'rgba(255,255,255,0.16)',
+                background: '#D3E3FD',
+                color: '#0B57D0',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -189,10 +191,10 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
               🤖
             </div>
             <div>
-              <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800 }}>
+              <h2 style={{ margin: 0, fontSize: '1.08rem', fontWeight: 700, color: '#1F1F1F' }}>
                 Android-App, Google Play & Enhetsbehörigheter
               </h2>
-              <p style={{ margin: 0, fontSize: '0.76rem', color: '#bae6fd' }}>
+              <p style={{ margin: 0, fontSize: '0.76rem', color: '#444746' }}>
                 Play Store Testapp (.aab), Direkt-APK, Kamera & Infusionslarm
               </p>
             </div>
@@ -203,12 +205,12 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
             onClick={onClose}
             style={{
               border: 'none',
-              background: 'rgba(255,255,255,0.2)',
-              color: '#ffffff',
-              width: '32px',
-              height: '32px',
+              background: '#E1E5EA',
+              color: '#1F1F1F',
+              width: '34px',
+              height: '34px',
               borderRadius: '50%',
-              fontWeight: 800,
+              fontWeight: 700,
               cursor: 'pointer',
             }}
           >
@@ -221,8 +223,8 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
           {/* 1. GOOGLE PLAY STORE TESTAPP (.AAB) & APK NEDLADDNING */}
           <div
             style={{
-              background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%)',
-              border: '1.5px solid #34d399',
+              background: '#F0F4F9',
+              border: '1px solid #D3E3FD',
               borderRadius: '16px',
               padding: '1.1rem',
             }}
@@ -419,7 +421,7 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
                       type="button"
                       onClick={() =>
                         copyToClipboard(
-                          'Kliniskt beslutsstöd och kunskapsbank för Intensivvårdsenheten Östra (IVA Östra). Innehåller strukturerade rutiner och PM, läkemedelsspädningar, infusionskalkylator, blodgastolkning med kameraskanning samt Gemini IVA Notebook.',
+                          'Kliniskt beslutsstöd och kunskapsbank för Intensivvårdsenheten Östra (IVA Östra). Innehåller strukturerade rutiner och PM, läkemedelsspädningar, infusionskalkylator, vätskebalans samt blodgastolkning med kameraskanning.',
                           'Fullständig beskrivning'
                         )
                       }
@@ -549,8 +551,8 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
                   <CameraIcon size={19} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f172a' }}>
-                    Kamera & Bildskanning (Blodgas OCR & Gemini Notebook)
+                  <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#1F1F1F' }}>
+                    Kamera & Bildskanning (Blodgas, Respirator & PM)
                   </div>
                   <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
                     Status:{' '}

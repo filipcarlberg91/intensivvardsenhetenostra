@@ -14,7 +14,6 @@ import { IVA_SHIFT_CHECKLIST } from './data/clinicalData';
 import { Header } from './components/Header';
 import { ClinicalSubnav } from './components/ClinicalSubnav';
 import { FloatingMenu } from './components/FloatingMenu';
-import { M3BottomNav } from './components/M3BottomNav';
 
 // Vyer
 import { HomeView } from './views/HomeView';
@@ -32,7 +31,6 @@ import { IVA_DRUGS } from './data/drugsData';
 
 // Modaler
 import { DocumentViewerModal } from './components/modals/DocumentViewerModal';
-import { GeminiChatDrawer } from './components/modals/GeminiChatDrawer';
 import { GlobalSearchModal } from './components/modals/GlobalSearchModal';
 import { PocketguideModal } from './components/modals/PocketguideModal';
 import { ShiftChecklistModal } from './components/modals/ShiftChecklistModal';
@@ -209,8 +207,6 @@ export const App: React.FC = () => {
   const [selectedDoc, setSelectedDoc] = useState<DocumentItem | null>(null);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [pocketguideModalOpen, setPocketguideModalOpen] = useState(false);
-  const [geminiChatOpen, setGeminiChatOpen] = useState(false);
-  const [geminiInitialPrompt, setGeminiInitialPrompt] = useState('');
   const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [permissionsModalOpen, setPermissionsModalOpen] = useState(false);
@@ -351,9 +347,6 @@ export const App: React.FC = () => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setGlobalSearchOpen(true);
-      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'j') {
-        e.preventDefault();
-        setGeminiChatOpen((prev) => !prev);
       } else if (e.key === 'Escape') {
         setSelectedDoc(null);
         setShiftModalOpen(false);
@@ -587,10 +580,6 @@ export const App: React.FC = () => {
         onNavigateHome={() => setActiveCategory('HOME')}
         onNavigateMyPage={() => setActiveCategory('MY_PAGE')}
         onOpenGlobalSearch={() => setGlobalSearchOpen(true)}
-        onOpenGeminiChat={() => {
-          setGeminiInitialPrompt('');
-          setGeminiChatOpen(true);
-        }}
         onOpenLoginModal={() => setLoginModalOpen(true)}
         onLogout={handleLogout}
         onOpenUploadModal={() => setUploadModalOpen(true)}
@@ -602,7 +591,7 @@ export const App: React.FC = () => {
         isOwnerOrEditor={isOwnerOrEditor}
       />
 
-      {/* Klinisk sektionsnavigering (M3 Expressive Filter Chips Strip) */}
+      {/* Klinisk sektionsnavigering */}
       <ClinicalSubnav
         activeCategory={activeCategory}
         onSelectCategory={(cat) => {
@@ -630,10 +619,6 @@ export const App: React.FC = () => {
             onOpenDoc={(doc) => setSelectedDoc(doc)}
             onGlobalSearch={(q) => {
               setGlobalSearchOpen(true);
-            }}
-            onQuickAskGemini={(prompt) => {
-              setGeminiInitialPrompt(prompt);
-              setGeminiChatOpen(true);
             }}
           />
         )}
@@ -741,23 +726,7 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* M3 Expressive Bottennavigering (för Mobil & Vikbara skärmar < 1024px) */}
-      <M3BottomNav
-        activeCategory={activeCategory}
-        onSelectCategory={(cat) => {
-          setActiveCategory(cat);
-          setFloatingMenuOpen(false);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onOpenGeminiChat={() => {
-          setGeminiInitialPrompt('');
-          setGeminiChatOpen(true);
-        }}
-        onToggleFabMenu={() => setFloatingMenuOpen((prev) => !prev)}
-        isFabOpen={floatingMenuOpen}
-      />
-
-      {/* Flytande M3 Expressive snabbmeny & drawer */}
+      {/* Flytande snabbmeny (Endast FAB-menyn) */}
       <FloatingMenu
         isOpen={floatingMenuOpen}
         onToggle={() => setFloatingMenuOpen((prev) => !prev)}
@@ -775,10 +744,6 @@ export const App: React.FC = () => {
         currentUser={currentUser}
         onOpenGlobalSearch={() => setGlobalSearchOpen(true)}
         onOpenUploadModal={() => setUploadModalOpen(true)}
-        onOpenGeminiChat={() => {
-          setGeminiInitialPrompt('');
-          setGeminiChatOpen(true);
-        }}
         onOpenAndroidSetup={() => setAndroidSetupModalOpen(true)}
         canEdit={canEdit}
       />
@@ -816,13 +781,6 @@ export const App: React.FC = () => {
           setGlobalSearchOpen(false);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
-      />
-
-      <GeminiChatDrawer
-        isOpen={geminiChatOpen}
-        onClose={() => setGeminiChatOpen(false)}
-        documents={documents}
-        initialPrompt={geminiInitialPrompt}
       />
 
       <UploadModal
@@ -866,11 +824,10 @@ export const App: React.FC = () => {
         isOpen={globalCameraScannerOpen}
         onClose={() => setGlobalCameraScannerOpen(false)}
         title="IVA Kameraskanner (Android)"
-        subtitle="Fota blodgasremsa, läkemedel eller PM och skicka till Gemini Notebook"
-        onCaptureImage={(base64) => {
-          showToast('📸 Bild tagen! Öppnar Syra-Bas / Gemini Notebook...');
-          setGeminiInitialPrompt('Analysera denna kamerabild och sammanfatta kliniskt viktiga värden.');
-          setGeminiChatOpen(true);
+        subtitle="Fota blodgasremsa, läkemedelsetikett eller kliniskt protokoll"
+        onCaptureImage={() => {
+          showToast('📸 Bild tagen! Öppnar Blodgas & Syra-Bas...');
+          setActiveCategory('ACID_BASE');
         }}
       />
     </div>

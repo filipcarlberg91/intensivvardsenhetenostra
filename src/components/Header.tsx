@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { HospitalIcon, SearchIcon, SparklesIcon, BellIcon, GoogleIcon } from './Icons';
+import { HospitalIcon, SearchIcon, BellIcon, GoogleIcon } from './Icons';
 import { UserProfile, UserRole, NotificationItem } from '../types';
 
 interface HeaderProps {
@@ -16,7 +16,6 @@ interface HeaderProps {
   onNavigateHome: () => void;
   onNavigateMyPage: () => void;
   onOpenGlobalSearch: () => void;
-  onOpenGeminiChat: () => void;
   onOpenLoginModal: () => void;
   onLogout: () => void;
   onOpenUploadModal: () => void;
@@ -41,7 +40,6 @@ export const Header: React.FC<HeaderProps> = ({
   onNavigateHome,
   onNavigateMyPage,
   onOpenGlobalSearch,
-  onOpenGeminiChat,
   onOpenLoginModal,
   onLogout,
   onOpenUploadModal,
@@ -72,10 +70,10 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="app-header m3-top-app-bar">
       <div className="header-main-bar">
         <div className="header-container">
-          {/* Vänster: M3 Expressive Brand Identity (Aldrig kapad till "I...") */}
+          {/* Vänster: Google-stil app-identitet */}
           <div className="brand-section" onClick={onNavigateHome} title="Gå till Startsidan">
             <div className="brand-logo-icon m3-squircle-logo">
-              <HospitalIcon size={22} />
+              <HospitalIcon size={20} />
             </div>
             <div className="brand-titles">
               <h1>
@@ -87,9 +85,9 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Höger: Adaptiva M3 Expressive Actions */}
+          {/* Höger: Sök, Notiser & Konto */}
           <div className="header-actions">
-            {/* Global sökknapp (M3 Tonal Search Pill på tablet/desktop, cirkelknapp på mobil) */}
+            {/* Global sökknapp (Matt Google-stil sökfält) */}
             <button
               className="global-search-btn m3-tonal-search-trigger"
               onClick={onOpenGlobalSearch}
@@ -97,24 +95,11 @@ export const Header: React.FC<HeaderProps> = ({
               aria-label="Sök i appen"
             >
               <SearchIcon size={18} />
-              <span className="search-btn-label">Sök PM, läkemedel & verktyg...</span>
+              <span className="search-btn-label">Sök i IVA Östra...</span>
               <kbd>Ctrl K</kbd>
             </button>
 
-            {/* Gemini IVA Notebook (M3 Expressive Tertiary Pill) */}
-            <button
-              className="btn-gemini-ai m3-tertiary-pill-btn"
-              onClick={onOpenGeminiChat}
-              title="Öppna Gemini IVA Notebook (Ctrl+J)"
-              aria-label="Öppna Gemini Notebook"
-            >
-              <span className="ai-sparkle-dot"></span>
-              <SparklesIcon size={17} />
-              <span className="gemini-btn-text-full">Gemini Notebook</span>
-              <span className="gemini-btn-text-compact">AI</span>
-            </button>
-
-            {/* Desktop/Tablet snabba knappar (Döljs på kompakta telefoner och läggs i profil/mer-menyn för ren M3-layout) */}
+            {/* Desktop/Tablet snabba knappar */}
             {onOpenAndroidSetup && (
               <button
                 className="btn-header-secondary btn-icon-compact hide-on-compact"
@@ -173,13 +158,13 @@ export const Header: React.FC<HeaderProps> = ({
                     {notifications.length === 0 ? (
                       <div
                         className="notification-empty"
-                        style={{ padding: '1.75rem 1.25rem', textAlign: 'center', color: '#64748b' }}
+                        style={{ padding: '1.75rem 1.25rem', textAlign: 'center', color: '#444746' }}
                       >
                         <BellIcon size={26} />
-                        <div style={{ marginTop: '0.5rem', fontWeight: 700, color: '#0f172a' }}>
+                        <div style={{ marginTop: '0.5rem', fontWeight: 600, color: '#1F1F1F' }}>
                           Inga nya notiser
                         </div>
-                        <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '0.25rem 0 0' }}>
+                        <p style={{ fontSize: '0.78rem', color: '#444746', margin: '0.25rem 0 0' }}>
                           Infusionslarm och uppdaterade PM visas här.
                         </p>
                       </div>
@@ -217,7 +202,7 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </div>
 
-            {/* M3 Expressive Användarprofil & Verktygsmeny */}
+            {/* Google-stil Användarprofil & Verktygsmeny */}
             <div className="m3-profile-menu-wrapper" ref={moreMenuRef} style={{ position: 'relative' }}>
               {!currentUser ? (
                 <button
@@ -242,16 +227,10 @@ export const Header: React.FC<HeaderProps> = ({
                   <span className="user-name-text hide-on-compact">
                     {currentUser.name || currentUser.email.split('@')[0]}
                   </span>
-                  {userRole === 'OWNER' && (
-                    <span className="user-role-tag owner hide-on-medium">Admin</span>
-                  )}
-                  {userRole === 'EDITOR' && (
-                    <span className="user-role-tag editor hide-on-medium">Redaktör</span>
-                  )}
                 </button>
               )}
 
-              {/* M3 Expressive Dropdown för Profil, Kamera, Nytt PM, Roller & Backup */}
+              {/* Google-stil Konto- & Verktygsmeny */}
               {moreMenuOpen && (
                 <div className="m3-user-dropdown-sheet">
                   {currentUser && (
@@ -260,15 +239,15 @@ export const Header: React.FC<HeaderProps> = ({
                         {(currentUser.name || currentUser.email).charAt(0).toUpperCase()}
                       </div>
                       <div style={{ minWidth: 0, flex: 1 }}>
-                        <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.92rem', color: '#1F1F1F', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {currentUser.name}
                         </div>
-                        <div style={{ fontSize: '0.75rem', color: '#475569', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <div style={{ fontSize: '0.75rem', color: '#444746', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {currentUser.email}
                         </div>
                       </div>
                       <span className="m3-role-chip">
-                        {userRole === 'OWNER' ? '👑 Admin' : userRole === 'EDITOR' ? '✏️ Redaktör' : '👁️ Läsare'}
+                        {userRole === 'OWNER' ? 'Admin' : userRole === 'EDITOR' ? 'Redaktör' : 'Läsare'}
                       </span>
                     </div>
                   )}

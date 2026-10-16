@@ -9,7 +9,6 @@ import {
   PillIcon,
   VentilatorIcon,
   SearchIcon,
-  SparklesIcon,
   CameraIcon,
 } from '../components/Icons';
 
@@ -24,7 +23,6 @@ interface HomeViewProps {
   onSelectCategory: (cat: string) => void;
   onOpenDoc: (doc: DocumentItem) => void;
   onGlobalSearch: (q: string) => void;
-  onQuickAskGemini: (prompt: string) => void;
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({
@@ -35,7 +33,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
   activeReminderCount = 0,
   onSelectCategory,
   onGlobalSearch,
-  onQuickAskGemini,
 }) => {
   const [searchInput, setSearchInput] = useState('');
 
@@ -58,81 +55,73 @@ export const HomeView: React.FC<HomeViewProps> = ({
     {
       id: 'PAIN_SEDATION',
       label: 'CPOT & RASS',
-      bg: '#FCE7F3',
-      color: '#BE185D',
-      icon: <HeartPulseIcon size={26} />,
+      bg: '#FCE8F3',
+      color: '#9C1D56',
+      icon: <HeartPulseIcon size={24} />,
       onClick: () => onSelectCategory('PAIN_SEDATION'),
     },
     {
       id: 'DISEASES',
       label: 'Sjukdomar',
-      bg: '#FFE4E6',
-      color: '#BE123C',
-      icon: <StethoscopeIcon size={26} />,
+      bg: '#F9DEDC',
+      color: '#B3261E',
+      icon: <StethoscopeIcon size={24} />,
       onClick: () => onSelectCategory('DISEASES'),
     },
     {
       id: 'ACID_BASE',
       label: 'Blodgas & Syra-Bas',
-      bg: '#EDE9FE',
-      color: '#5B21B6',
-      icon: <FlaskIcon size={26} />,
+      bg: '#E8DEF8',
+      color: '#4F378B',
+      icon: <FlaskIcon size={24} />,
       onClick: () => onSelectCategory('ACID_BASE'),
     },
     {
       id: 'FLUID_BALANCE',
       label: 'Vätskor & ROSE',
-      bg: '#CCFBF1',
-      color: '#0F766E',
-      icon: <DropletIcon size={26} />,
+      bg: '#C4EED0',
+      color: '#0F5223',
+      icon: <DropletIcon size={24} />,
       onClick: () => onSelectCategory('FLUID_BALANCE'),
     },
     {
       id: 'NUTRITION',
       label: 'Nutrition',
-      bg: '#FEF3C7',
-      color: '#B45309',
-      icon: <NutritionIcon size={26} />,
+      bg: '#FEF7E0',
+      color: '#8F4C00',
+      icon: <NutritionIcon size={24} />,
       onClick: () => onSelectCategory('NUTRITION'),
     },
     {
       id: 'DRUGS',
       label: 'Dos & CVK',
-      bg: '#D4E8FF',
-      color: '#005689',
-      icon: <PillIcon size={26} />,
+      bg: '#D3E3FD',
+      color: '#0B57D0',
+      icon: <PillIcon size={24} />,
       onClick: () => onSelectCategory('DRUGS'),
     },
     {
       id: 'Läkemedel',
       label: 'Läkemedel',
-      bg: '#EBDDFF',
-      color: '#583596',
-      icon: <PillIcon size={26} />,
+      bg: '#E8DEF8',
+      color: '#4F378B',
+      icon: <PillIcon size={24} />,
       onClick: () => onSelectCategory('Läkemedel'),
     },
     {
       id: 'EQUIPMENT',
       label: 'Apparatur',
-      bg: '#CFFAFE',
-      color: '#0E7490',
-      icon: <VentilatorIcon size={26} />,
+      bg: '#C2E7FF',
+      color: '#004A77',
+      icon: <VentilatorIcon size={24} />,
       onClick: () => onSelectCategory('EQUIPMENT'),
-    },
-    {
-      id: 'GEMINI_NOTEBOOK',
-      label: 'Gemini Notebook',
-      bg: '#E0E7FF',
-      color: '#3730A3',
-      icon: <SparklesIcon size={26} />,
-      onClick: () => onQuickAskGemini(''),
     },
     {
       id: 'ANDROID_CAMERA',
       label: 'Kamera & Notiser',
-      bg: '#E2E8F0',
-      color: '#1E293B',
-      icon: <CameraIcon size={26} />,
+      bg: '#E1E5EA',
+      color: '#1F1F1F',
+      icon: <CameraIcon size={24} />,
       onClick: () => {
         if (onOpenAndroidSetup) onOpenAndroidSetup();
       },
@@ -141,14 +130,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
   return (
     <div className="home-view-container m3-adaptive-container">
-      {/* 1. MATERIAL 3 EXPRESSIVE HERO CARD */}
+      {/* 1. GOOGLE M3 TOPPSEKTION (MATT TONAL YTA UTAN GLOSS/GRADIENT) */}
       <section className="m3-expressive-hero">
         <div className="m3-hero-inner">
-          {/* Topp-rad med statuschip och datum */}
+          {/* Topp-rad med avdelningsetikett och datum */}
           <div className="m3-hero-top-row">
             <span className="m3-hero-status-chip">
-              <span className="pulse-dot"></span>
-              <span>IVA Östra • Sahlgrenska</span>
+              <span>IVA Östra • Sahlgrenska Universitetssjukhuset</span>
             </span>
             <span className="m3-hero-date-chip">{currentDateStr}</span>
           </div>
@@ -161,7 +149,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </p>
           </div>
 
-          {/* M3 Expressive Pill Search Bar (Alltid horisontell pill-form på alla skärmar!) */}
+          {/* Google-stil Sökfält (Matt tonal pill-form) */}
           <form onSubmit={handleSearchSubmit} className="m3-expressive-search-pill">
             <span className="m3-search-pill-icon">
               <SearchIcon size={20} />
@@ -178,12 +166,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </button>
           </form>
 
-          {/* Dubbla M3 Expressive Action Cards (Adaptiv Bento Grid: 1 kolumn på smal mobil, 2 på vikbar/surfplatta/desktop) */}
+          {/* Dubbla Google M3 Tonala Kort: Start av arbetspass & Medicintider */}
           <div className="m3-hero-bento-grid">
             {/* KORT 1: START AV ARBETSPASS */}
             <div className="m3-bento-action-card primary-bento" onClick={onOpenShiftModal} role="button" tabIndex={0}>
               <div className="m3-bento-top">
-                <span className="m3-bento-kicker">📋 Skiftöverlämning</span>
+                <span className="m3-bento-kicker">Skiftöverlämning</span>
                 <span className={`m3-bento-status-badge ${shiftChecked === shiftTotal && shiftTotal > 0 ? 'done' : ''}`}>
                   {shiftChecked}/{shiftTotal} ({shiftPercent}%)
                 </span>
@@ -202,7 +190,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   }}
                 >
                   <span>Checklista</span>
-                  <span>→</span>
                 </button>
               </div>
               <div className="m3-bento-progress-track">
@@ -213,9 +200,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
             {/* KORT 2: MEDICINTIDER & INFUSIONSSLUT */}
             <div className="m3-bento-action-card tertiary-bento" onClick={onOpenMedicationModal} role="button" tabIndex={0}>
               <div className="m3-bento-top">
-                <span className="m3-bento-kicker tertiary">⏰ Sprutbyte & Larm</span>
+                <span className="m3-bento-kicker tertiary">Sprutbyte & Larm</span>
                 <span className={`m3-bento-status-badge tertiary ${activeReminderCount > 0 ? 'active-alarm' : ''}`}>
-                  {activeReminderCount > 0 ? `🔔 ${activeReminderCount} aktiva` : 'Inga larm'}
+                  {activeReminderCount > 0 ? `${activeReminderCount} aktiva larm` : 'Inga larm'}
                 </span>
               </div>
               <div className="m3-bento-body">
@@ -232,7 +219,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   }}
                 >
                   <span>Medicintider</span>
-                  <span>→</span>
                 </button>
               </div>
             </div>
@@ -240,14 +226,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
         </div>
       </section>
 
-      {/* 2. KLINISKA VERKTYG — MATERIAL 3 EXPRESSIVE SQUIRCLE ICON TILES */}
+      {/* 2. KLINISKA VERKTYG — ENBART IKONER MED TEXT UNDER (GOOGLE M3 STIL) */}
       <section className="m3-tools-section">
         <div className="m3-section-header">
           <div className="m3-section-title-group">
-            <span className="m3-section-indicator"></span>
             <h2 className="m3-section-title">Kliniska Verktyg</h2>
           </div>
-          <span className="m3-section-subtitle">Snabbval</span>
         </div>
 
         <div className="m3-expressive-tools-grid">

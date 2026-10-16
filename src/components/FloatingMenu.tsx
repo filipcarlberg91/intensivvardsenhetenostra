@@ -4,7 +4,6 @@ import {
   HomeIcon,
   StarIcon,
   SearchIcon,
-  SparklesIcon,
   HeartPulseIcon,
   StethoscopeIcon,
   FlaskIcon,
@@ -29,7 +28,6 @@ interface FloatingMenuProps {
   currentUser: UserProfile | null;
   onOpenGlobalSearch: () => void;
   onOpenUploadModal: () => void;
-  onOpenGeminiChat: () => void;
   onOpenAndroidSetup?: () => void;
   canEdit: boolean;
 }
@@ -40,20 +38,18 @@ interface ClinicalToolItem {
   id: string;
   name: string;
   color: string;
-  isAi?: boolean;
   showDocCount?: boolean;
 }
 
 const DEFAULT_CLINICAL_TOOLS: ClinicalToolItem[] = [
-  { id: 'PAIN_SEDATION', name: 'CPOT & RASS', color: '#d946ef' },
-  { id: 'DISEASES', name: 'Sjukdomar', color: '#e11d48' },
-  { id: 'ACID_BASE', name: 'Syra-Bas', color: '#7c3aed' },
-  { id: 'FLUID_BALANCE', name: 'Vätskor', color: '#059669' },
-  { id: 'NUTRITION', name: 'Nutrition (Kalkylator)', color: '#d97706' },
-  { id: 'DRUGS', name: 'Dos & CVK', color: '#0ea5e9' },
-  { id: 'EQUIPMENT', name: 'Apparatur', color: '#0891b2' },
-  { id: 'ALL', name: 'Alla PM', color: '#64749b', showDocCount: true },
-  { id: 'GEMINI_AI', name: 'Gemini IVA Notebook (AI)', color: '#7c3aed', isAi: true },
+  { id: 'PAIN_SEDATION', name: 'CPOT & RASS', color: '#B4236C' },
+  { id: 'DISEASES', name: 'Sjukdomar', color: '#B3261E' },
+  { id: 'ACID_BASE', name: 'Syra-Bas', color: '#5E35B1' },
+  { id: 'FLUID_BALANCE', name: 'Vätskor', color: '#006A60' },
+  { id: 'NUTRITION', name: 'Nutrition (Kalkylator)', color: '#B25E00' },
+  { id: 'DRUGS', name: 'Dos & CVK', color: '#0B57D0' },
+  { id: 'EQUIPMENT', name: 'Apparatur', color: '#00677F' },
+  { id: 'ALL', name: 'Alla PM', color: '#444746', showDocCount: true },
 ];
 
 const DEFAULT_SECTION_ORDER: SectionKey[] = ['top_cards', 'rutiner_pm', 'clinical_modules'];
@@ -74,7 +70,6 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
   currentUser,
   onOpenGlobalSearch,
   onOpenUploadModal,
-  onOpenGeminiChat,
   onOpenAndroidSetup,
   canEdit,
 }) => {
@@ -223,8 +218,6 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
 
   const renderToolIcon = (toolId: string) => {
     switch (toolId) {
-      case 'GEMINI_AI':
-        return <SparklesIcon size={16} />;
       case 'PAIN_SEDATION':
         return <HeartPulseIcon size={16} />;
       case 'DISEASES':
@@ -256,12 +249,13 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
           }}
           disabled={sectionIdx === 0}
           style={{
-            border: '1px solid rgba(255,255,255,0.2)',
-            background: sectionIdx === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.14)',
-            color: sectionIdx === 0 ? '#64748b' : '#f8fafc',
-            borderRadius: '5px',
+            border: '1px solid #C4C7C5',
+            background: sectionIdx === 0 ? '#F0F4F9' : '#FFFFFF',
+            color: sectionIdx === 0 ? '#8E918F' : '#1F1F1F',
+            borderRadius: '8px',
             fontSize: '0.68rem',
-            padding: '0.1rem 0.35rem',
+            fontWeight: 600,
+            padding: '0.12rem 0.45rem',
             cursor: sectionIdx === 0 ? 'default' : 'pointer',
           }}
           title="Flytta sektion uppåt"
@@ -276,12 +270,13 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
           }}
           disabled={sectionIdx === sectionOrder.length - 1}
           style={{
-            border: '1px solid rgba(255,255,255,0.2)',
-            background: sectionIdx === sectionOrder.length - 1 ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.14)',
-            color: sectionIdx === sectionOrder.length - 1 ? '#64748b' : '#f8fafc',
-            borderRadius: '5px',
+            border: '1px solid #C4C7C5',
+            background: sectionIdx === sectionOrder.length - 1 ? '#F0F4F9' : '#FFFFFF',
+            color: sectionIdx === sectionOrder.length - 1 ? '#8E918F' : '#1F1F1F',
+            borderRadius: '8px',
             fontSize: '0.68rem',
-            padding: '0.1rem 0.35rem',
+            fontWeight: 600,
+            padding: '0.12rem 0.45rem',
             cursor: sectionIdx === sectionOrder.length - 1 ? 'default' : 'pointer',
           }}
           title="Flytta sektion nedåt"
@@ -293,130 +288,104 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
 
     if (sectionKey === 'top_cards') {
       return (
-        <div key="top_cards" style={{ marginBottom: '0.75rem' }}>
+        <div key="top_cards" style={{ marginBottom: '0.85rem' }}>
           {isEditingLayout && (
-            <div className="fab-section-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div className="fab-section-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
               <span>Snabbkort (Startsida & Min Sida)</span>
               {sectionHeaderControls}
             </div>
           )}
-          {topCardsOrder.map((cardKey, cIdx) => {
-            if (cardKey === 'HOME') {
-              return (
-                <div
-                  key="HOME"
-                  className={`fab-mypage-card ${activeCategory === 'HOME' ? 'active' : ''}`}
-                  style={{
-                    background:
-                      activeCategory === 'HOME'
-                        ? 'linear-gradient(135deg, rgba(2, 132, 199, 0.35) 0%, rgba(14, 165, 233, 0.2) 100%)'
-                        : 'rgba(255, 255, 255, 0.06)',
-                    borderColor: activeCategory === 'HOME' ? '#38bdf8' : 'rgba(255, 255, 255, 0.12)',
-                    marginBottom: '0.55rem',
-                    position: 'relative',
-                  }}
-                  onClick={() => {
-                    if (isEditingLayout) return;
-                    onSelectCategory('HOME');
-                    onClose();
-                  }}
-                  title="Öppna Startsidan"
-                >
-                  <div className="fab-mypage-icon" style={{ background: '#0284c7', color: '#ffffff' }}>
-                    <HomeIcon size={20} />
-                  </div>
-                  <div className="fab-mypage-info">
-                    <div className="fab-mypage-title" style={{ color: '#ffffff' }}>
-                      Startsida
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+            {topCardsOrder.map((cardKey, cIdx) => {
+              if (cardKey === 'HOME') {
+                const isHomeActive = activeCategory === 'HOME';
+                return (
+                  <div
+                    key="HOME"
+                    className={`google-fab-top-card ${isHomeActive ? 'active' : ''}`}
+                    onClick={() => {
+                      if (isEditingLayout) return;
+                      onSelectCategory('HOME');
+                      onClose();
+                    }}
+                    title="Öppna Startsidan"
+                  >
+                    <div className="google-fab-top-icon" style={{ background: isHomeActive ? '#0B57D0' : '#D3E3FD', color: isHomeActive ? '#FFFFFF' : '#0B57D0' }}>
+                      <HomeIcon size={18} />
                     </div>
-                    <div className="fab-mypage-sub">IVA Översikt & Verktyg</div>
-                  </div>
-                  {isEditingLayout ? (
-                    <div style={{ display: 'flex', gap: '0.25rem' }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div style={{ fontSize: '0.84rem', fontWeight: 700, color: isHomeActive ? '#001D35' : '#1F1F1F' }}>
+                        Startsida
+                      </div>
+                      <div style={{ fontSize: '0.7rem', color: '#444746', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        Översikt & Verktyg
+                      </div>
+                    </div>
+                    {isEditingLayout && (
                       <button
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           setTopCardsOrder((prev) => moveItemInArray(prev, cIdx, cIdx === 0 ? 1 : -1));
                         }}
-                        style={{
-                          background: 'rgba(56, 189, 248, 0.25)',
-                          color: '#ffffff',
-                          border: '1px solid #38bdf8',
-                          borderRadius: '6px',
-                          padding: '0.2rem 0.45rem',
-                          fontSize: '0.72rem',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                        }}
-                        title="Byt plats på Startsida och Min Sida"
+                        className="google-swap-mini-btn"
+                        title="Byt plats"
                       >
-                        ⇅ Byt plats
+                        ⇄
                       </button>
+                    )}
+                  </div>
+                );
+              }
+
+              const isMyPageActive = activeCategory === 'MY_PAGE';
+              return (
+                <div
+                  key="MY_PAGE"
+                  className={`google-fab-top-card ${isMyPageActive ? 'active' : ''}`}
+                  onClick={() => {
+                    if (isEditingLayout) return;
+                    onSelectCategory('MY_PAGE');
+                    onClose();
+                  }}
+                  title="Öppna Min Sida med dina sparade favoriter"
+                >
+                  <div className="google-fab-top-icon" style={{ background: isMyPageActive ? '#0B57D0' : '#FEF7E0', color: isMyPageActive ? '#FFFFFF' : '#B06000' }}>
+                    <StarIcon filled size={18} />
+                  </div>
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <div style={{ fontSize: '0.84rem', fontWeight: 700, color: isMyPageActive ? '#001D35' : '#1F1F1F' }}>
+                      Min Sida
                     </div>
-                  ) : (
-                    <span style={{ fontSize: '1.1rem', color: '#38bdf8', fontWeight: 700 }}>🏠</span>
+                    <div style={{ fontSize: '0.7rem', color: '#444746', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {favoritesCount} favoriter
+                    </div>
+                  </div>
+                  {isEditingLayout && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setTopCardsOrder((prev) => moveItemInArray(prev, cIdx, cIdx === 0 ? 1 : -1));
+                      }}
+                      className="google-swap-mini-btn"
+                      title="Byt plats"
+                    >
+                      ⇄
+                    </button>
                   )}
                 </div>
               );
-            }
-
-            return (
-              <div
-                key="MY_PAGE"
-                className={`fab-mypage-card ${activeCategory === 'MY_PAGE' ? 'active' : ''}`}
-                style={{ marginBottom: '0.55rem' }}
-                onClick={() => {
-                  if (isEditingLayout) return;
-                  onSelectCategory('MY_PAGE');
-                  onClose();
-                }}
-                title="Öppna Min Sida med dina sparade favoriter"
-              >
-                <div className="fab-mypage-icon">
-                  <StarIcon filled size={20} />
-                </div>
-                <div className="fab-mypage-info">
-                  <div className="fab-mypage-title">Min Sida</div>
-                  <div className="fab-mypage-sub">
-                    {currentUser ? currentUser.name || currentUser.email : 'Gäst'} • {favoritesCount} sparade
-                  </div>
-                </div>
-                {isEditingLayout ? (
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setTopCardsOrder((prev) => moveItemInArray(prev, cIdx, cIdx === 0 ? 1 : -1));
-                    }}
-                    style={{
-                      background: 'rgba(56, 189, 248, 0.25)',
-                      color: '#ffffff',
-                      border: '1px solid #38bdf8',
-                      borderRadius: '6px',
-                      padding: '0.2rem 0.45rem',
-                      fontSize: '0.72rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                    }}
-                    title="Byt plats på Startsida och Min Sida"
-                  >
-                    ⇅ Byt plats
-                  </button>
-                ) : (
-                  <span className="fab-badge">{favoritesCount}</span>
-                )}
-              </div>
-            );
-          })}
+            })}
+          </div>
         </div>
       );
     }
 
     if (sectionKey === 'rutiner_pm') {
       return (
-        <div key="rutiner_pm" style={{ marginBottom: '0.75rem' }}>
-          <div className="fab-section-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div key="rutiner_pm" style={{ marginBottom: '0.85rem' }}>
+          <div className="fab-section-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
             <span>Rutiner/PM</span>
             {sectionHeaderControls}
           </div>
@@ -447,7 +416,7 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                     className={`fab-cat-btn ${isActive ? 'active' : ''}`}
                     style={{
                       width: '100%',
-                      border: isEditingLayout ? '1px dashed rgba(56, 189, 248, 0.6)' : undefined,
+                      border: isEditingLayout ? '1.5px dashed #0B57D0' : undefined,
                       cursor: isEditingLayout ? 'grab' : 'pointer',
                       paddingBottom: isEditingLayout ? '1.6rem' : undefined,
                     }}
@@ -458,8 +427,8 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                     }}
                     title={`${cat.name} (${cat.subtitle})`}
                   >
-                    <span className="fab-cat-icon" style={{ color: isActive ? '#ffffff' : cat.color }}>
-                      <CategoryIcon icon={cat.icon} size={18} color={cat.color} />
+                    <span className="fab-cat-icon" style={{ color: isActive ? '#001D35' : cat.color }}>
+                      <CategoryIcon icon={cat.icon} size={18} color={isActive ? '#001D35' : cat.color} />
                     </span>
                     <span className="fab-cat-name">{cat.name}</span>
                     <span className="fab-badge">{count}</span>
@@ -485,22 +454,12 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                           e.stopPropagation();
                           handleMoveCategory(idx, -1);
                         }}
-                        style={{
-                          flex: 1,
-                          border: 'none',
-                          background: idx === 0 ? 'rgba(255,255,255,0.05)' : 'rgba(2, 132, 199, 0.45)',
-                          color: idx === 0 ? '#475569' : '#ffffff',
-                          fontSize: '0.66rem',
-                          fontWeight: 800,
-                          borderRadius: '4px',
-                          padding: '1px 0',
-                          cursor: idx === 0 ? 'default' : 'pointer',
-                        }}
+                        className="google-reorder-arrow-btn"
                         title="Flytta bakåt/upp"
                       >
                         ←
                       </button>
-                      <span style={{ fontSize: '0.62rem', color: '#94a3b8', alignSelf: 'center', fontWeight: 700 }}>
+                      <span style={{ fontSize: '0.62rem', color: '#444746', alignSelf: 'center', fontWeight: 700 }}>
                         #{idx + 1}
                       </span>
                       <button
@@ -510,20 +469,7 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                           e.stopPropagation();
                           handleMoveCategory(idx, 1);
                         }}
-                        style={{
-                          flex: 1,
-                          border: 'none',
-                          background:
-                            idx === orderedCategories.length - 1
-                              ? 'rgba(255,255,255,0.05)'
-                              : 'rgba(2, 132, 199, 0.45)',
-                          color: idx === orderedCategories.length - 1 ? '#475569' : '#ffffff',
-                          fontSize: '0.66rem',
-                          fontWeight: 800,
-                          borderRadius: '4px',
-                          padding: '1px 0',
-                          cursor: idx === orderedCategories.length - 1 ? 'default' : 'pointer',
-                        }}
+                        className="google-reorder-arrow-btn"
                         title="Flytta framåt/ner"
                       >
                         →
@@ -538,18 +484,17 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
       );
     }
 
-    // clinical_modules (med Gemini AI Notebook längst ner som standard!)
+    // clinical_modules (Utan Gemini AI!)
     return (
-      <div key="clinical_modules" style={{ marginBottom: '0.5rem' }}>
-        <div className="fab-section-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span>Kliniska Moduler & AI</span>
+      <div key="clinical_modules" style={{ marginBottom: '0.35rem' }}>
+        <div className="fab-section-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
+          <span>Kliniska Moduler</span>
           {sectionHeaderControls}
         </div>
 
         <div className="fab-tools-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.45rem' }}>
           {orderedTools.map((tool, idx) => {
             const isActive = activeCategory === tool.id;
-            const isAi = tool.isAi;
 
             return (
               <div
@@ -563,8 +508,6 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                   if (isEditingLayout) handleDropTool(tool.id);
                 }}
                 style={{
-                  gridColumn: isAi ? '1 / -1' : undefined,
-                  marginTop: isAi ? '0.25rem' : undefined,
                   position: 'relative',
                 }}
               >
@@ -573,49 +516,22 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                   className={`fab-cat-btn ${isActive ? 'active' : ''}`}
                   style={{
                     width: '100%',
-                    background: isAi ? 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' : undefined,
-                    color: isAi ? '#ffffff' : undefined,
-                    border: isEditingLayout
-                      ? '1px dashed rgba(167, 139, 250, 0.7)'
-                      : isAi
-                      ? '1px solid rgba(196, 181, 253, 0.45)'
-                      : undefined,
-                    padding: isAi ? '0.68rem 0.85rem' : undefined,
+                    border: isEditingLayout ? '1.5px dashed #0B57D0' : undefined,
                     paddingBottom: isEditingLayout ? '1.6rem' : undefined,
                     cursor: isEditingLayout ? 'grab' : 'pointer',
-                    boxShadow: isAi ? '0 8px 20px -4px rgba(124, 58, 237, 0.45)' : undefined,
                   }}
                   onClick={() => {
                     if (isEditingLayout) return;
-                    if (tool.id === 'GEMINI_AI') {
-                      onClose();
-                      onOpenGeminiChat();
-                    } else {
-                      onSelectCategory(tool.id);
-                      onClose();
-                    }
+                    onSelectCategory(tool.id);
+                    onClose();
                   }}
                 >
-                  <span className="fab-cat-icon" style={{ color: isAi ? '#ffffff' : tool.color }}>
+                  <span className="fab-cat-icon" style={{ color: isActive ? '#001D35' : tool.color }}>
                     {renderToolIcon(tool.id)}
                   </span>
-                  <span className="fab-cat-name" style={{ flex: 1, textAlign: 'left', fontWeight: isAi ? 800 : undefined }}>
+                  <span className="fab-cat-name" style={{ flex: 1, textAlign: 'left' }}>
                     {tool.name}
                   </span>
-                  {isAi && (
-                    <span
-                      style={{
-                        background: 'rgba(255,255,255,0.2)',
-                        color: '#ffffff',
-                        fontSize: '0.65rem',
-                        fontWeight: 800,
-                        padding: '0.12rem 0.45rem',
-                        borderRadius: '6px',
-                      }}
-                    >
-                      Notebook
-                    </span>
-                  )}
                   {tool.showDocCount && <span className="fab-badge">{documents.length}</span>}
                 </button>
 
@@ -639,22 +555,12 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                         e.stopPropagation();
                         handleMoveTool(idx, -1);
                       }}
-                      style={{
-                        flex: 1,
-                        border: 'none',
-                        background: idx === 0 ? 'rgba(255,255,255,0.05)' : 'rgba(124, 58, 237, 0.5)',
-                        color: idx === 0 ? '#475569' : '#ffffff',
-                        fontSize: '0.66rem',
-                        fontWeight: 800,
-                        borderRadius: '4px',
-                        padding: '1px 0',
-                        cursor: idx === 0 ? 'default' : 'pointer',
-                      }}
+                      className="google-reorder-arrow-btn"
                       title="Flytta bakåt/upp"
                     >
                       ←
                     </button>
-                    <span style={{ fontSize: '0.62rem', color: '#cbd5e1', alignSelf: 'center', fontWeight: 700 }}>
+                    <span style={{ fontSize: '0.62rem', color: '#444746', alignSelf: 'center', fontWeight: 700 }}>
                       #{idx + 1}
                     </span>
                     <button
@@ -664,20 +570,7 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                         e.stopPropagation();
                         handleMoveTool(idx, 1);
                       }}
-                      style={{
-                        flex: 1,
-                        border: 'none',
-                        background:
-                          idx === orderedTools.length - 1
-                            ? 'rgba(255,255,255,0.05)'
-                            : 'rgba(124, 58, 237, 0.5)',
-                        color: idx === orderedTools.length - 1 ? '#475569' : '#ffffff',
-                        fontSize: '0.66rem',
-                        fontWeight: 800,
-                        borderRadius: '4px',
-                        padding: '1px 0',
-                        cursor: idx === orderedTools.length - 1 ? 'default' : 'pointer',
-                      }}
+                      className="google-reorder-arrow-btn"
                       title="Flytta framåt/ner"
                     >
                       →
@@ -705,18 +598,10 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
             setIsEditingLayout(false);
             onClose();
           }}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(15, 23, 42, 0.55)',
-            backdropFilter: 'blur(6px)',
-            WebkitBackdropFilter: 'blur(6px)',
-            zIndex: 99990,
-          }}
         />
       )}
 
-      {/* M3 Expressive Squircle FAB button */}
+      {/* Google Material 3 Tonal Squircle FAB */}
       <button
         className="fab-main-btn m3-expressive-fab"
         onClick={(e) => {
@@ -728,41 +613,18 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
         aria-expanded={isOpen}
       >
         {isOpen ? (
-          <span style={{ fontSize: '1.35rem', fontWeight: 800, lineHeight: 1 }}>✕</span>
+          <span style={{ fontSize: '1.25rem', fontWeight: 600, lineHeight: 1 }}>✕</span>
         ) : (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="3" width="7" height="7" rx="2" />
             <rect x="14" y="3" width="7" height="7" rx="2" />
             <rect x="14" y="14" width="7" height="7" rx="2" />
             <rect x="3" y="14" width="7" height="7" rx="2" />
           </svg>
         )}
-        {favoritesCount > 0 && !isOpen && (
-          <span
-            className="fab-badge-pill"
-            style={{
-              position: 'absolute',
-              top: '-5px',
-              right: '-5px',
-              background: '#BA1A1A',
-              color: 'white',
-              fontSize: '0.68rem',
-              fontWeight: 800,
-              width: '21px',
-              height: '21px',
-              borderRadius: '9999px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: '2px solid #F4F7FC',
-            }}
-          >
-            {favoritesCount}
-          </span>
-        )}
       </button>
 
-      {/* Utfällbar M3 Expressive meny-panel */}
+      {/* Google Material 3 Meny-panel (Ljus, matt tonal yta) */}
       {isOpen && (
         <div
           className="fab-menu-panel m3-fab-sheet"
@@ -771,29 +633,16 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
         >
           <div className="fab-panel-header">
             <div className="fab-panel-title">
-              <span style={{ color: '#38bdf8' }}>🏥</span>
-              <span>IVA Navigering & Hubbar</span>
+              <span>IVA Navigering</span>
             </div>
             <div className="fab-header-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <button
                 type="button"
                 onClick={() => setIsEditingLayout((prev) => !prev)}
-                style={{
-                  border: isEditingLayout ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.2)',
-                  background: isEditingLayout ? '#0284c7' : 'rgba(255,255,255,0.08)',
-                  color: '#ffffff',
-                  fontSize: '0.73rem',
-                  fontWeight: 700,
-                  padding: '0.32rem 0.65rem',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.3rem',
-                }}
+                className={`google-fab-edit-btn ${isEditingLayout ? 'active' : ''}`}
                 title="Flytta runt och redigera innehållet i menyn"
               >
-                <span>{isEditingLayout ? '✓ Klar' : '✏️ Redigera'}</span>
+                <span>{isEditingLayout ? '✓ Klar' : 'Redigera'}</span>
               </button>
 
               {onOpenAndroidSetup && (
@@ -806,7 +655,7 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                   }}
                   title="Android-App, Kamera & Notiser"
                 >
-                  🤖
+                  📱
                 </button>
               )}
 
@@ -818,7 +667,7 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
                 }}
                 title="Sök i hela appen (Ctrl+K)"
               >
-                <SearchIcon size={14} />
+                <SearchIcon size={15} />
               </button>
               {canEdit && (
                 <button
@@ -836,38 +685,14 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({
           </div>
 
           {isEditingLayout && (
-            <div
-              style={{
-                background: 'rgba(2, 132, 199, 0.2)',
-                border: '1px solid rgba(56, 189, 248, 0.45)',
-                borderRadius: '10px',
-                padding: '0.55rem 0.75rem',
-                marginBottom: '0.75rem',
-                fontSize: '0.74rem',
-                color: '#e0f2fe',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '0.5rem',
-              }}
-            >
+            <div className="google-fab-edit-banner">
               <span>
-                Använd pilarna <strong>← / →</strong> (eller dra & släpp) för att ändra ordning i menyn.
+                Använd pilarna <strong>← / →</strong> eller dra & släpp för att ändra ordning.
               </span>
               <button
                 type="button"
                 onClick={handleResetLayout}
-                style={{
-                  border: '1px solid rgba(255,255,255,0.3)',
-                  background: 'rgba(15, 23, 42, 0.7)',
-                  color: '#ffffff',
-                  fontSize: '0.68rem',
-                  fontWeight: 700,
-                  padding: '0.25rem 0.5rem',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                }}
+                className="google-fab-reset-btn"
                 title="Återställ standardordning"
               >
                 Återställ
