@@ -42,10 +42,47 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Configure Android Manifest Permissions & Versioning for Google Play
+      - name: Configure Android minSdkVersion 24 & Permissions for Google Play
         run: |
           node -e '
             const fs = require("fs");
+
+            // 1. Update android/variables.gradle to minSdkVersion = 24
+            const varsPath = "android/variables.gradle";
+            if (fs.existsSync(varsPath)) {
+              let vars = fs.readFileSync(varsPath, "utf8");
+              vars = vars.replace(/minSdkVersion\s*=\s*\d+/g, "minSdkVersion = 24");
+              fs.writeFileSync(varsPath, vars, "utf8");
+              console.log("Updated android/variables.gradle:\n" + vars);
+            }
+
+            // 2. Update android/app/build.gradle versionCode, versionName, and explicit minSdkVersion 24
+            const gradlePath = "android/app/build.gradle";
+            let gradle = fs.readFileSync(gradlePath, "utf8");
+            const runNum = parseInt(process.env.GITHUB_RUN_NUMBER || "2", 10);
+            const versionCode = 100 + runNum;
+            const versionName = "1.0." + runNum;
+            gradle = gradle.replace(/minSdkVersion\s+rootProject\.ext\.minSdkVersion/g, "minSdkVersion 24");
+            gradle = gradle.replace(/minSdkVersion\s+\d+/g, "minSdkVersion 24");
+            gradle = gradle.replace(/versionCode\s+\d+/, "versionCode " + versionCode);
+            gradle = gradle.replace(/versionName\s+"[^"]+"/, "versionName \"" + versionName + "\"");
+            fs.writeFileSync(gradlePath, gradle, "utf8");
+            console.log("Configured Android minSdkVersion=24, versionCode=" + versionCode + ", versionName=" + versionName);
+
+            // 3. Also ensure minSdkVersion 24 in capacitor submodules if hardcoded
+            const otherGradles = [
+              "android/capacitor-cordova-android-plugins/build.gradle",
+              "node_modules/@capacitor/android/capacitor/build.gradle"
+            ];
+            for (const p of otherGradles) {
+              if (fs.existsSync(p)) {
+                let content = fs.readFileSync(p, "utf8");
+                content = content.replace(/minSdkVersion\s+\d+/g, "minSdkVersion 24");
+                fs.writeFileSync(p, content, "utf8");
+              }
+            }
+
+            // 4. Inject AndroidManifest.xml permissions
             const manifestPath = "android/app/src/main/AndroidManifest.xml";
             let xml = fs.readFileSync(manifestPath, "utf8");
             const perms = `
@@ -60,16 +97,6 @@ jobs:
               xml = xml.replace("</manifest>", perms + "\n</manifest>");
               fs.writeFileSync(manifestPath, xml, "utf8");
             }
-
-            const gradlePath = "android/app/build.gradle";
-            let gradle = fs.readFileSync(gradlePath, "utf8");
-            const runNum = parseInt(process.env.GITHUB_RUN_NUMBER || "1", 10);
-            const versionCode = 100 + runNum;
-            const versionName = "1.0." + runNum;
-            gradle = gradle.replace(/versionCode\s+\d+/, "versionCode " + versionCode);
-            gradle = gradle.replace(/versionName\s+"[^"]+"/, "versionName \"" + versionName + "\"");
-            fs.writeFileSync(gradlePath, gradle, "utf8");
-            console.log("Configured Android versionCode=" + versionCode + ", versionName=" + versionName);
           '
 
       - name: Ensure Persistent Play Store Upload Keystore
@@ -124,11 +151,12 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.${{ github.run_number }}
-          name: "IVA Östra v1.0.${{ github.run_number }} — Google Play Testapp (.aab) & APK"
+          name: "IVA Östra v1.0.${{ github.run_number }} — Google Play Testapp (.aab, minSdk 24) & APK"
           body: |
             ### 🏥 Intensivvårdsenheten Östra — Android Build (v1.0.${{ github.run_number }})
             - **Google Play Store (Intern testning):** Ladda ner **`IVA-Ostra-PlayStore-Test.aab`** och ladda upp under *Google Play Console → Testning → Intern testning*.
             - **Direktinstallation på Android-mobil:** Ladda ner **`IVA-Ostra-Direct-Install.apk`** direkt i telefonen.
+            - **minSdkVersion:** `24` (Uppdaterad från 22 enligt Google Play-krav)
             - **Package ID:** `se.vgregion.su.ivaostra`
             - **Version Code:** `10${{ github.run_number }}`
             - **Integritetspolicy-URL (krävs i Play Console):** `https://filipcarlberg91.github.io/intensivvardsenhetenostra/privacy-policy.html`
