@@ -42,7 +42,7 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Configure Android minSdkVersion 24 & Permissions for Google Play
+      - name: Configure Android Package com.iva.ostra, minSdkVersion 24 & Permissions
         run: |
           node -e '
             const fs = require("fs");
@@ -56,18 +56,20 @@ jobs:
               console.log("Updated android/variables.gradle:\n" + vars);
             }
 
-            // 2. Update android/app/build.gradle versionCode, versionName, and explicit minSdkVersion 24
+            // 2. Update android/app/build.gradle applicationId, versionCode, versionName, and explicit minSdkVersion 24
             const gradlePath = "android/app/build.gradle";
             let gradle = fs.readFileSync(gradlePath, "utf8");
-            const runNum = parseInt(process.env.GITHUB_RUN_NUMBER || "2", 10);
+            const runNum = parseInt(process.env.GITHUB_RUN_NUMBER || "3", 10);
             const versionCode = 100 + runNum;
             const versionName = "1.0." + runNum;
+            gradle = gradle.replace(/applicationId\s+"[^"]+"/g, "applicationId \"com.iva.ostra\"");
+            gradle = gradle.replace(/namespace\s+"[^"]+"/g, "namespace \"com.iva.ostra\"");
             gradle = gradle.replace(/minSdkVersion\s+rootProject\.ext\.minSdkVersion/g, "minSdkVersion 24");
             gradle = gradle.replace(/minSdkVersion\s+\d+/g, "minSdkVersion 24");
             gradle = gradle.replace(/versionCode\s+\d+/, "versionCode " + versionCode);
             gradle = gradle.replace(/versionName\s+"[^"]+"/, "versionName \"" + versionName + "\"");
             fs.writeFileSync(gradlePath, gradle, "utf8");
-            console.log("Configured Android minSdkVersion=24, versionCode=" + versionCode + ", versionName=" + versionName);
+            console.log("Configured Android applicationId=com.iva.ostra, minSdkVersion=24, versionCode=" + versionCode + ", versionName=" + versionName);
 
             // 3. Also ensure minSdkVersion 24 in capacitor submodules if hardcoded
             const otherGradles = [
@@ -151,13 +153,13 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.${{ github.run_number }}
-          name: "IVA Östra v1.0.${{ github.run_number }} — Google Play Testapp (.aab, minSdk 24) & APK"
+          name: "IVA Östra v1.0.${{ github.run_number }} — Google Play Testapp (.aab, com.iva.ostra, minSdk 24)"
           body: |
             ### 🏥 Intensivvårdsenheten Östra — Android Build (v1.0.${{ github.run_number }})
             - **Google Play Store (Intern testning):** Ladda ner **`IVA-Ostra-PlayStore-Test.aab`** och ladda upp under *Google Play Console → Testning → Intern testning*.
             - **Direktinstallation på Android-mobil:** Ladda ner **`IVA-Ostra-Direct-Install.apk`** direkt i telefonen.
-            - **minSdkVersion:** `24` (Uppdaterad från 22 enligt Google Play-krav)
-            - **Package ID:** `se.vgregion.su.ivaostra`
+            - **Package ID:** `com.iva.ostra`
+            - **minSdkVersion:** `24`
             - **Version Code:** `10${{ github.run_number }}`
             - **Integritetspolicy-URL (krävs i Play Console):** `https://filipcarlberg91.github.io/intensivvardsenhetenostra/privacy-policy.html`
           files: |
