@@ -235,7 +235,7 @@ export const AndroidSetupModal: React.FC<AndroidSetupModalProps> = ({
                     Google Play Store (Intern Testapp) & Signerad APK
                   </strong>
                   <span style={{ fontSize: '0.75rem', color: '#047857' }}>
-                    Automatiskt byggd och signerad i Build Mode (Package ID: <code>com.iva.ostra</code>, minSdk 24)
+                    Automatiskt byggd och signerad i Build Mode (Package ID: <code>com.iva.ostra</code>, minSdk 24, targetSdk 36)
                   </span>
                 </div>
               </div>

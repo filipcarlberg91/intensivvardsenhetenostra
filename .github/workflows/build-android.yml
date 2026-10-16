@@ -30,6 +30,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Install Android SDK Platform 36
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;35.0.0" || true
+
       - name: Install dependencies & Build Web App (Build Mode)
         run: |
           npm install
@@ -42,36 +47,53 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Configure Android Package com.iva.ostra, minSdkVersion 24 & Permissions
+      - name: Configure Android Package com.iva.ostra, minSdk 24, targetSdk/compileSdk 36 & Permissions
         run: |
           node -e '
             const fs = require("fs");
 
-            // 1. Update android/variables.gradle to minSdkVersion = 24
+            // 1. Update android/variables.gradle to minSdkVersion = 24, compileSdkVersion = 36, targetSdkVersion = 36
             const varsPath = "android/variables.gradle";
             if (fs.existsSync(varsPath)) {
               let vars = fs.readFileSync(varsPath, "utf8");
               vars = vars.replace(/minSdkVersion\s*=\s*\d+/g, "minSdkVersion = 24");
+              vars = vars.replace(/compileSdkVersion\s*=\s*\d+/g, "compileSdkVersion = 36");
+              vars = vars.replace(/targetSdkVersion\s*=\s*\d+/g, "targetSdkVersion = 36");
               fs.writeFileSync(varsPath, vars, "utf8");
               console.log("Updated android/variables.gradle:\n" + vars);
             }
 
-            // 2. Update android/app/build.gradle applicationId, versionCode, versionName, and explicit minSdkVersion 24
+            // 2. Suppress unsupported compileSdk warning in android/gradle.properties
+            const propsPath = "android/gradle.properties";
+            if (fs.existsSync(propsPath)) {
+              let props = fs.readFileSync(propsPath, "utf8");
+              if (!props.includes("android.suppressUnsupportedCompileSdk")) {
+                props += "\nandroid.suppressUnsupportedCompileSdk=35,36\n";
+                fs.writeFileSync(propsPath, props, "utf8");
+              }
+            }
+
+            // 3. Update android/app/build.gradle applicationId, versionCode, versionName, minSdk 24, compileSdk 36, targetSdk 36
             const gradlePath = "android/app/build.gradle";
             let gradle = fs.readFileSync(gradlePath, "utf8");
-            const runNum = parseInt(process.env.GITHUB_RUN_NUMBER || "3", 10);
+            const runNum = parseInt(process.env.GITHUB_RUN_NUMBER || "4", 10);
             const versionCode = 100 + runNum;
             const versionName = "1.0." + runNum;
             gradle = gradle.replace(/applicationId\s+"[^"]+"/g, "applicationId \"com.iva.ostra\"");
             gradle = gradle.replace(/namespace\s+"[^"]+"/g, "namespace \"com.iva.ostra\"");
+            gradle = gradle.replace(/compileSdk\s+rootProject\.ext\.compileSdkVersion/g, "compileSdk 36");
+            gradle = gradle.replace(/compileSdkVersion\s+rootProject\.ext\.compileSdkVersion/g, "compileSdkVersion 36");
+            gradle = gradle.replace(/compileSdkVersion\s+\d+/g, "compileSdkVersion 36");
             gradle = gradle.replace(/minSdkVersion\s+rootProject\.ext\.minSdkVersion/g, "minSdkVersion 24");
             gradle = gradle.replace(/minSdkVersion\s+\d+/g, "minSdkVersion 24");
+            gradle = gradle.replace(/targetSdkVersion\s+rootProject\.ext\.targetSdkVersion/g, "targetSdkVersion 36");
+            gradle = gradle.replace(/targetSdkVersion\s+\d+/g, "targetSdkVersion 36");
             gradle = gradle.replace(/versionCode\s+\d+/, "versionCode " + versionCode);
             gradle = gradle.replace(/versionName\s+"[^"]+"/, "versionName \"" + versionName + "\"");
             fs.writeFileSync(gradlePath, gradle, "utf8");
-            console.log("Configured Android applicationId=com.iva.ostra, minSdkVersion=24, versionCode=" + versionCode + ", versionName=" + versionName);
+            console.log("Configured Android applicationId=com.iva.ostra, minSdk=24, targetSdk=36, compileSdk=36, versionCode=" + versionCode);
 
-            // 3. Also ensure minSdkVersion 24 in capacitor submodules if hardcoded
+            // 4. Also ensure minSdk 24, compileSdk 36, targetSdk 36 in capacitor submodules if hardcoded
             const otherGradles = [
               "android/capacitor-cordova-android-plugins/build.gradle",
               "node_modules/@capacitor/android/capacitor/build.gradle"
@@ -80,11 +102,13 @@ jobs:
               if (fs.existsSync(p)) {
                 let content = fs.readFileSync(p, "utf8");
                 content = content.replace(/minSdkVersion\s+\d+/g, "minSdkVersion 24");
+                content = content.replace(/compileSdkVersion\s+\d+/g, "compileSdkVersion 36");
+                content = content.replace(/targetSdkVersion\s+\d+/g, "targetSdkVersion 36");
                 fs.writeFileSync(p, content, "utf8");
               }
             }
 
-            // 4. Inject AndroidManifest.xml permissions
+            // 5. Inject AndroidManifest.xml permissions
             const manifestPath = "android/app/src/main/AndroidManifest.xml";
             let xml = fs.readFileSync(manifestPath, "utf8");
             const perms = `
@@ -153,12 +177,13 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.${{ github.run_number }}
-          name: "IVA Östra v1.0.${{ github.run_number }} — Google Play Testapp (.aab, com.iva.ostra, minSdk 24)"
+          name: "IVA Östra v1.0.${{ github.run_number }} — Google Play Testapp (.aab, com.iva.ostra, API 36)"
           body: |
             ### 🏥 Intensivvårdsenheten Östra — Android Build (v1.0.${{ github.run_number }})
             - **Google Play Store (Intern testning):** Ladda ner **`IVA-Ostra-PlayStore-Test.aab`** och ladda upp under *Google Play Console → Testning → Intern testning*.
             - **Direktinstallation på Android-mobil:** Ladda ner **`IVA-Ostra-Direct-Install.apk`** direkt i telefonen.
             - **Package ID:** `com.iva.ostra`
+            - **targetSdkVersion / compileSdkVersion:** `36` (API-nivå 36)
             - **minSdkVersion:** `24`
             - **Version Code:** `10${{ github.run_number }}`
             - **Integritetspolicy-URL (krävs i Play Console):** `https://filipcarlberg91.github.io/intensivvardsenhetenostra/privacy-policy.html`
